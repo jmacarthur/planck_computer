@@ -154,6 +154,7 @@ class Renderer {
 	this.world = world;
 	this.canvas = canvas;
 	this.ctx = canvas.getContext("2d");
+	this.ctx.translate(100,100);
 	this.loop(window, 0);
     }
     loop(dt) {
@@ -171,6 +172,29 @@ class Renderer {
 	this.ctx.beginPath();
 	this.ctx.arc(pos.x * this.scale, pos.y * this.scale, 10, 0, 2*Math.PI);
 	this.ctx.stroke();
+	for (let fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
+	    this.renderFixture(fixture, pos.x*this.scale, pos.y*this.scale);
+	}
+    }
+    renderFixture(fixture, offsetx, offsety) {
+	var shapetype = fixture.getType();
+	if (shapetype == "polygon") {
+	    var shape = fixture.getShape();
+	    var vertices = shape.m_vertices;
+	    this.ctx.beginPath();
+	    for(let i=0;i<vertices.length;i++) {
+		var v = vertices[i];
+		if(i==0) {
+		    this.ctx.moveTo(v.x*this.scale+offsetx, v.y*this.scale+offsety);
+		} else {
+		    this.ctx.lineTo(v.x*this.scale+offsetx, v.y*this.scale+offsety);
+		}
+	    }
+	    this.ctx.closePath();
+	    this.ctx.stroke();
+	} else {
+	    console.log("Unrenderable shape type "+shapetype);
+	}
     }
 }
 
