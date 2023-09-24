@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style type="text/css">
+    body {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      display: block;
+    }
+    canvas#stage {
+	width: 100%;
+	height: 100%;
+    }
+
+  </style>
+</head><body>
+    <div id="testbed-console"></div>
+    <canvas id="stage"></canvas>
+    <div class="output">
+      <div id="testbed-status"></div>
+      <div id="testbed-info"></div>
+    </div>
+
+    <!-- These don't do anything, but Testbed will look for them and break if they are not present. -->
+    <a id="testbed-play" class="pause"><span class="pause">Pause</span><span class="play">Play</span></a>
+    <a id="testbed-reload">Reload</a>
+    <a id="testbed-prev">Prev</a>
+    <a id="testbed-next">Next</a>
+
+    <!-- You can get planck.js from jsdelivr. Replace the src in the next tag with
+	 "https://cdn.jsdelivr.net/npm/planck/dist/planck.min.js" -->
+    <script src="planck-with-testbed.js"></script>
+    <script src="planck-demo.js"></script>
+</body></html>
