@@ -148,14 +148,29 @@ function createWorld(world) {
 class Renderer {
     world = null;
     started = false;
-    start(world) {
+    scale = 10.0;
+    canvas = null;
+    start(world, canvas) {
 	this.world = world;
+	this.canvas = canvas;
+	this.ctx = canvas.getContext("2d");
 	this.loop(window, 0);
     }
     loop(dt) {
 	console.log("Loop iteration at "+dt+"ms");	
-	
+	//this.world.step(1 / 60);
+	for (let body = this.world.getBodyList(); body; body = body.getNext()) {
+	    this.renderBody(body);
+	}
 	window.requestAnimationFrame(this.loop.bind(this));
+	
+    }
+    renderBody(body) {
+	var pos = body.getPosition();
+	console.log("Body is present at "+pos.x+","+pos.y);
+	this.ctx.beginPath();
+	this.ctx.arc(pos.x * this.scale, pos.y * this.scale, 10, 0, 2*Math.PI);
+	this.ctx.stroke();
     }
 }
 
@@ -169,7 +184,7 @@ window.onload = (() => {
     createWorld(world);
 
     const renderer = new Renderer();
-    renderer.start(world);
+    renderer.start(world, canvas);
 
     console.log("Created world");
 });
