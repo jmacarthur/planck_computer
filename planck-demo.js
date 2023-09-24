@@ -154,12 +154,14 @@ class Renderer {
 	this.world = world;
 	this.canvas = canvas;
 	this.ctx = canvas.getContext("2d");
-	this.ctx.translate(100,100);
+	this.ctx.scale(1,-1);
+	this.ctx.translate(100,-300);
 	this.loop(window, 0);
     }
     loop(dt) {
 	console.log("Loop iteration at "+dt+"ms");	
 	this.world.step(1 / 60);
+	this.ctx.clearRect(-100, -300, this.canvas.width, this.canvas.height);
 	for (let body = this.world.getBodyList(); body; body = body.getNext()) {
 	    this.renderBody(body);
 	}
