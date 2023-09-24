@@ -145,20 +145,24 @@ function createWorld(world) {
     }, magic1, Vec2(10.0, 20.0), smallbox5, Vec2(10.0,20.0)));
 }
 
+class Renderer {
+    world = null;
+    started = false;
+    start(world) {
+	this.world = world;
+    }
+}
+
 window.onload = (() => {
     console.log("onload");
 
     var canvas = document.getElementsByTagName('canvas')[0];
 
-    var testbed = Testbed.mount();
-    testbed.x = 0;
-    testbed.y = 0;
     var world = planck.World({gravity: Vec2(0.0,-9.8)});
     createWorld(world);
-    testbed.step = (dt) => {
-	step_function(dt);
-    };
+
+    const renderer = new Renderer();
+    renderer.start(world);
 
     console.log("Created world");
-    testbed.start(world);
 });
