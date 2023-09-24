@@ -150,6 +150,12 @@ class Renderer {
     started = false;
     start(world) {
 	this.world = world;
+	this.loop(window, 0);
+    }
+    loop(dt) {
+	console.log("Loop iteration at "+dt+"ms");	
+	
+	window.requestAnimationFrame(this.loop.bind(this));
     }
 }
 
