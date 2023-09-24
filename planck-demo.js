@@ -159,7 +159,7 @@ class Renderer {
     }
     loop(dt) {
 	console.log("Loop iteration at "+dt+"ms");	
-	//this.world.step(1 / 60);
+	this.world.step(1 / 60);
 	for (let body = this.world.getBodyList(); body; body = body.getNext()) {
 	    this.renderBody(body);
 	}
