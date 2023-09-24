@@ -163,7 +163,8 @@ window.onload = (() => {
     console.log("onload");
 
     var canvas = document.getElementsByTagName('canvas')[0];
-
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     var world = planck.World({gravity: Vec2(0.0,-9.8)});
     createWorld(world);
 
