@@ -38,9 +38,7 @@ function createWorld(world) {
 	friction: 0.3,
     });
 
-    var fake_shape = new Box(1.0,1.0);
-    fake_shape.draw_m_vertices =  [Vec2(0,1), Vec2(0,2), Vec2(2,0), Vec2(1,0), Vec2(1,-1), Vec2(-1,-1), Vec2(-1,1)];
-    body.fixtureOverride = fake_shape;
+    body.shapeOverride = [Vec2(0,1), Vec2(0,2), Vec2(2,0), Vec2(1,0), Vec2(1,-1), Vec2(-1,-1), Vec2(-1,1)];
 
     // Create a box with a rotary joint
     let smallbox = world.createBody({
@@ -165,7 +163,6 @@ class Renderer {
 	canvas.addEventListener('mousemove', this.mousemove.bind(this));
 	canvas.addEventListener('mousedown', this.mousedown.bind(this));
 	canvas.addEventListener('mouseup', this.mouseup.bind(this));
-
     }
     mousedown(e) {
 	this.drag_start_x = e.x;
@@ -198,27 +195,32 @@ class Renderer {
     }
     renderBody(body) {
 	var pos = body.getPosition();
-	//console.log("Body is present at "+pos.x+","+pos.y);
-	for (let fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
-	    this.renderFixture(fixture, pos.x*this.scale, pos.y*this.scale);
+	if('shapeOverride' in body) {
+	    this.renderPolygon(body.shapeOverride, pos.x*this.scale, pos.y*this.scale);
+	} else {
+	    for (let fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
+		this.renderFixture(fixture, pos.x*this.scale, pos.y*this.scale);
+	    }
 	}
+    }
+    renderPolygon(vertices, offsetx, offsety) {
+	this.ctx.beginPath();
+	for(let i=0;i<vertices.length;i++) {
+	    var v = vertices[i];
+	    if(i==0) {
+		this.ctx.moveTo(v.x*this.scale+offsetx, v.y*this.scale+offsety);
+	    } else {
+		this.ctx.lineTo(v.x*this.scale+offsetx, v.y*this.scale+offsety);
+	    }
+	}
+	this.ctx.closePath();
+	this.ctx.stroke();
     }
     renderFixture(fixture, offsetx, offsety) {
 	var shapetype = fixture.getType();
 	var shape = fixture.getShape();
 	if (shapetype == "polygon") {
-	    var vertices = shape.m_vertices;
-	    this.ctx.beginPath();
-	    for(let i=0;i<vertices.length;i++) {
-		var v = vertices[i];
-		if(i==0) {
-		    this.ctx.moveTo(v.x*this.scale+offsetx, v.y*this.scale+offsety);
-		} else {
-		    this.ctx.lineTo(v.x*this.scale+offsetx, v.y*this.scale+offsety);
-		}
-	    }
-	    this.ctx.closePath();
-	    this.ctx.stroke();
+	    this.renderPolygon(shape.m_vertices, offsetx, offsety);
 	} else if (shapetype == "edge") {
 	    this.ctx.beginPath();
 	    this.ctx.moveTo(shape.m_vertex1.x, shape.m_vertex1.y);
