@@ -198,6 +198,8 @@ class Renderer {
 	window.requestAnimationFrame(this.loop.bind(this));
     }
     renderJoint(joint) {
+	this.ctx.strokeStyle = '#ff0000';
+
 	var type = joint.getType()
 	if(type == "distance-joint") {
 	    var pos = joint.getLocalAnchorA();
@@ -220,6 +222,7 @@ class Renderer {
 	}
     }
     renderBody(body) {
+	this.ctx.strokeStyle = '#000000';
 	var pos = body.getPosition();
 	if('shapeOverride' in body) {
 	    this.renderPolygon(body.shapeOverride, pos.x*this.scale, pos.y*this.scale);
