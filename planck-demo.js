@@ -190,29 +190,25 @@ class Renderer {
     }
 
     loop(dt) {
-	//console.log("Loop iteration at "+dt+"ms");	
+	//console.log("Loop iteration at "+dt+"ms");
 	this.world.step(1 / 60);
 	this.ctx.clearRect(-this.view_offset_x, this.view_offset_y, this.canvas.width, this.canvas.height);
 	for (let body = this.world.getBodyList(); body; body = body.getNext()) {
 	    this.renderBody(body);
 	}
 	window.requestAnimationFrame(this.loop.bind(this));
-	
     }
     renderBody(body) {
 	var pos = body.getPosition();
 	//console.log("Body is present at "+pos.x+","+pos.y);
-	this.ctx.beginPath();
-	this.ctx.arc(pos.x * this.scale, pos.y * this.scale, 10, 0, 2*Math.PI);
-	this.ctx.stroke();
 	for (let fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
 	    this.renderFixture(fixture, pos.x*this.scale, pos.y*this.scale);
 	}
     }
     renderFixture(fixture, offsetx, offsety) {
 	var shapetype = fixture.getType();
+	var shape = fixture.getShape();
 	if (shapetype == "polygon") {
-	    var shape = fixture.getShape();
 	    var vertices = shape.m_vertices;
 	    this.ctx.beginPath();
 	    for(let i=0;i<vertices.length;i++) {
@@ -224,6 +220,11 @@ class Renderer {
 		}
 	    }
 	    this.ctx.closePath();
+	    this.ctx.stroke();
+	} else if (shapetype == "edge") {
+	    this.ctx.beginPath();
+	    this.ctx.moveTo(shape.m_vertex1.x, shape.m_vertex1.y);
+	    this.ctx.lineTo(shape.m_vertex2.x, shape.m_vertex2.y);
 	    this.ctx.stroke();
 	} else {
 	    console.log("Unrenderable shape type "+shapetype);
