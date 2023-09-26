@@ -1,11 +1,7 @@
 'use strict';
 
 const pl = planck;
-const {Vec2, Box, Polygon, Testbed} = pl;
-
-function step_function(ms) {
-    // This runs for every simulation step
-}
+const {Vec2, Box, Polygon} = pl;
 
 function createWorld(world) {
     // Create the ground object
