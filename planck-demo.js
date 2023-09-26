@@ -150,18 +150,49 @@ class Renderer {
     started = false;
     scale = 10.0;
     canvas = null;
+    dragging = false;
+    drag_start_x = 0;
+    drag_stary_y = 0;
+    view_offset_x = 100;
+    view_offset_y = -300;
     start(world, canvas) {
 	this.world = world;
 	this.canvas = canvas;
 	this.ctx = canvas.getContext("2d");
 	this.ctx.scale(1,-1);
-	this.ctx.translate(100,-300);
+	this.ctx.translate(this.view_offset_x, this.view_offset_y);
 	this.loop(window, 0);
+	canvas.addEventListener('mousemove', this.mousemove.bind(this));
+	canvas.addEventListener('mousedown', this.mousedown.bind(this));
+	canvas.addEventListener('mouseup', this.mouseup.bind(this));
+
     }
+    mousedown(e) {
+	this.drag_start_x = e.x;
+	this.drag_start_y = -e.y;
+	this.dragging = true;
+    }
+    mousemove(e) {
+	console.log("Mousemove "+e.x+","+e.y+" (dragging="+this.dragging+")");
+	if(this.dragging) {
+	    var dx = e.x-this.drag_start_x;
+	    var dy = -e.y-this.drag_start_y;
+	    console.log("Drag "+dx+","+dy);
+	    this.ctx.translate(dx, dy);
+	    this.view_offset_x += dx;
+	    this.view_offset_y += dy;
+	    this.drag_start_x = e.x;
+	    this.drag_start_y = -e.y;
+	}
+    }
+    mouseup(e) {
+	this.dragging = false;
+    }
+
     loop(dt) {
-	console.log("Loop iteration at "+dt+"ms");	
+	//console.log("Loop iteration at "+dt+"ms");	
 	this.world.step(1 / 60);
-	this.ctx.clearRect(-100, -300, this.canvas.width, this.canvas.height);
+	this.ctx.clearRect(-this.view_offset_x, this.view_offset_y, this.canvas.width, this.canvas.height);
 	for (let body = this.world.getBodyList(); body; body = body.getNext()) {
 	    this.renderBody(body);
 	}
@@ -170,7 +201,7 @@ class Renderer {
     }
     renderBody(body) {
 	var pos = body.getPosition();
-	console.log("Body is present at "+pos.x+","+pos.y);
+	//console.log("Body is present at "+pos.x+","+pos.y);
 	this.ctx.beginPath();
 	this.ctx.arc(pos.x * this.scale, pos.y * this.scale, 10, 0, 2*Math.PI);
 	this.ctx.stroke();
