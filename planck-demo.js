@@ -191,7 +191,32 @@ class Renderer {
 	for (let body = this.world.getBodyList(); body; body = body.getNext()) {
 	    this.renderBody(body);
 	}
+	// Iterate over joints
+	for (let joint = this.world.getJointList(); joint; joint = joint.getNext()) {
+	    this.renderJoint(joint);
+	}
 	window.requestAnimationFrame(this.loop.bind(this));
+    }
+    renderJoint(joint) {
+	var type = joint.getType()
+	console.log("Rendering joint type "+type);
+	if(type == "distance-joint") {
+	    var pos = joint.getLocalAnchorA();
+	    var pos2 = joint.getBodyA().getPosition();
+	    var posB = joint.getLocalAnchorB();
+	    var posB2 = joint.getBodyB().getPosition();
+	    this.ctx.beginPath();
+	    this.ctx.moveTo((pos.x + pos2.x)*this.scale, (pos.y + pos2.y)*this.scale, 5, 0, Math.PI*2);
+	    this.ctx.lineTo((posB.x + posB2.x)*this.scale, (posB.y + posB2.y) *this.scale, 5, 0, Math.PI*2);
+	    this.ctx.stroke();
+
+	} else if(type == "revolute-joint") {
+	    var pos = joint.getLocalAnchorA();
+	    var pos2 = joint.getBodyA().getPosition();
+	    this.ctx.beginPath();
+	    this.ctx.arc((pos.x + pos2.x)*this.scale, (pos.y + pos2.y)*this.scale, 5, 0, Math.PI*2);
+	    this.ctx.stroke();
+	}
     }
     renderBody(body) {
 	var pos = body.getPosition();
