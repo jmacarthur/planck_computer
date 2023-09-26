@@ -26,19 +26,21 @@ function createWorld(world) {
 	position: new Vec2(0.0, 4.0)
     });
 
+    var fix1 = new Box(1.0, 1.0);
+    var fix2 = new Polygon([Vec2(0,0), Vec2(2,0), Vec2(0,2)]);
     body.createFixture({
-	shape: new Box(1.0, 1.0),
+	shape: fix1,
 	density: 1.0,
 	friction: 0.3,
     });
 
     body.createFixture({
-	shape: new Polygon([Vec2(0,0), Vec2(2,0), Vec2(0,2)]),
+	shape: fix2,
 	density: 1.0,
 	friction: 0.3,
     });
 
-    body.shapeOverride = [Vec2(0,1), Vec2(0,2), Vec2(2,0), Vec2(1,0), Vec2(1,-1), Vec2(-1,-1), Vec2(-1,1)];
+    body.shapeOverride = union(fix1, fix2);
 
     // Create a box with a rotary joint
     let smallbox = world.createBody({
@@ -70,6 +72,7 @@ function createWorld(world) {
 	density: 1.0,
 	friction: 0.3,
     });
+
     var MOTOR_SPEED = 10;
     var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	lowerTranslation : 0.0,
@@ -275,3 +278,38 @@ window.onload = (() => {
 
     console.log("Created world");
 });
+
+function union(polygon1, polygon2) {
+    // Convert polygons into a form clipper will understand
+    var path1 = [[]];
+    var path2 = [[]];
+    for(let i=0;i<polygon1.m_vertices.length;i++) {
+	var v = polygon1.m_vertices[i];
+	path1[0].push({X:v.x, Y:v.y});
+    }
+
+    for(let i=0;i<polygon2.m_vertices.length;i++) {
+	var v = polygon2.m_vertices[i];
+	path2[0].push({X:v.x, Y:v.y});
+    }
+
+    var scale = 100;
+    ClipperLib.JS.ScaleUpPaths(path1, scale);
+    ClipperLib.JS.ScaleUpPaths(path2, scale);
+
+    var cpr = new ClipperLib.Clipper();
+    cpr.AddPaths(path1, ClipperLib.PolyType.ptSubject, true);
+    cpr.AddPaths(path2, ClipperLib.PolyType.ptClip, true);
+    var solution_paths = new ClipperLib.Paths();
+    var succeeded = cpr.Execute(ClipperLib.ClipType.ctUnion, solution_paths, ClipperLib.PolyFillType.pftNonZero, ClipperLib.PolyFillType.pftNonZero);
+
+    ClipperLib.JS.ScaleDownPaths(solution_paths, scale);
+
+    // Convert back to planck.js polygons
+    var result = [];
+    for(let i=0;i<solution_paths[0].length;i++) {
+	var v = solution_paths[0][i];
+	result.push(Vec2(v.X, v.Y));
+    }
+    return result;
+}
