@@ -199,7 +199,6 @@ class Renderer {
     }
     renderJoint(joint) {
 	var type = joint.getType()
-	console.log("Rendering joint type "+type);
 	if(type == "distance-joint") {
 	    var pos = joint.getLocalAnchorA();
 	    var pos2 = joint.getBodyA().getPosition();
@@ -216,6 +215,8 @@ class Renderer {
 	    this.ctx.beginPath();
 	    this.ctx.arc((pos.x + pos2.x)*this.scale, (pos.y + pos2.y)*this.scale, 5, 0, Math.PI*2);
 	    this.ctx.stroke();
+	} else {
+	    console.log("Rendering unknown joint type "+type);
 	}
     }
     renderBody(body) {
