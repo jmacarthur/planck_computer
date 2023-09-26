@@ -1,7 +1,7 @@
 'use strict';
 
 const pl = planck;
-const {Vec2, Box, Polygon} = pl;
+const {Vec2, Box, Polygon, Circle} = pl;
 
 window.onload = (() => {
     console.log("onload");

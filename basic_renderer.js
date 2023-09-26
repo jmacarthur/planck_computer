@@ -62,8 +62,8 @@ class Renderer {
 	    var posB = joint.getLocalAnchorB();
 	    var posB2 = joint.getBodyB().getPosition();
 	    this.ctx.beginPath();
-	    this.ctx.moveTo((pos.x + pos2.x)*this.scale, (pos.y + pos2.y)*this.scale, 5, 0, Math.PI*2);
-	    this.ctx.lineTo((posB.x + posB2.x)*this.scale, (posB.y + posB2.y) *this.scale, 5, 0, Math.PI*2);
+	    this.ctx.moveTo((pos.x + pos2.x)*this.scale, (pos.y + pos2.y)*this.scale);
+	    this.ctx.lineTo((posB.x + posB2.x)*this.scale, (posB.y + posB2.y) *this.scale);
 	    this.ctx.stroke();
 
 	} else if(type == "revolute-joint") {
@@ -78,14 +78,19 @@ class Renderer {
     }
     renderBody(body) {
 	this.ctx.strokeStyle = '#000000';
+	this.ctx.save();
 	var pos = body.getPosition();
+	var rot = body.getAngle();
+	this.ctx.translate(pos.x*this.scale, pos.y*this.scale);
+	this.ctx.rotate(rot);
 	if('shapeOverride' in body) {
-	    this.renderPolygon(body.shapeOverride, pos.x*this.scale, pos.y*this.scale);
+	    this.renderPolygon(body.shapeOverride, 0, 0);
 	} else {
 	    for (let fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
-		this.renderFixture(fixture, pos.x*this.scale, pos.y*this.scale);
+		this.renderFixture(fixture, 0, 0);
 	    }
 	}
+	this.ctx.restore();
     }
     renderPolygon(vertices, offsetx, offsety) {
 	this.ctx.beginPath();
@@ -107,9 +112,16 @@ class Renderer {
 	    this.renderPolygon(shape.m_vertices, offsetx, offsety);
 	} else if (shapetype == "edge") {
 	    this.ctx.beginPath();
-	    this.ctx.moveTo(shape.m_vertex1.x, shape.m_vertex1.y);
-	    this.ctx.lineTo(shape.m_vertex2.x, shape.m_vertex2.y);
+	    this.ctx.moveTo(shape.m_vertex1.x*this.scale+offsetx, shape.m_vertex1.y*this.scale+offsety);
+	    this.ctx.lineTo(shape.m_vertex2.x*this.scale+offsetx, shape.m_vertex2.y*this.scale+offsety);
 	    this.ctx.stroke();
+	} else if (shapetype == "circle") {
+	    var centre = shape.getCenter();
+	    this.ctx.strokeStyle = '#000000';
+	    this.ctx.beginPath();
+	    this.ctx.arc(centre.x*this.scale+offsetx, centre.y*this.scale+offsety, shape.m_radius*this.scale, 0, Math.PI*2);
+	    this.ctx.stroke();
+	    console.log("Draw circle: "+centre.x+","+centre.y+" offset "+offsetx+","+offsety);
 	} else {
 	    console.log("Unrenderable shape type "+shapetype);
 	}
