@@ -117,11 +117,9 @@ class Renderer {
 	    this.ctx.stroke();
 	} else if (shapetype == "circle") {
 	    var centre = shape.getCenter();
-	    this.ctx.strokeStyle = '#000000';
 	    this.ctx.beginPath();
 	    this.ctx.arc(centre.x*this.scale+offsetx, centre.y*this.scale+offsety, shape.m_radius*this.scale, 0, Math.PI*2);
 	    this.ctx.stroke();
-	    console.log("Draw circle: "+centre.x+","+centre.y+" offset "+offsetx+","+offsety);
 	} else {
 	    console.log("Unrenderable shape type "+shapetype);
 	}
