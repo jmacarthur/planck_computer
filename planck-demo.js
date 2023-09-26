@@ -173,11 +173,9 @@ class Renderer {
 	this.dragging = true;
     }
     mousemove(e) {
-	console.log("Mousemove "+e.x+","+e.y+" (dragging="+this.dragging+")");
 	if(this.dragging) {
 	    var dx = e.x-this.drag_start_x;
 	    var dy = -e.y-this.drag_start_y;
-	    console.log("Drag "+dx+","+dy);
 	    this.ctx.translate(dx, dy);
 	    this.view_offset_x += dx;
 	    this.view_offset_y += dy;
