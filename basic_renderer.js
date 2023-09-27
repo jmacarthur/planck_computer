@@ -50,6 +50,14 @@ class Renderer {
 	for (let joint = this.world.getJointList(); joint; joint = joint.getNext()) {
 	    this.renderJoint(joint);
 	}
+	// Add origin mark
+	this.ctx.strokeStyle = '#ff0000';
+	this.ctx.beginPath();
+	this.ctx.moveTo(0, -10);
+	this.ctx.lineTo(0, 10);
+	this.ctx.moveTo(10, 0);
+	this.ctx.lineTo(-10, 0);
+	this.ctx.stroke();
 	window.requestAnimationFrame(this.loop.bind(this));
     }
     renderJoint(joint) {
