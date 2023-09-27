@@ -81,7 +81,7 @@ class Renderer {
 	    this.ctx.arc((pos.x + pos2.x)*this.scale, (pos.y + pos2.y)*this.scale, 5, 0, Math.PI*2);
 	    this.ctx.stroke();
 	} else {
-	    console.log("Rendering unknown joint type "+type);
+	    //console.log("Rendering unknown joint type "+type);
 	}
     }
     renderBody(body) {
