@@ -44,9 +44,11 @@ function createWorld(world) {
 
     let ball1 = world.createBody({
 	type: "dynamic",
-	position: new Vec2(1.0, 8.0) });
+	position: new Vec2(1.0, 8.0)
+    });
     ball1.createFixture({
 	shape: new Circle(1.0),
 	density: 1.0,
-	friction: 0.3 });
+	friction: 0.3,
+    });
 }
