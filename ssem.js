@@ -38,39 +38,55 @@ function createWorld(world) {
 	filterGroupIndex: 1
     }
 
-    // Create the ground object
+    var channel_pitch = 8.0;
+
+    // Create the ground object, just in case we need it
     var ground = world.createBody();
-    ground.createFixture({
-	shape: new pl.Edge(new Vec2(-50, 0), new Vec2(+50, 0)),
-    });
+    addFixture(ground, new Box(1.0,1.0, new Vec2(-5.0,0)), mass_none, collisions_none);
 
     // Create the hopper and injector
     // Injector consists of an active rectangle and an intangible rectangle
-    let injector_lever = world.createBody({
-	type: "dynamic",
-	position: new Vec2(0.0, 4.0)
-    });
+    var injector_levers = [];
 
-    var fix1 = new Box(2.0, 0.5, new Vec2(1.5,0));
-    var fix2 = new Box(0.5, 2.0, new Vec2(0,-1.5));
-    addFixture(injector_lever, fix1, mass_none, collisions_none);
-    addFixture(injector_lever, fix2, mass_normal, collisions_toplayer);
+    for(var i=0;i<8;i++) {
+	let injector_lever = world.createBody({
+	    type: "dynamic",
+	    position: new Vec2(i*channel_pitch, 4.0)
+	});
 
-    //injector_lever.shapeOverride = union(fix1, fix2);
+	var fix1 = new Box(2.0, 0.5, new Vec2(1.5,0));
+	var fix2 = new Box(0.5, 2.0, new Vec2(0,-1.5));
+	addFixture(injector_lever, fix1, mass_none, collisions_none);
+	addFixture(injector_lever, fix2, mass_normal, collisions_toplayer);
 
-    var revoluteJoint = world.createJoint(pl.RevoluteJoint({
-	lowerAngle: -0.25 * Math.PI,
-	upperAngle: 0.25 * Math.PI,
-	enableLimit: false,
-    }, ground, injector_lever, Vec2(0.0, 4.0)));
+	//injector_lever.shapeOverride = union(fix1, fix2);
 
-    let ball1 = world.createBody({
-	type: "dynamic",
-	position: new Vec2(2.0, 8.0)
-    });
-    ball1.createFixture({
-	shape: new Circle(1.0),
-	density: 1.0,
-	friction: 0.3,
-    });
+	var revoluteJoint = world.createJoint(pl.RevoluteJoint({
+	    lowerAngle: -0.25 * Math.PI,
+	    upperAngle: 0.25 * Math.PI,
+	    enableLimit: false,
+	}, ground, injector_lever, Vec2(i*channel_pitch, 4.0)));
+	injector_levers.push(injector_lever);
+
+	// Add channel side
+	var channel_side = world.createBody({type: "static", position: new Vec2(i*channel_pitch+3.5,3.1)});
+	addFixture(channel_side, new Box(0.5,1.0), mass_none, collisions_toplayer);
+
+	// Add channel base
+	var channel_side = world.createBody({type: "static", position: new Vec2(i*channel_pitch+2.0,-0.5)});
+	addFixture(channel_side, new Box(1.0,0.5), mass_none, collisions_toplayer);
+
+	// Add channel left side (backstop)
+	var channel_side = world.createBody({type: "static", position: new Vec2(i*channel_pitch-1.0,0)});
+	addFixture(channel_side, new Box(0.5,1.0), mass_none, collisions_toplayer);
+
+    }
+
+    for(var i=0;i<8;i++) {
+	let ball1 = world.createBody({
+	    type: "dynamic",
+	    position: new Vec2(2.0, 8.0+2*i)
+	});
+	addFixture(ball1, new Circle(1.0), mass_normal, collisions_toplayer);
+    }
 }
