@@ -133,6 +133,25 @@ function create_memory(world, ground) {
     return memory_lines;
 }
 
+function create_memory_decoder(world, ground, xoffset, yoffset) {
+    var decoder_lines = [];
+    for(var col=0; col<3; col++) {
+	var decoder_line = world.createBody({type: "dynamic", position: new Vec2(-3.0+xoffset+col*10.0, yoffset)});
+	for(var row=0; row<8; row++) {
+	    var offset = ((row>>col)%2==1)?2:0;
+	    addFixture(decoder_line, box(0, row_separation*row-offset, 1.0, 1.0), mass_normal, collisions_toplayer);
+	}
+	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
+	    lowerTranslation : 0.0,
+	    upperTranslation : row_separation,
+	    enableLimit : true
+	}, ground, decoder_line, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
+	decoder_lines.push(decoder_line);
+    }
+    return decoder_lines;
+}
+
+
 function createWorld(world) {
 
     // Create the ground object, just in case we need it
@@ -140,4 +159,5 @@ function createWorld(world) {
     addFixture(ground, box(-5.0, 0, 1, 1), mass_none, collisions_none);
     var injectors = create_injectors(world, ground);
     var memory_lines = create_memory(world, ground);
+    var memory_decoder_lines = create_memory_decoder(world, ground, channel_pitch*8+10, -30);
 }
