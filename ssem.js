@@ -40,6 +40,15 @@ var collisions_toplayer = {
     filterGroupIndex: 1
 }
 
+function translate_points(polygon, offsetx, offsety) {
+    var newpoints = [];
+    for(var i=0; i<polygon.length; i++) {
+	var v = polygon[i];
+	newpoints.push(new Vec2(v.x+offsetx, v.y+offsety));
+    }
+    return newpoints;
+}
+
 var channel_pitch = 8.0;
 var row_separation = 4.0;
 function create_injectors(world, ground) {
@@ -103,21 +112,22 @@ function create_memory(world, ground) {
     var memory_lines = [];
     for(var row=0; row<8; row++) {
 	var eject_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row)});
-	var block_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row - row_separation/2)});
+	var block_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row - 1.5)});
 	for(var col=0; col<8; col++) {
-	    addFixture(eject_line, box(col*channel_pitch, 0, 1.0, 1.0), mass_normal, collisions_toplayer);
-	    addFixture(block_line, box(col*channel_pitch, 0, 1.0, 1.0), mass_normal, collisions_toplayer);
+	    addFixture(eject_line, box(col*channel_pitch+2.0, 0, 5.0, 1.0), mass_normal, collisions_toplayer);
+	    addFixture(block_line, box(col*channel_pitch+2.0, 0, 5.0, 1.0), mass_normal, collisions_toplayer);
 	}
+	addFixture(block_line, new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,3), Vec2(0,3)], col*7+7.0, 0)), mass_normal, collisions_toplayer);
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
-	    lowerTranslation : 0.0,
-	    upperTranslation : 20.0,
+	    lowerTranslation : -channel_pitch,
+	    upperTranslation : 0.0,
 	    enableLimit : true
-	}, ground, eject_line, Vec2(0.0, 12.0), Vec2(1.0,0.0)));
+	}, ground, eject_line, Vec2(0.0, 1.0), Vec2(1.0,0.0)));
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
-	    lowerTranslation : 0.0,
-	    upperTranslation : 20.0,
+	    lowerTranslation : -channel_pitch,
+	    upperTranslation : 0.0,
 	    enableLimit : true
-	}, ground, block_line, Vec2(0.0, 12.0), Vec2(1.0,0.0)));
+	}, ground, block_line, Vec2(0.0, 1.0), Vec2(1.0,0.0)));
 	memory_lines.push(eject_line);
     }
     return memory_lines;
