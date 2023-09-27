@@ -18,36 +18,31 @@ function box(x, y, width, height) {
     return new Box(width/2, height/2, new Vec2(x+width/2, y+height/2));
 }
 
-function createWorld(world) {
+var mass_none = {
+    density: 0.0,
+    friction: 0.3
+}
 
-    var mass_none = {
-	density: 0.0,
-	friction: 0.3
-    }
+var mass_normal =  {
+    density: 1.0,
+    friction: 0.3
+}
 
-    var mass_normal =  {
-	density: 1.0,
-	friction: 0.3
-    }
+var collisions_none = {
+    filterCategoryBits: 0x01,
+    filterMaskBits: 0,
+    filterGroupIndex: -1
+}
 
-    var collisions_none = {
-	filterCategoryBits: 0x01,
-	filterMaskBits: 0,
-	filterGroupIndex: -1
-    }
+var collisions_toplayer = {
+    filterCategoryBits: 0x01,
+    filterMaskBits: 0x01,
+    filterGroupIndex: 1
+}
 
-    var collisions_toplayer = {
-	filterCategoryBits: 0x01,
-	filterMaskBits: 0x01,
-	filterGroupIndex: 1
-    }
-
-    var channel_pitch = 8.0;
-
-    // Create the ground object, just in case we need it
-    var ground = world.createBody();
-    addFixture(ground, box(-5.0, 0, 1, 1), mass_none, collisions_none);
-
+var channel_pitch = 8.0;
+var row_separation = 4.0;
+function create_injectors(world, ground) {
     // Create the hopper and injector
     // Injector consists of an active rectangle and an intangible rectangle
     var injector_levers = [];
@@ -101,4 +96,38 @@ function createWorld(world) {
 	});
 	addFixture(ball1, new Circle(1.0), mass_normal, collisions_toplayer);
     }
+    return injector_levers;
+}
+
+function create_memory(world, ground) {
+    var memory_lines = [];
+    for(var row=0; row<8; row++) {
+	var eject_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row)});
+	var block_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row - row_separation/2)});
+	for(var col=0; col<8; col++) {
+	    addFixture(eject_line, box(col*channel_pitch, 0, 1.0, 1.0), mass_normal, collisions_toplayer);
+	    addFixture(block_line, box(col*channel_pitch, 0, 1.0, 1.0), mass_normal, collisions_toplayer);
+	}
+	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
+	    lowerTranslation : 0.0,
+	    upperTranslation : 20.0,
+	    enableLimit : true
+	}, ground, eject_line, Vec2(0.0, 12.0), Vec2(1.0,0.0)));
+	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
+	    lowerTranslation : 0.0,
+	    upperTranslation : 20.0,
+	    enableLimit : true
+	}, ground, block_line, Vec2(0.0, 12.0), Vec2(1.0,0.0)));
+	memory_lines.push(eject_line);
+    }
+    return memory_lines;
+}
+
+function createWorld(world) {
+
+    // Create the ground object, just in case we need it
+    var ground = world.createBody();
+    addFixture(ground, box(-5.0, 0, 1, 1), mass_none, collisions_none);
+    var injectors = create_injectors(world, ground);
+    var memory_lines = create_memory(world, ground);
 }
