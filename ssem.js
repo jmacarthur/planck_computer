@@ -24,8 +24,10 @@ function createWorld(world) {
     var fix2 = new Box(0.5, 2.0, new Vec2(0,-1.5));
     body.createFixture({
 	shape: fix1,
-	density: 1.0,
+	density: 0.0,
 	friction: 0.3,
+	filterCategoryBits: 0x01,
+	filterMaskBits: 0x0,
     });
 
     body.createFixture({
@@ -44,7 +46,7 @@ function createWorld(world) {
 
     let ball1 = world.createBody({
 	type: "dynamic",
-	position: new Vec2(1.0, 8.0)
+	position: new Vec2(2.0, 8.0)
     });
     ball1.createFixture({
 	shape: new Circle(1.0),
