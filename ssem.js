@@ -151,6 +151,17 @@ function create_memory_decoder(world, ground, xoffset, yoffset) {
     return decoder_lines;
 }
 
+function create_cam(world, ground, xoffset, yoffset) {
+    var cam = world.createBody({type: "dynamic", position: new Vec2(xoffset, yoffset)});
+    addFixture(cam, new Circle(15), mass_normal, collisions_toplayer);
+    addFixture(cam, box(-5,7,10,10), mass_normal, collisions_toplayer);
+    var revoluteJoint = world.createJoint(pl.RevoluteJoint({
+	maxMotorTorque: 10000,
+	motorSpeed: 0.1,
+	enableMotor: true,
+    }, ground, cam, Vec2(xoffset,yoffset)));
+    return cam;
+}
 
 function createWorld(world) {
 
@@ -160,4 +171,5 @@ function createWorld(world) {
     var injectors = create_injectors(world, ground);
     var memory_lines = create_memory(world, ground);
     var memory_decoder_lines = create_memory_decoder(world, ground, channel_pitch*8+10, -30);
+    var decoder_holdoff_cam = create_cam(world, ground, 50, 30);
 }
