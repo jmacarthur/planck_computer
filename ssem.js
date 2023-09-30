@@ -172,7 +172,12 @@ function create_cam(world, ground, xoffset, yoffset) {
 	motorSpeed: 0.1,
 	enableMotor: true,
     }, ground, cam, Vec2(xoffset,yoffset)));
+    var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset-10, yoffset+20)});
+    addFixture(follower, box(0,0,15,1), mass_normal, collisions_toplayer);
+    var revoluteJoint = world.createJoint(pl.RevoluteJoint({
+    }, ground, follower, Vec2(xoffset-10+0.5,yoffset+20+0.5)));
     return cam;
+
 }
 
 function createWorld(world) {
