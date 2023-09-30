@@ -141,6 +141,8 @@ function create_memory_decoder(world, ground, xoffset, yoffset) {
 	    var offset = ((row>>col)%2==1)?2:0;
 	    addFixture(decoder_line, box(0, row_separation*row-offset, 1.0, 1.0), mass_normal, collisions_toplayer);
 	}
+	// Add the holdoff bar pin
+	addFixture(decoder_line, box(0, row_separation*8,1.0,1.0), mass_normal, collisions_toplayer);
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : 0.0,
 	    upperTranslation : row_separation,
@@ -148,13 +150,23 @@ function create_memory_decoder(world, ground, xoffset, yoffset) {
 	}, ground, decoder_line, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
 	decoder_lines.push(decoder_line);
     }
+
+    // Add the holdoff bar
+    var decoder_holdoff_bar = world.createBody({type: "dynamic", position: new Vec2(-3.0+xoffset, yoffset+row_separation*8-1)});
+    addFixture(decoder_holdoff_bar, box(0,0,21,1), mass_normal, collisions_toplayer);
+    var prismaticJoint = world.createJoint(pl.PrismaticJoint({
+	lowerTranslation : 0.0,
+	upperTranslation : row_separation,
+	enableLimit : true
+    }, ground, decoder_holdoff_bar, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
+    
     return decoder_lines;
 }
 
 function create_cam(world, ground, xoffset, yoffset) {
     var cam = world.createBody({type: "dynamic", position: new Vec2(xoffset, yoffset)});
     addFixture(cam, new Circle(15), mass_normal, collisions_toplayer);
-    addFixture(cam, box(-5,7,10,10), mass_normal, collisions_toplayer);
+    addFixture(cam, new Polygon([new Vec2(-5,13), new Vec2(5,13), new Vec2(3,17), new Vec2(-3,17)]), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	maxMotorTorque: 10000,
 	motorSpeed: 0.1,
@@ -171,5 +183,5 @@ function createWorld(world) {
     var injectors = create_injectors(world, ground);
     var memory_lines = create_memory(world, ground);
     var memory_decoder_lines = create_memory_decoder(world, ground, channel_pitch*8+10, -30);
-    var decoder_holdoff_cam = create_cam(world, ground, 50, 30);
+    var decoder_holdoff_cam = create_cam(world, ground, 80, 40);
 }
