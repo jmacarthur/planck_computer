@@ -8,6 +8,7 @@ class Renderer {
     drag_stary_y = 0;
     view_offset_x = 100;
     view_offset_y = -300;
+    simulating = false;
     start(world, canvas) {
 	this.world = world;
 	this.canvas = canvas;
@@ -18,6 +19,13 @@ class Renderer {
 	canvas.addEventListener('mousemove', this.mousemove.bind(this));
 	canvas.addEventListener('mousedown', this.mousedown.bind(this));
 	canvas.addEventListener('mouseup', this.mouseup.bind(this));
+	document.addEventListener('keydown', this.keydown.bind(this));
+    }
+    keydown(e) {
+	console.log("Key down: '"+e.key+"'");
+	if (e.key == " "){
+	    this.simulating = !this.simulating;
+	}
     }
     mousedown(e) {
 	this.drag_start_x = e.x;
@@ -41,7 +49,9 @@ class Renderer {
 
     loop(dt) {
 	//console.log("Loop iteration at "+dt+"ms");
-	this.world.step(1 / 60);
+	if(this.simulating) {
+	    this.world.step(1 / 60);
+	}
 	this.ctx.clearRect(-this.view_offset_x, this.view_offset_y, this.canvas.width, this.canvas.height);
 	for (let body = this.world.getBodyList(); body; body = body.getNext()) {
 	    this.renderBody(body);
