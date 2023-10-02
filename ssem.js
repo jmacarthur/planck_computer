@@ -147,7 +147,7 @@ function create_memory_decoder(world, ground, xoffset, yoffset) {
 	    lowerTranslation : 0.0,
 	    upperTranslation : row_separation,
 	    enableLimit : true
-	}, ground, decoder_line, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
+	}, ground, decoder_line, Vec2(0.0, 0.0), Vec2(0.0,-1.0)));
 	decoder_lines.push(decoder_line);
     }
 
@@ -158,25 +158,24 @@ function create_memory_decoder(world, ground, xoffset, yoffset) {
 	lowerTranslation : 0.0,
 	upperTranslation : row_separation,
 	enableLimit : true
-    }, ground, decoder_holdoff_bar, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
-    
-    return decoder_lines;
+    }, ground, decoder_holdoff_bar, Vec2(0.0, 0.0), Vec2(0.0,-1.0)));
+    return decoder_holdoff_bar;
 }
 
 function create_cam(world, ground, xoffset, yoffset) {
     var cam = world.createBody({type: "dynamic", position: new Vec2(xoffset, yoffset)});
     addFixture(cam, new Circle(15), mass_normal, collisions_toplayer);
-    addFixture(cam, new Polygon([new Vec2(-5,13), new Vec2(5,13), new Vec2(3,17), new Vec2(-3,17)]), mass_normal, collisions_toplayer);
+    addFixture(cam, new Polygon([new Vec2(13,-5), new Vec2(13,5), new Vec2(17,3), new Vec2(17,-3)]), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	maxMotorTorque: 10000,
 	motorSpeed: 0.1,
 	enableMotor: true,
     }, ground, cam, Vec2(xoffset,yoffset)));
-    var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset-10, yoffset+20)});
-    addFixture(follower, box(0,0,15,1), mass_normal, collisions_toplayer);
+    var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset-10, yoffset+18)});
+    addFixture(follower, box(0,0,20,1), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
-    }, ground, follower, Vec2(xoffset-10+0.5,yoffset+20+0.5)));
-    return cam;
+    }, ground, follower, Vec2(xoffset-10+0.5,yoffset+18+0.5)));
+    return follower;
 
 }
 
@@ -188,5 +187,9 @@ function createWorld(world) {
     var injectors = create_injectors(world, ground);
     var memory_lines = create_memory(world, ground);
     var memory_decoder_lines = create_memory_decoder(world, ground, channel_pitch*8+10, -30);
-    var decoder_holdoff_cam = create_cam(world, ground, 80, 40);
+    var decoder_holdoff_cam_follower = create_cam(world, ground, 80, 40);
+
+    var distanceJoint = world.createJoint(pl.DistanceJoint({
+    }, decoder_holdoff_cam_follower, Vec2(80.0, 70.0), memory_decoder_lines, Vec2(80.0,0.0)));
+
 }
