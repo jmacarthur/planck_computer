@@ -113,15 +113,27 @@ function create_memory(world, ground) {
     for(var row=0; row<8; row++) {
 	var eject_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row)});
 	var block_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row - 1.5)});
+	var line_shapes = [];
 	for(var col=0; col<8; col++) {
+	    line_shapes.push(box(col*channel_pitch+2.0, 0, 5.0, 1.0));
 	    addFixture(eject_line, box(col*channel_pitch+2.0, 0, 5.0, 1.0), mass_normal, collisions_toplayer);
-	    addFixture(block_line, box(col*channel_pitch+2.0, 0, 5.0, 1.0), mass_normal, collisions_toplayer);
 	}
-	addFixture(block_line, new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,3), Vec2(0,3)], col*7+7.0, 0)), mass_normal, collisions_toplayer);
-	addFixture(block_line, box(8*channel_pitch-5, 0, 40.0, 1.0), mass_normal, collisions_toplayer);
+
+	line_shapes.push(new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,3), Vec2(0,3)], col*7+7.0, 0)));
+	line_shapes.push(box(8*channel_pitch-5, 0, 40.0, 1.0));
 	for(var col=0;col<3;col++) {
-	    addFixture(block_line, box(8*channel_pitch+10+10*col+1, 0, 1.0, 1.5), mass_normal, collisions_toplayer);
+	    line_shapes.push(box(8*channel_pitch+10+10*col+1, 0, 1.0, 1.5));
 	}
+	var compound_shape = new Polygon();
+	for(var i=0;i<line_shapes.length;i++) {
+	    addFixture(block_line, line_shapes[i], mass_normal, collisions_toplayer);
+	    if(i==1) {
+		compound_shape.m_vertices = union(line_shapes[0], line_shapes[1]);
+	    } else if(i>1) {
+		compound_shape.m_vertices = union(compound_shape, line_shapes[i]);
+	    }
+	}
+	block_line.shapeOverride = compound_shape.m_vertices;
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : -channel_pitch,
 	    upperTranslation : 0.0,
