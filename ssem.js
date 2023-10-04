@@ -118,6 +118,10 @@ function create_memory(world, ground) {
 	    addFixture(block_line, box(col*channel_pitch+2.0, 0, 5.0, 1.0), mass_normal, collisions_toplayer);
 	}
 	addFixture(block_line, new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,3), Vec2(0,3)], col*7+7.0, 0)), mass_normal, collisions_toplayer);
+	addFixture(block_line, box(8*channel_pitch-5, 0, 40.0, 1.0), mass_normal, collisions_toplayer);
+	for(var col=0;col<3;col++) {
+	    addFixture(block_line, box(8*channel_pitch+10+10*col+1, 0, 1.0, 1.5), mass_normal, collisions_toplayer);
+	}
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : -channel_pitch,
 	    upperTranslation : 0.0,
@@ -135,19 +139,20 @@ function create_memory(world, ground) {
 
 function create_memory_decoder(world, ground, xoffset, yoffset) {
     var decoder_lines = [];
-    for(var col=0; col<3; col++) {
+    var cols = 3;
+    for(var col=0; col<cols; col++) {
 	var decoder_line = world.createBody({type: "dynamic", position: new Vec2(-3.0+xoffset+col*10.0, yoffset)});
 	for(var row=0; row<8; row++) {
-	    var offset = ((row>>col)%2==1)?2:0;
+	    var offset = ((row>>(cols-1-col))%2==1)?0:1;
 	    addFixture(decoder_line, box(0, row_separation*row-offset, 1.0, 1.0), mass_normal, collisions_toplayer);
 	}
-	// Add the holdoff bar pin
+	// Add the decoder holdoff bar pin
 	addFixture(decoder_line, box(0, row_separation*8,1.0,1.0), mass_normal, collisions_toplayer);
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : 0.0,
 	    upperTranslation : row_separation,
 	    enableLimit : true
-	}, ground, decoder_line, Vec2(0.0, 0.0), Vec2(0.0,-1.0)));
+	}, ground, decoder_line, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
 	decoder_lines.push(decoder_line);
     }
 
@@ -158,23 +163,24 @@ function create_memory_decoder(world, ground, xoffset, yoffset) {
 	lowerTranslation : 0.0,
 	upperTranslation : row_separation,
 	enableLimit : true
-    }, ground, decoder_holdoff_bar, Vec2(0.0, 0.0), Vec2(0.0,-1.0)));
+    }, ground, decoder_holdoff_bar, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
     return decoder_holdoff_bar;
 }
 
 function create_cam(world, ground, xoffset, yoffset) {
+    var follower_height = 16.5;
     var cam = world.createBody({type: "dynamic", position: new Vec2(xoffset, yoffset)});
     addFixture(cam, new Circle(15), mass_normal, collisions_toplayer);
     addFixture(cam, new Polygon([new Vec2(13,-5), new Vec2(13,5), new Vec2(17,3), new Vec2(17,-3)]), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
-	maxMotorTorque: 10000,
+	maxMotorTorque: 100000,
 	motorSpeed: 0.1,
 	enableMotor: true,
     }, ground, cam, Vec2(xoffset,yoffset)));
-    var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset-10, yoffset+18)});
+    var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset-10, yoffset+follower_height)});
     addFixture(follower, box(0,0,20,1), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
-    }, ground, follower, Vec2(xoffset-10+0.5,yoffset+18+0.5)));
+    }, ground, follower, Vec2(xoffset-10+0.5,yoffset+follower_height+0.5)));
     return follower;
 
 }
@@ -186,7 +192,7 @@ function createWorld(world) {
     addFixture(ground, box(-5.0, 0, 1, 1), mass_none, collisions_none);
     var injectors = create_injectors(world, ground);
     var memory_lines = create_memory(world, ground);
-    var memory_decoder_lines = create_memory_decoder(world, ground, channel_pitch*8+10, -30);
+    var memory_decoder_lines = create_memory_decoder(world, ground, channel_pitch*8+10, -29.5);
     var decoder_holdoff_cam_follower = create_cam(world, ground, 80, 40);
 
     var distanceJoint = world.createJoint(pl.DistanceJoint({
