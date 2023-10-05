@@ -130,10 +130,10 @@ function create_memory(world, ground) {
 	    addFixture(block_line, line_shapes[i], mass_normal, collisions_toplayer);
 	    if(i==1) {
 		compound_shape.m_vertices = union(line_shapes[0], line_shapes[1]);
-		compound_shapes = multi_union(line_shapes[0], line_shapes[1]);
+		compound_shapes = multi_union([line_shapes[0]], [line_shapes[1]]);
 	    } else if(i>1) {
 		compound_shape.m_vertices = union(compound_shape, line_shapes[i]);
-		compound_shapes = multi_union(compound_shape, line_shapes[i]);
+		compound_shapes = multi_union(compound_shapes, [line_shapes[i]]);
 	    }
 	}
 	block_line.shapeOverride = compound_shape.m_vertices;
