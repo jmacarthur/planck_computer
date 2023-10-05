@@ -125,12 +125,15 @@ function create_memory(world, ground) {
 	    line_shapes.push(box(8*channel_pitch+10+10*col+1, 0, 1.0, 1.5));
 	}
 	var compound_shape = new Polygon();
+	var compound_shapes = [];
 	for(var i=0;i<line_shapes.length;i++) {
 	    addFixture(block_line, line_shapes[i], mass_normal, collisions_toplayer);
 	    if(i==1) {
 		compound_shape.m_vertices = union(line_shapes[0], line_shapes[1]);
+		compound_shapes = multi_union(line_shapes[0], line_shapes[1]);
 	    } else if(i>1) {
 		compound_shape.m_vertices = union(compound_shape, line_shapes[i]);
+		compound_shapes = multi_union(compound_shape, line_shapes[i]);
 	    }
 	}
 	block_line.shapeOverride = compound_shape.m_vertices;
@@ -165,6 +168,7 @@ function create_memory_decoder(world, ground, xoffset, yoffset) {
 	    upperTranslation : row_separation,
 	    enableLimit : true
 	}, ground, decoder_line, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
+
 	decoder_lines.push(decoder_line);
     }
 
