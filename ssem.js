@@ -122,7 +122,7 @@ function create_memory(world, ground) {
 	line_shapes.push(new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,3), Vec2(0,3)], col*7+7.0, 0)));
 	line_shapes.push(box(8*channel_pitch-5, 0, 40.0, 1.0));
 	for(var col=0;col<3;col++) {
-	    line_shapes.push(box(8*channel_pitch+10+10*col+1, 0, 1.0, 1.5));
+	    line_shapes.push(box(8*channel_pitch+10+10*col+1.1, 0, 1.0, 1.5));
 	}
 	var compound_shape = new Polygon();
 	var compound_shapes = [];
