@@ -137,6 +137,7 @@ function create_memory(world, ground) {
 	    }
 	}
 	block_line.shapeOverride = compound_shape.m_vertices;
+	block_line.multiShapeOverride = compound_shapes;
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : -channel_pitch,
 	    upperTranslation : 0.0,
