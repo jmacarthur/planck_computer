@@ -9,6 +9,7 @@ class Renderer {
     view_offset_x = 100;
     view_offset_y = -300;
     simulating = false;
+    stoprunloop = false;
     start(world, canvas) {
 	this.world = world;
 	this.canvas = canvas;
@@ -25,6 +26,9 @@ class Renderer {
 	console.log("Key down: '"+e.key+"'");
 	if (e.key == " "){
 	    this.simulating = !this.simulating;
+	}
+	else if (e.key == "q"){
+	    this.stoprunloop = true;
 	}
     }
     mousedown(e) {
@@ -68,7 +72,9 @@ class Renderer {
 	this.ctx.moveTo(10, 0);
 	this.ctx.lineTo(-10, 0);
 	this.ctx.stroke();
-	window.requestAnimationFrame(this.loop.bind(this));
+	if(!this.stoprunloop) {
+	    window.requestAnimationFrame(this.loop.bind(this));
+	}
     }
     renderJoint(joint) {
 	this.ctx.strokeStyle = '#ff0000';
