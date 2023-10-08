@@ -188,7 +188,7 @@ function create_cam(world, ground, xoffset, yoffset) {
     var follower_height = 16.5;
     var cam = world.createBody({type: "dynamic", position: new Vec2(xoffset, yoffset)});
     addFixture(cam, new Circle(15), mass_normal, collisions_toplayer);
-    addFixture(cam, new Polygon([new Vec2(13,-5), new Vec2(13,5), new Vec2(17,3), new Vec2(17,-3)]), mass_normal, collisions_toplayer);
+    addFixture(cam, new Polygon([new Vec2(13,-3), new Vec2(13,3), new Vec2(17,1), new Vec2(17,-1)]), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	maxMotorTorque: 100000,
 	motorSpeed: 0.1,
