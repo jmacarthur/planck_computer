@@ -77,10 +77,9 @@ class Renderer {
 	}
     }
     renderJoint(joint) {
-	this.ctx.strokeStyle = '#ff0000';
-
 	var type = joint.getType()
 	if(type == "distance-joint") {
+	    this.ctx.strokeStyle = '#ff0000';
 	    var pos = joint.getLocalAnchorA();
 	    var pos2 = joint.getBodyA().getPosition();
 	    var posB = joint.getLocalAnchorB();
@@ -91,6 +90,7 @@ class Renderer {
 	    this.ctx.stroke();
 
 	} else if(type == "revolute-joint") {
+	    this.ctx.strokeStyle = '#ff0000';
 	    var pos = joint.getLocalAnchorA();
 	    var pos2 = joint.getBodyA().getPosition();
 	    this.ctx.beginPath();
@@ -101,17 +101,18 @@ class Renderer {
 	}
     }
     renderBody(body) {
-	this.ctx.strokeStyle = '#000000';
 	this.ctx.save();
 	var pos = body.getPosition();
 	var rot = body.getAngle();
 	this.ctx.translate(pos.x*this.scale, pos.y*this.scale);
 	this.ctx.rotate(rot);
 	if('multiShapeOverride' in body) {
+	    this.ctx.strokeStyle = "#000000";
 	    for(var i=0;i<body.multiShapeOverride.length;i++) {
 		this.renderPolygon(body.multiShapeOverride[i].m_vertices, 0, 0);
 	    }
 	} else if('shapeOverride' in body) {
+	    this.ctx.strokeStyle = "#000000";
 	    this.renderPolygon(body.shapeOverride, 0, 0);
 	} else {
 	    for (let fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
@@ -134,8 +135,14 @@ class Renderer {
 	this.ctx.stroke();
     }
     renderFixture(fixture, offsetx, offsety) {
+	var collisions = fixture.getFilterMaskBits()
 	var shapetype = fixture.getType();
 	var shape = fixture.getShape();
+	if(collisions == 0) {
+	    this.ctx.strokeStyle = "#cfcfcf";
+	} else {
+	    this.ctx.strokeStyle = "#000000";
+	}
 	if (shapetype == "polygon") {
 	    this.renderPolygon(shape.m_vertices, offsetx, offsety);
 	} else if (shapetype == "edge") {

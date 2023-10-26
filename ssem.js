@@ -154,10 +154,13 @@ function create_memory(world, ground) {
 }
 
 function create_memory_decoder(world, ground, xoffset, yoffset) {
+    /* This is the decoder pattern and holdoff bar */
     var decoder_lines = [];
     var cols = 3;
     for(var col=0; col<cols; col++) {
 	var decoder_line = world.createBody({type: "dynamic", position: new Vec2(-3.0+xoffset+col*10.0, yoffset)});
+	// Add an intangible box to hold the columns together
+	addFixture(decoder_line, box(0, 0, 1.0, row_separation*8+1), mass_none, collisions_none);
 	for(var row=0; row<8; row++) {
 	    var offset = ((row>>(cols-1-col))%2==1)?0:1;
 	    addFixture(decoder_line, box(0, row_separation*row-offset, 1.0, 1.0), mass_normal, collisions_toplayer);
