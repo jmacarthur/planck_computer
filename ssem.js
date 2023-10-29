@@ -123,7 +123,7 @@ function create_memory(world, ground) {
 
 	line_shapes.push(new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,3), Vec2(0,3)], col*7+7.0, 0)));
 	for(var col=0;col<3;col++) {
-	    line_shapes.push(box(8*channel_pitch+10+10*col+1.1, 0.9, 1.0, 1.0));
+	    line_shapes.push(box(8*channel_pitch+10+10*col+1.1, -0.1, 1.0, 1.0));
 	}
 
 	// Turn everything in 'line_shapes' into real fixtures and combine the
@@ -173,7 +173,7 @@ function create_memory_decoder(world, ground, xoffset, yoffset) {
 	addFixture(decoder_line, box(0, sensor_drop, 1.0, row_separation*8+1-sensor_drop), mass_none, collisions_none);
 	for(var row=0; row<8; row++) {
 	    var offset = ((row>>(cols-1-col))%2==1)?0:1;
-	    addFixture(decoder_line, box(0, row_separation*row-offset, 1.0, 1.0), mass_normal, collisions_toplayer);
+	    addFixture(decoder_line, box(0, row_separation*row-offset-1.0, 1.0, 1.0), mass_normal, collisions_toplayer);
 	}
 
 	// Add the decoder holdoff bar pin
