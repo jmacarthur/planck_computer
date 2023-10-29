@@ -49,6 +49,15 @@ function translate_points(polygon, offsetx, offsety) {
     return newpoints;
 }
 
+function create_crank(world, ground, x, y, initial_rotation) {
+    // Rotation in radians. Zero rotation is an 'L' shape going up and right from the origin.
+    var crank = world.createBody({type: "dynamic", position: new Vec2(x, y)});
+    addFixture(crank, box(-0.5, -0.5, 1.0, 5.0), mass_normal, collisions_toplayer);
+    addFixture(crank, box(-0.5, -0.5, 5.0, 1.0), mass_normal, collisions_toplayer);
+    var revoluteJoint = world.createJoint(pl.RevoluteJoint({}, ground, crank, Vec2(x,y)));
+    crank.setAngle(initial_rotation);
+}
+
 var channel_pitch = 8.0;
 var row_separation = 4.0;
 function create_injectors(world, ground) {
@@ -158,6 +167,9 @@ function create_memory(world, ground) {
 	    enableLimit : true
 	}, ground, block_line, Vec2(0.0, 1.0), Vec2(1.0,0.0)));
 	memory_lines.push(eject_line);
+
+	// Create the crank which biases the block line
+	var bias_crank = create_crank(world, ground, -10 - 5.0*row, -35 + row_separation*row, Math.PI/2);
     }
     return memory_lines;
 }
