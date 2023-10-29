@@ -41,7 +41,6 @@ function union(polygon1, polygon2) {
     cpr.AddPaths(path2, ClipperLib.PolyType.ptClip, true);
     var solution_paths = new ClipperLib.Paths();
     var succeeded = cpr.Execute(ClipperLib.ClipType.ctUnion, solution_paths, ClipperLib.PolyFillType.pftNonZero, ClipperLib.PolyFillType.pftNonZero);
-    console.log("Union operation: result = "+succeeded);
     ClipperLib.JS.ScaleDownPaths(solution_paths, scale);
 
     // Convert back to planck.js polygons
@@ -84,7 +83,6 @@ function multi_union(polygon1list, polygon2list) {
     cpr.AddPaths(path2, ClipperLib.PolyType.ptClip, true);
     var solution_paths = new ClipperLib.Paths();
     var succeeded = cpr.Execute(ClipperLib.ClipType.ctUnion, solution_paths, ClipperLib.PolyFillType.pftNonZero, ClipperLib.PolyFillType.pftNonZero);
-    console.log("Union operation: result = "+succeeded);
     ClipperLib.JS.ScaleDownPaths(solution_paths, scale);
 
     // Convert back to planck.js polygons
