@@ -124,7 +124,7 @@ function create_memory(world, ground) {
 	line_shapes.push(new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,3), Vec2(0,3)], col*7+7.0, 0)));
 	//line_shapes.push(box(8*channel_pitch-5, 0, 40.0, 1.0));
 	for(var col=0;col<3;col++) {
-	    line_shapes.push(box(8*channel_pitch+10+10*col+1.1, 0, 1.0, 1.0));
+	    line_shapes.push(box(8*channel_pitch+10+10*col+1.1, 0.9, 1.0, 1.0));
 	}
 
 	// Turn everything in 'line_shapes' into real fixtures and combine the
@@ -160,15 +160,17 @@ function create_memory(world, ground) {
 function create_memory_decoder(world, ground, xoffset, yoffset) {
     /* This is the decoder pattern and holdoff bar */
     var decoder_lines = [];
+    var sensor_drop = -100;
     var cols = 3;
     for(var col=0; col<cols; col++) {
 	var decoder_line = world.createBody({type: "dynamic", position: new Vec2(-3.0+xoffset+col*10.0, yoffset)});
 	// Add an intangible box to hold the columns together
-	addFixture(decoder_line, box(0, 0, 1.0, row_separation*8+1), mass_none, collisions_none);
+	addFixture(decoder_line, box(0, sensor_drop, 1.0, row_separation*8+1-sensor_drop), mass_none, collisions_none);
 	for(var row=0; row<8; row++) {
 	    var offset = ((row>>(cols-1-col))%2==1)?0:1;
 	    addFixture(decoder_line, box(0, row_separation*row-offset, 1.0, 1.0), mass_normal, collisions_toplayer);
 	}
+
 	// Add the decoder holdoff bar pin
 	addFixture(decoder_line, box(0, row_separation*8,1.0,1.0), mass_normal, collisions_toplayer);
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
@@ -177,6 +179,10 @@ function create_memory_decoder(world, ground, xoffset, yoffset) {
 	    enableLimit : true
 	}, ground, decoder_line, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
 
+	// Add the 'sensor'
+	addFixture(decoder_line, box(0, sensor_drop, 1.0, 1.0), mass_normal, collisions_toplayer);
+
+	
 	decoder_lines.push(decoder_line);
     }
 
