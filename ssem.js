@@ -199,18 +199,20 @@ function create_memory_decoder(world, ground, xoffset, yoffset) {
 
 function create_cam(world, ground, xoffset, yoffset) {
     var follower_height = 16.5;
+    var base_radius = 15;
+    var tab_height = 2;
     var cam = world.createBody({type: "dynamic", position: new Vec2(xoffset, yoffset)});
-    addFixture(cam, new Circle(15), mass_normal, collisions_toplayer);
-    addFixture(cam, new Polygon([new Vec2(13,-3), new Vec2(13,3), new Vec2(17,1), new Vec2(17,-1)]), mass_normal, collisions_toplayer);
+    addFixture(cam, new Circle(base_radius), mass_normal, collisions_toplayer);
+    addFixture(cam, new Polygon([new Vec2(base_radius-2,-3), new Vec2(base_radius-2,3), new Vec2(base_radius+tab_height,1), new Vec2(base_radius+tab_height,-1)]), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	maxMotorTorque: 100000,
 	motorSpeed: 0.1,
 	enableMotor: true,
     }, ground, cam, Vec2(xoffset,yoffset)));
-    var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset-10, yoffset+follower_height)});
-    addFixture(follower, box(0,0,20,1), mass_normal, collisions_toplayer);
+    var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset-10, yoffset+base_radius)});
+    addFixture(follower, box(-5,0,20,1), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
-    }, ground, follower, Vec2(xoffset-10+0.5,yoffset+follower_height+0.5)));
+    }, ground, follower, Vec2(xoffset-15+0.5,yoffset+base_radius+0.5)));
     return follower;
 
 }
