@@ -107,8 +107,12 @@ class Renderer {
 	this.ctx.translate(pos.x*this.scale, pos.y*this.scale);
 	this.ctx.rotate(rot);
 	if('shapeOverride' in body) {
-	    this.ctx.strokeStyle = "#000000";
 	    for(var i=0;i<body.shapeOverride.length;i++) {
+		if(body.shapeOverride[i].colour) {
+		    this.ctx.strokeStyle = body.shapeOverride[i].colour;
+		} else {
+		    this.ctx.strokeStyle = "#000000";
+		}
 		this.renderPolygon(body.shapeOverride[i].m_vertices, 0, 0);
 	    }
 	} else {

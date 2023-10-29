@@ -122,7 +122,6 @@ function create_memory(world, ground) {
 	}
 
 	line_shapes.push(new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,3), Vec2(0,3)], col*7+7.0, 0)));
-	//line_shapes.push(box(8*channel_pitch-5, 0, 40.0, 1.0));
 	for(var col=0;col<3;col++) {
 	    line_shapes.push(box(8*channel_pitch+10+10*col+1.1, 0.9, 1.0, 1.0));
 	}
@@ -141,7 +140,13 @@ function create_memory(world, ground) {
 		compound_shapes = multi_union(compound_shapes, [line_shapes[i]]);
 	    }
 	}
+
+	// Add another ghost fixture to hold the line together
+	var joining_bar = box(0,0,8*channel_pitch+10+10*2+2, 1);
+	addFixture(block_line, joining_bar, mass_none, collisions_none);
+	joining_bar.colour = "#c0c0c0";
 	block_line.shapeOverride = compound_shapes;
+	block_line.shapeOverride.push(joining_bar);
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : -channel_pitch,
 	    upperTranslation : 0.0,
