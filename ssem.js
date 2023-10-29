@@ -67,7 +67,9 @@ function create_injectors(world, ground) {
 	addFixture(injector_lever, fix1, mass_none, collisions_none);
 	addFixture(injector_lever, fix2, mass_normal, collisions_toplayer);
 
-	//injector_lever.shapeOverride = union(fix1, fix2);
+	var lever_shape = new Polygon();
+	lever_shape.m_vertices = union(fix1, fix2);
+	injector_lever.shapeOverride = [lever_shape];
 
 	var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	    lowerAngle: -0.25 * Math.PI,
@@ -124,6 +126,9 @@ function create_memory(world, ground) {
 	for(var col=0;col<3;col++) {
 	    line_shapes.push(box(8*channel_pitch+10+10*col+1.1, 0, 1.0, 1.0));
 	}
+
+	// Turn everything in 'line_shapes' into real fixtures and combine the
+	// shapes into one polygon
 	var compound_shape = new Polygon();
 	var compound_shapes = [];
 	for(var i=0;i<line_shapes.length;i++) {
@@ -136,8 +141,7 @@ function create_memory(world, ground) {
 		compound_shapes = multi_union(compound_shapes, [line_shapes[i]]);
 	    }
 	}
-	//block_line.shapeOverride = compound_shape.m_vertices;
-	block_line.multiShapeOverride = compound_shapes;
+	block_line.shapeOverride = compound_shapes;
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : -channel_pitch,
 	    upperTranslation : 0.0,

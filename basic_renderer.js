@@ -106,14 +106,11 @@ class Renderer {
 	var rot = body.getAngle();
 	this.ctx.translate(pos.x*this.scale, pos.y*this.scale);
 	this.ctx.rotate(rot);
-	if('multiShapeOverride' in body) {
+	if('shapeOverride' in body) {
 	    this.ctx.strokeStyle = "#000000";
-	    for(var i=0;i<body.multiShapeOverride.length;i++) {
-		this.renderPolygon(body.multiShapeOverride[i].m_vertices, 0, 0);
+	    for(var i=0;i<body.shapeOverride.length;i++) {
+		this.renderPolygon(body.shapeOverride[i].m_vertices, 0, 0);
 	    }
-	} else if('shapeOverride' in body) {
-	    this.ctx.strokeStyle = "#000000";
-	    this.renderPolygon(body.shapeOverride, 0, 0);
 	} else {
 	    for (let fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
 		this.renderFixture(fixture, 0, 0);
