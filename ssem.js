@@ -170,7 +170,13 @@ function create_memory(world, ground) {
 	memory_lines.push(eject_line);
 
 	// Create the crank which biases the block line
-	var bias_crank = create_crank(world, ground, -10 - 5.0*row, -35 + row_separation*row, Math.PI/2);
+	var crank_x = -10 - 5.0*row;
+	var crank_y = -35 + row_separation*row;
+	var bias_crank = create_crank(world, ground, crank_x, crank_y, Math.PI/2);
+	var distanceJoint = world.createJoint(pl.DistanceJoint({
+	}, bias_crank, new Vec2(crank_x, crank_y+4.5), block_line, new Vec2(-3.0,crank_y)));
+	console.log("Creating crank "+row+" and attaching it to things");
+
     }
     return memory_lines;
 }
