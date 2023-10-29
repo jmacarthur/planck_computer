@@ -56,6 +56,7 @@ function create_crank(world, ground, x, y, initial_rotation) {
     addFixture(crank, box(-0.5, -0.5, 5.0, 1.0), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({}, ground, crank, Vec2(x,y)));
     crank.setAngle(initial_rotation);
+    return crank;
 }
 
 var channel_pitch = 8.0;
