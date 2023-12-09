@@ -63,7 +63,7 @@ function create_crank(world, ground, x, y, initial_rotation) {
 
 var channel_pitch = 8.0;
 var row_separation = 4.0;
-function create_injectors(world, ground) {
+function create_injectors(world, ground, part_index) {
     // Create the hopper and injector
     // Injector consists of an active rectangle and an intangible rectangle
     var injector_levers = [];
@@ -119,10 +119,10 @@ function create_injectors(world, ground) {
 	});
 	addFixture(ball1, new Circle(1.0), mass_normal, collisions_toplayer);
     }
-    return injector_levers;
+    part_index['injector_levers'] = injector_levers;
 }
 
-function create_memory(world, ground) {
+function create_memory(world, ground, part_index) {
     var memory_lines = [];
     for(var row=0; row<8; row++) {
 	var eject_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row)});
@@ -196,11 +196,10 @@ function create_memory(world, ground) {
     // Memory holdoff crank
     var holdoff_crank = create_crank(world, ground, memory_right_x+10, -16, Math.PI);
     var distanceJoint = world.createJoint(pl.DistanceJoint({}, holdoff_crank, holdoff_crank.attach2, memory_holdoff, new Vec2(memory_right_x-3.5,-16.0)));
-
-    return memory_lines;
+    part_index['memory_block_lines'] = memory_lines;
 }
 
-function create_memory_decoder(world, ground, xoffset, yoffset) {
+function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
     /* This is the decoder pattern and holdoff bar */
     var decoder_lines = [];
     var sensor_drop = -100;
@@ -236,7 +235,7 @@ function create_memory_decoder(world, ground, xoffset, yoffset) {
 	upperTranslation : row_separation,
 	enableLimit : true
     }, ground, decoder_holdoff_bar, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
-    return decoder_holdoff_bar;
+    part_index['decoder_holdoff_bar'] = decoder_holdoff_bar;
 }
 
 function create_cam(world, ground, xoffset, yoffset) {
@@ -261,15 +260,16 @@ function create_cam(world, ground, xoffset, yoffset) {
 
 function createWorld(world) {
 
+    var part_index = [];
     // Create the ground object, just in case we need it
     var ground = world.createBody();
     addFixture(ground, box(-5.0, 0, 1, 1), mass_none, collisions_none);
-    var injectors = create_injectors(world, ground);
-    var memory_lines = create_memory(world, ground);
-    var memory_decoder_lines = create_memory_decoder(world, ground, channel_pitch*8+10, -29.5);
+    create_injectors(world, ground, part_index);
+    create_memory(world, ground, part_index);
+    create_memory_decoder(world, ground, channel_pitch*8+10, -29.5, part_index);
     var decoder_holdoff_cam_follower = create_cam(world, ground, 80, 40);
     var memory_holdoff_cam_follower = create_cam(world, ground, 115, 40);
 
     var distanceJoint = world.createJoint(pl.DistanceJoint({
-    }, decoder_holdoff_cam_follower, decoder_holdoff_cam_follower.attach_point, memory_decoder_lines, Vec2(82.0,2.0)));
+    }, decoder_holdoff_cam_follower, decoder_holdoff_cam_follower.attach_point, part_index['decoder_holdoff_bar'], Vec2(82.0,2.0)));
 }
