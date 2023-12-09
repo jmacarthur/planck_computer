@@ -207,7 +207,6 @@ function create_memory_decoder(world, ground, xoffset, yoffset) {
 	// Add the 'sensor'
 	addFixture(decoder_line, box(0, sensor_drop, 1.0, 1.0), mass_normal, collisions_toplayer);
 
-	
 	decoder_lines.push(decoder_line);
     }
 
