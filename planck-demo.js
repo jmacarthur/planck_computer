@@ -49,7 +49,6 @@ function union(polygon1, polygon2) {
     return result;
 }
 
-
 function multi_union(polygon1list, polygon2list) {
     // Convert polygons into a form clipper will understand
     var path1 = [[]];

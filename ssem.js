@@ -248,6 +248,14 @@ function create_cam(world, ground, xoffset, yoffset) {
     var cam = world.createBody({type: "dynamic", position: new Vec2(xoffset, yoffset)});
 
     // Cam base circle
+    var fake_circle_shape_points = [];
+    var circle_interpolation = 32;
+    for(var i=0;i<circle_interpolation; i++) {
+	fake_circle_shape_points.push(Vec2(Math.cos(Math.PI*2*i/circle_interpolation)*base_radius,
+					   Math.sin(Math.PI*2*i/circle_interpolation)*base_radius));
+    }
+    var fake_circle = [];
+    fake_circle.m_vertices = fake_circle_shape_points; // If we make this a real Polygon, it'll restrict the number of vertices
     addFixture(cam, new Circle(base_radius), mass_normal, collisions_toplayer);
 
     // Cam profile
@@ -264,15 +272,29 @@ function create_cam(world, ground, xoffset, yoffset) {
 				  Math.sin(start_angle+i*profile_length/(max_segments-4)) * high_height));
     }
     point_array.push(new Vec2(Math.cos(start_angle+profile_length+rise_angle)*low_height, Math.sin(start_angle+profile_length+rise_angle)*low_height));
-    addFixture(cam, new Polygon(point_array), mass_normal, collisions_toplayer);
+    var profile_polygon = new Polygon(point_array);
+    addFixture(cam, profile_polygon, mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	maxMotorTorque: 10000000,
 	motorSpeed: 0.1,
 	enableMotor: true,
     }, ground, cam, Vec2(xoffset,yoffset)));
+
+    var cam_shape = new Polygon();
+    cam_shape.m_vertices = union(fake_circle, profile_polygon);
+    cam.shapeOverride = [cam_shape];
+
+    // Follower assembly
     var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset+follower_axis_x-0.5, yoffset+follower_height)});
-    addFixture(follower, box(0,0,lever_length,1), mass_normal, collisions_toplayer);
-    addFixture(follower, new Polygon([Vec2(15-3,1), Vec2(15, -2), Vec2(15+3,1)]), mass_normal, collisions_toplayer);
+    var follower_arm = box(0,0,lever_length,1);
+    var follower_point = new Polygon([Vec2(15-3,1), Vec2(15, -2), Vec2(15+3,1)]);
+    addFixture(follower, follower_arm, mass_normal, collisions_toplayer);
+    addFixture(follower, follower_point, mass_normal, collisions_toplayer);
+
+    var follower_shape = new Polygon();
+    follower_shape.m_vertices = union(follower_arm, follower_point);
+    follower.shapeOverride = [follower_shape];
+
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
     }, ground, follower, Vec2(xoffset+follower_axis_x,yoffset+follower_height+0.5)));
     follower.attach_point = Vec2(xoffset+follower_axis_x+lever_length-1, yoffset+follower_height+0.5);
