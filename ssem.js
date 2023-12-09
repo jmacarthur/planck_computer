@@ -56,6 +56,8 @@ function create_crank(world, ground, x, y, initial_rotation) {
     addFixture(crank, box(-4.5, -0.5, 5.0, 1.0), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({}, ground, crank, Vec2(x,y)));
     crank.setAngle(initial_rotation);
+    crank.attach1 = Vec2(x,y).add(Rot.mul(Rot(initial_rotation),Vec2(-4.5, 0)));
+    crank.attach2 = Vec2(x,y).add(Rot.mul(Rot(initial_rotation),Vec2(0, 4.5)));
     return crank;
 }
 
@@ -131,8 +133,8 @@ function create_memory(world, ground) {
 	    addFixture(eject_line, box(col*channel_pitch+2.0, 0, 5.0, 1.0), mass_normal, collisions_toplayer);
 	}
 
-	line_shapes.push(new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,3), Vec2(0,3)], col*7+7.0, 0)));
-	for(var col=0;col<3;col++) {
+	line_shapes.push(new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,2.5), Vec2(0,2.5)], col*7+7.0, 0)));
+	for(var col=0;col<4;col++) {
 	    line_shapes.push(box(8*channel_pitch+10+10*col+1.1, -0.1, 1.0, 1.0));
 	}
 
@@ -177,8 +179,24 @@ function create_memory(world, ground) {
 	    var distanceJoint = world.createJoint(pl.DistanceJoint({}, bias_crank, new Vec2(crank_x, crank_y+4.5), block_line, new Vec2(-3.0,crank_y+4.5)));
 	    console.log("Creating crank "+row+" and attaching it to things");
 	}
-
     }
+    // Memory line holdoff bar
+    var memory_right_x = 8*channel_pitch+10*4;
+    var memory_holdoff = world.createBody({type: "dynamic", position: new Vec2(memory_right_x-3.9, -32.0)});
+    addFixture(memory_holdoff, box(0, 0, 2.0, 8*row_separation), mass_none, collisions_toplayer);
+    var prismaticJoint = world.createJoint(pl.PrismaticJoint({
+	lowerTranslation : 0.0,
+	upperTranslation : row_separation,
+	enableLimit : false
+    }, ground, memory_holdoff, Vec2(0.0, 0.0), Vec2(1.0,0)));
+
+    // Memory line limiting block(s)
+    var memory_limit = world.createBody({type: "static", position: new Vec2(memory_right_x-8, -32.0)});
+    addFixture(memory_limit, box(0, 0, 1.0,1.0), mass_none, collisions_toplayer);
+    // Memory holdoff crank
+    var holdoff_crank = create_crank(world, ground, memory_right_x+10, -16, Math.PI);
+    var distanceJoint = world.createJoint(pl.DistanceJoint({}, holdoff_crank, holdoff_crank.attach2, memory_holdoff, new Vec2(memory_right_x-3.5,-16.0)));
+
     return memory_lines;
 }
 
@@ -224,7 +242,7 @@ function create_memory_decoder(world, ground, xoffset, yoffset) {
 function create_cam(world, ground, xoffset, yoffset) {
     var follower_height = 16.5;
     var base_radius = 15;
-    var tab_height = 2;
+    var tab_height = 1;
     var cam = world.createBody({type: "dynamic", position: new Vec2(xoffset, yoffset)});
     addFixture(cam, new Circle(base_radius), mass_normal, collisions_toplayer);
     addFixture(cam, new Polygon([new Vec2(base_radius-2,-3), new Vec2(base_radius-2,3), new Vec2(base_radius+tab_height,1), new Vec2(base_radius+tab_height,-1)]), mass_normal, collisions_toplayer);
@@ -237,8 +255,8 @@ function create_cam(world, ground, xoffset, yoffset) {
     addFixture(follower, box(-5,0,20,1), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
     }, ground, follower, Vec2(xoffset-15+0.5,yoffset+base_radius+0.5)));
+    follower.attach_point = Vec2(xoffset-10-5+20, yoffset+base_radius+0.5);
     return follower;
-
 }
 
 function createWorld(world) {
@@ -250,8 +268,8 @@ function createWorld(world) {
     var memory_lines = create_memory(world, ground);
     var memory_decoder_lines = create_memory_decoder(world, ground, channel_pitch*8+10, -29.5);
     var decoder_holdoff_cam_follower = create_cam(world, ground, 80, 40);
+    var memory_holdoff_cam_follower = create_cam(world, ground, 115, 40);
 
     var distanceJoint = world.createJoint(pl.DistanceJoint({
-    }, decoder_holdoff_cam_follower, Vec2(80.0, 70.0), memory_decoder_lines, Vec2(80.0,0.0)));
-
+    }, decoder_holdoff_cam_follower, decoder_holdoff_cam_follower.attach_point, memory_decoder_lines, Vec2(82.0,2.0)));
 }
