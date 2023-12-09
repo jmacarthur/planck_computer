@@ -50,10 +50,10 @@ function translate_points(polygon, offsetx, offsety) {
 }
 
 function create_crank(world, ground, x, y, initial_rotation) {
-    // Rotation in radians. Zero rotation is an 'L' shape going up and right from the origin.
+    // Rotation in radians. Zero rotation is an 'L' shape going up and left from the origin.
     var crank = world.createBody({type: "dynamic", position: new Vec2(x, y)});
     addFixture(crank, box(-0.5, -0.5, 1.0, 5.0), mass_normal, collisions_toplayer);
-    addFixture(crank, box(-0.5, -0.5, 5.0, 1.0), mass_normal, collisions_toplayer);
+    addFixture(crank, box(-4.5, -0.5, 5.0, 1.0), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({}, ground, crank, Vec2(x,y)));
     crank.setAngle(initial_rotation);
     return crank;
@@ -170,11 +170,13 @@ function create_memory(world, ground) {
 	memory_lines.push(eject_line);
 
 	// Create the crank which biases the block line
-	var crank_x = -10 - 5.0*row;
-	var crank_y = -35 + row_separation*row;
-	var bias_crank = create_crank(world, ground, crank_x, crank_y, Math.PI/2);
-	var distanceJoint = world.createJoint(pl.DistanceJoint({}, bias_crank, new Vec2(crank_x, crank_y+4.5), block_line, new Vec2(-3.0,crank_y)));
-	console.log("Creating crank "+row+" and attaching it to things");
+	if(row<8) {
+	    var crank_x = -10 - 5.0*row;
+	    var crank_y = -35.5 + row_separation*row;
+	    var bias_crank = create_crank(world, ground, crank_x, crank_y, 0);
+	    var distanceJoint = world.createJoint(pl.DistanceJoint({}, bias_crank, new Vec2(crank_x, crank_y+4.5), block_line, new Vec2(-3.0,crank_y+4.5)));
+	    console.log("Creating crank "+row+" and attaching it to things");
+	}
 
     }
     return memory_lines;
