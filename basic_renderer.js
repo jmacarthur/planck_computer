@@ -1,3 +1,6 @@
+const pl = planck;
+const {Vec2, Box, Polygon, Circle, Rot} = pl;
+
 class Renderer {
     world = null;
     started = false;
@@ -82,8 +85,12 @@ class Renderer {
 	    this.ctx.strokeStyle = '#ff0000';
 	    var pos = joint.getLocalAnchorA();
 	    var pos2 = joint.getBodyA().getPosition();
+	    var rot = joint.getBodyA().getAngle();
+	    pos = Rot.mul(Rot(rot),pos);
 	    var posB = joint.getLocalAnchorB();
 	    var posB2 = joint.getBodyB().getPosition();
+	    var rotB = joint.getBodyB().getAngle();
+	    posB = Rot.mul(Rot(rotB),posB);
 	    this.ctx.beginPath();
 	    this.ctx.moveTo((pos.x + pos2.x)*this.scale, (pos.y + pos2.y)*this.scale);
 	    this.ctx.lineTo((posB.x + posB2.x)*this.scale, (posB.y + posB2.y) *this.scale);
