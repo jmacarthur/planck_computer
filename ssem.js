@@ -186,7 +186,10 @@ function create_memory(world, ground, part_index) {
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : -channel_pitch,
 	    upperTranslation : 0.0,
-	    enableLimit : true
+	    enableLimit : true,
+	    motorSpeed : 0.0,
+	    maxMotorForce: 1.0,
+	    enableMotor: true
 	}, ground, eject_line, Vec2(0.0, 1.0), Vec2(1.0,0.0)));
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : -channel_pitch,
