@@ -114,10 +114,10 @@ function create_injectors(world, ground, part_index) {
     var hopper_right = world.createBody({type: "static", position: new Vec2(0.0+8*channel_pitch,5.5)});
     addFixture(hopper_right, new Polygon([Vec2(0,0), Vec2(3,0), Vec2(16,10), Vec2(13,10)]), mass_none, collisions_toplayer);
 
-    for(var i=0;i<8;i++) {
+    for(var i=0;i<16;i++) {
 	let ball1 = world.createBody({
 	    type: "dynamic",
-	    position: new Vec2(2.0+2*i, 8.0)
+	    position: new Vec2(2.0+4*i, 8.0)
 	});
 	addFixture(ball1, new Circle(1.0), mass_normal, collisions_toplayer);
     }
