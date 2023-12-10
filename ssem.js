@@ -325,6 +325,20 @@ function create_cam(world, ground, xoffset, yoffset) {
     return follower;
 }
 
+function create_discarder(world, ground, origin_x, origin_y, part_index) {
+    var block_width = channel_pitch - 2.2;
+    for(var i=0;i<8;i++) {
+	var discard_flap = world.createBody({type: "dynamic", position: new Vec2(origin_x+i*channel_pitch, origin_y+i*1+2)});
+	addFixture(discard_flap, new Polygon([Vec2(0,0), Vec2(channel_pitch,0), Vec2(channel_pitch+1,1), Vec2(1,1)]), mass_normal, collisions_toplayer);
+	var revoluteJoint = world.createJoint(pl.RevoluteJoint({
+	}, ground, discard_flap, Vec2(origin_x+i*channel_pitch+0.1, origin_y+i*1+2.1)));
+	discard_flap.setAngle(0.3);
+    }
+    // One final rest
+    var discarder_block = world.createBody({type: "static", position: new Vec2(origin_x+8*channel_pitch-1, origin_y+9.5)});
+    addFixture(discarder_block, box(0,0,1,1), mass_none, collisions_toplayer);
+}
+
 function createWorld(world) {
 
     var part_index = [];
@@ -334,6 +348,7 @@ function createWorld(world) {
     create_injectors(world, ground, part_index);
     create_memory(world, ground, part_index);
     create_memory_decoder(world, ground, channel_pitch*8+10, -29.5, part_index);
+    create_discarder(world, ground, 0, -50, part_index);
     var decoder_holdoff_cam_follower = create_cam(world, ground, 80, 40);
     var memory_holdoff_cam_follower = create_cam(world, ground, 115, 40);
     var all_inject_cam_follower = create_cam(world, ground, 22, 40);
