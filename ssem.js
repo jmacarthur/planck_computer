@@ -92,12 +92,14 @@ function create_injectors(world, ground, part_index) {
 
 	// Add channel right side
 	var channel_side = world.createBody({type: "static", position: new Vec2(i*channel_pitch+3.0,3.1)});
-	addFixture(channel_side, box(0.0, -0.5, 1.0, 2.5), mass_none, collisions_toplayer);
+	var side_poly = Polygon([Vec2(-0.5,-0.5), Vec2(0.8,-0.4), Vec2(0.8, 2.1), Vec2(-0.2, 2.1)]);
+	addFixture(channel_side, side_poly, mass_none, collisions_toplayer);
 	addFixture(channel_side, box(1.0, 1.0, 3.0, 1.0), mass_none, collisions_toplayer);
 
 	// Add channel base
 	var channel_side = world.createBody({type: "static", position: new Vec2(i*channel_pitch+2.0,-0.5)});
-	addFixture(channel_side, box(-1, 0, 3.0, 1.0), mass_none, collisions_toplayer);
+	var base_poly = Polygon([Vec2(-1,0), Vec2(2,0), Vec2(2,1.1), Vec2(-1,1)]);
+	addFixture(channel_side, base_poly, mass_none, collisions_toplayer);
 
 	// Add channel left side (backstop)
 	var channel_side = world.createBody({type: "static", position: new Vec2(i*channel_pitch-1.25,0)});
@@ -115,11 +117,33 @@ function create_injectors(world, ground, part_index) {
     for(var i=0;i<8;i++) {
 	let ball1 = world.createBody({
 	    type: "dynamic",
-	    position: new Vec2(2.0, 8.0+2*i)
+	    position: new Vec2(2.0+2*i, 8.0)
 	});
 	addFixture(ball1, new Circle(1.0), mass_normal, collisions_toplayer);
     }
     part_index['injector_levers'] = injector_levers;
+
+    // Add injector controls and bar
+    for(var i=0;i<8;i++) {
+	let injector_control = world.createBody({type: "dynamic", position: new Vec2(i*channel_pitch+2.5, 20)});
+	addFixture(injector_control, box(0,0,1,1), mass_normal, collisions_toplayer);
+	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
+	    lowerTranslation : 0.0,
+	    upperTranslation : 2.0,
+	    enableLimit : true
+	}, ground, injector_control, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
+	var distanceJoint = world.createJoint(pl.DistanceJoint({}, injector_levers[i], new Vec2(i*channel_pitch+3.0, 4.5), injector_control, new Vec2(i*channel_pitch+3.0,20.5)));
+    }
+    // Add all-inject bar
+    let all_inject = world.createBody({type: "dynamic", position: new Vec2(0, 19)});
+    addFixture(all_inject, box(0,0,8*channel_pitch,1), mass_normal, collisions_toplayer);
+    var prismaticJoint = world.createJoint(pl.PrismaticJoint({
+	lowerTranslation : 0.0,
+	upperTranslation : 2.0,
+	enableLimit : true
+    }, ground, all_inject, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
+    all_inject.attach_point = Vec2(4*channel_pitch, 19.5);
+    part_index['all_inject'] = all_inject;
 }
 
 function create_memory(world, ground, part_index) {
@@ -312,9 +336,11 @@ function createWorld(world) {
     create_memory_decoder(world, ground, channel_pitch*8+10, -29.5, part_index);
     var decoder_holdoff_cam_follower = create_cam(world, ground, 80, 40);
     var memory_holdoff_cam_follower = create_cam(world, ground, 115, 40);
-
+    var all_inject_cam_follower = create_cam(world, ground, 22, 40);
     var distanceJoint = world.createJoint(pl.DistanceJoint({
     }, decoder_holdoff_cam_follower, decoder_holdoff_cam_follower.attach_point, part_index['decoder_holdoff_bar'], Vec2(82.0,2.0)));
     var distanceJoint = world.createJoint(pl.DistanceJoint({
     }, decoder_holdoff_cam_follower, memory_holdoff_cam_follower.attach_point, part_index['memory_holdoff_crank'], part_index['memory_holdoff_crank'].attach1));
+    var distanceJoint = world.createJoint(pl.DistanceJoint({
+    }, all_inject_cam_follower, all_inject_cam_follower.attach_point, part_index['all_inject'], part_index['all_inject'].attach_point));
 }
