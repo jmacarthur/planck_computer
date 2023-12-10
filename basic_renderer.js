@@ -83,6 +83,7 @@ class Renderer {
 	var type = joint.getType()
 	if(type == "distance-joint") {
 	    this.ctx.strokeStyle = '#ff0000';
+	    this.ctx.fillStyle = '#ff0000';
 	    var pos = joint.getLocalAnchorA();
 	    var pos2 = joint.getBodyA().getPosition();
 	    var rot = joint.getBodyA().getAngle();
@@ -95,6 +96,10 @@ class Renderer {
 	    this.ctx.moveTo((pos.x + pos2.x)*this.scale, (pos.y + pos2.y)*this.scale);
 	    this.ctx.lineTo((posB.x + posB2.x)*this.scale, (posB.y + posB2.y) *this.scale);
 	    this.ctx.stroke();
+	    this.ctx.beginPath();
+	    this.ctx.arc((posB.x + posB2.x)*this.scale, (posB.y + posB2.y) *this.scale, 2, 0, Math.PI*2);
+	    this.ctx.arc((pos.x + pos2.x)*this.scale, (pos.y + pos2.y) *this.scale, 2, 0, Math.PI*2);
+	    this.ctx.fill();
 
 	} else if(type == "revolute-joint") {
 	    this.ctx.strokeStyle = '#ff0000';
