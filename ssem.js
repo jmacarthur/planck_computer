@@ -126,7 +126,7 @@ function create_injectors(world, ground, part_index) {
     // Add injector controls and bar
     for(var i=0;i<8;i++) {
 	let injector_control = world.createBody({type: "dynamic", position: new Vec2(i*channel_pitch+2.5, 20)});
-	addFixture(injector_control, box(0,0,1,1), mass_normal, collisions_toplayer);
+	addFixture(injector_control, box(0,0,1,2), mass_normal, collisions_toplayer);
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : 0.0,
 	    upperTranslation : 2.0,
