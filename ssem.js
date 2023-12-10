@@ -330,15 +330,25 @@ function create_cam(world, ground, xoffset, yoffset) {
 
 function create_discarder(world, ground, origin_x, origin_y, part_index) {
     var block_width = channel_pitch - 2.2;
+    var vertical_pitch = 1;
+    var initial_rotation = 0.3;
+    var discard_flaps = [];
     for(var i=0;i<8;i++) {
-	var discard_flap = world.createBody({type: "dynamic", position: new Vec2(origin_x+i*channel_pitch, origin_y+i*1+2)});
+	var discard_flap = world.createBody({type: "dynamic", position: new Vec2(origin_x+i*channel_pitch, origin_y+i*vertical_pitch+2)});
 	addFixture(discard_flap, new Polygon([Vec2(0,0), Vec2(channel_pitch,0), Vec2(channel_pitch+1,1), Vec2(1,1)]), mass_normal, collisions_toplayer);
+	addFixture(discard_flap, new Polygon([Vec2(0,-4), Vec2(1,-4), Vec2(1,0), Vec2(0,0)]), mass_normal, collisions_toplayer);
+	discard_flap.setAngle(initial_rotation);
 	var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	}, ground, discard_flap, Vec2(origin_x+i*channel_pitch+0.1, origin_y+i*1+2.1)));
-	discard_flap.setAngle(0.3);
+	if(i>0) {
+	    var local_pos = Rot.mul(Rot(initial_rotation),Vec2(0.5, -3.5));
+	    var distanceJoint = world.createJoint(pl.DistanceJoint({
+	    }, discard_flaps[i-1], Vec2(origin_x+(i-1)*channel_pitch,origin_y+(i-1)*vertical_pitch+2).add(local_pos), discard_flap, Vec2(origin_x+i*channel_pitch,origin_y+i*vertical_pitch+2).add(local_pos)));
+	}
+	discard_flaps.push(discard_flap);
     }
     // One final rest
-    var discarder_block = world.createBody({type: "static", position: new Vec2(origin_x+8*channel_pitch-1, origin_y+9.5)});
+    var discarder_block = world.createBody({type: "static", position: new Vec2(origin_x+8*channel_pitch-1, origin_y+9)});
     addFixture(discarder_block, box(0,0,1,1), mass_none, collisions_toplayer);
 }
 
