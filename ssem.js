@@ -61,6 +61,30 @@ function create_crank(world, ground, x, y, initial_rotation) {
     return crank;
 }
 
+function create_transparent_lever(world, ground, x, y) {
+    // Creates a crank with collision-less horizontal part, used in the injector and regens
+    let injector_lever = world.createBody({
+	type: "dynamic",
+	position: new Vec2(x, y)
+    });
+
+    var fix1 = box(-0.5, -0.5, 4.0, 1.0);
+    var fix2 = box(-0.5, -3.5, 1.0, 4.0);
+    addFixture(injector_lever, fix1, mass_none, collisions_none);
+    addFixture(injector_lever, fix2, mass_normal, collisions_toplayer);
+
+    var lever_shape = new Polygon();
+    lever_shape.m_vertices = union(fix1, fix2);
+    injector_lever.shapeOverride = [lever_shape];
+    var revoluteJoint = world.createJoint(pl.RevoluteJoint({
+	lowerAngle: -0.25 * Math.PI,
+	upperAngle: 0.25 * Math.PI,
+	enableLimit: false,
+    }, ground, injector_lever, Vec2(x, y)));
+
+    return injector_lever
+}
+
 var channel_pitch = 8.0;
 var row_separation = 4.0;
 function create_injectors(world, ground, part_index) {
@@ -69,25 +93,9 @@ function create_injectors(world, ground, part_index) {
     var injector_levers = [];
 
     for(var i=0;i<8;i++) {
-	let injector_lever = world.createBody({
-	    type: "dynamic",
-	    position: new Vec2(i*channel_pitch, 4.5)
-	});
 
-	var fix1 = box(-0.5, -0.5, 4.0, 1.0);
-	var fix2 = box(-0.5, -3.5, 1.0, 4.0);
-	addFixture(injector_lever, fix1, mass_none, collisions_none);
-	addFixture(injector_lever, fix2, mass_normal, collisions_toplayer);
+	var injector_lever = create_transparent_lever(world, ground, i*channel_pitch, 4.5);
 
-	var lever_shape = new Polygon();
-	lever_shape.m_vertices = union(fix1, fix2);
-	injector_lever.shapeOverride = [lever_shape];
-
-	var revoluteJoint = world.createJoint(pl.RevoluteJoint({
-	    lowerAngle: -0.25 * Math.PI,
-	    upperAngle: 0.25 * Math.PI,
-	    enableLimit: false,
-	}, ground, injector_lever, Vec2(i*channel_pitch, 4.5)));
 	injector_levers.push(injector_lever);
 
 	// Add channel right side
@@ -342,14 +350,39 @@ function create_discarder(world, ground, origin_x, origin_y, part_index) {
 	}, ground, discard_flap, Vec2(origin_x+i*channel_pitch+0.1, origin_y+i*1+2.1)));
 	if(i>0) {
 	    var local_pos = Rot.mul(Rot(initial_rotation),Vec2(0.5, -3.5));
+	    discard_flap.attach_point = Vec2(origin_x+i*channel_pitch,origin_y+i*vertical_pitch+2).add(local_pos);
 	    var distanceJoint = world.createJoint(pl.DistanceJoint({
-	    }, discard_flaps[i-1], Vec2(origin_x+(i-1)*channel_pitch,origin_y+(i-1)*vertical_pitch+2).add(local_pos), discard_flap, Vec2(origin_x+i*channel_pitch,origin_y+i*vertical_pitch+2).add(local_pos)));
+	    }, discard_flaps[i-1], Vec2(origin_x+(i-1)*channel_pitch,origin_y+(i-1)*vertical_pitch+2).add(local_pos), discard_flap, discard_flap.attach_point));
 	}
 	discard_flaps.push(discard_flap);
     }
     // One final rest
     var discarder_block = world.createBody({type: "static", position: new Vec2(origin_x+8*channel_pitch-1, origin_y+9)});
     addFixture(discarder_block, box(0,0,1,1), mass_none, collisions_toplayer);
+    part_index['discarder'] = discard_flap;
+}
+
+function horizontal_prismatic(world, ground, object) {
+    var prismaticJoint = world.createJoint(pl.PrismaticJoint({
+	enableLimit : false
+    }, ground, object, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
+    return prismaticJoint;
+}
+
+function create_regen(world, ground, origin_x, origin_y, part_index) {
+
+    create_transparent_lever(world, ground, origin_x, origin_y+5);
+    // Create pusher line
+    var regen_bar = world.createBody({type: "dynamic", position: new Vec2(origin_x, origin_y)});
+    var blocking_bar = world.createBody({type: "static", position: new Vec2(origin_x, origin_y)});
+    for(var col=0; col<8; col++) {
+	addFixture(regen_bar, box(col*channel_pitch, 0, 1, 2), mass_normal, collisions_toplayer)
+	addFixture(blocking_bar, box(col*channel_pitch, -1, channel_pitch-2, 1), mass_normal, collisions_toplayer)
+    }
+
+    var joining_bar = box(0,0,8*channel_pitch, 2);
+    addFixture(regen_bar, joining_bar, mass_none, collisions_none);
+    horizontal_prismatic(world, ground, regen_bar);
 }
 
 function createWorld(world) {
@@ -362,6 +395,7 @@ function createWorld(world) {
     create_memory(world, ground, part_index);
     create_memory_decoder(world, ground, channel_pitch*8+10, -29.5, part_index);
     create_discarder(world, ground, 0, -50, part_index);
+    create_regen(world, ground, 0, -60, part_index);
     var decoder_holdoff_cam_follower = create_cam(world, ground, 80, 40);
     var memory_holdoff_cam_follower = create_cam(world, ground, 115, 40);
     var all_inject_cam_follower = create_cam(world, ground, 22, 40);
