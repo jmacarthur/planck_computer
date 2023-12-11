@@ -371,7 +371,7 @@ function horizontal_prismatic(world, ground, object) {
 
 function create_regen(world, ground, origin_x, origin_y, part_index) {
 
-    create_transparent_lever(world, ground, origin_x, origin_y+5);
+    create_transparent_lever(world, ground, origin_x+5, origin_y+3.5);
     // Create pusher line
     var regen_bar = world.createBody({type: "dynamic", position: new Vec2(origin_x, origin_y)});
     var blocking_bar = world.createBody({type: "static", position: new Vec2(origin_x, origin_y)});
