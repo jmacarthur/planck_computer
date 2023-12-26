@@ -329,7 +329,7 @@ function create_cam(world, ground, xoffset, yoffset) {
     return cam;
 }
 
-function create_cam_and_follower(world, ground, xoffset, yoffset) {
+function create_cam_and_h_follower(world, ground, xoffset, yoffset) {
     var follower_height = 17;
     var follower_axis_x = -15+0.5;
     var lever_length = 25;
@@ -349,6 +349,32 @@ function create_cam_and_follower(world, ground, xoffset, yoffset) {
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
     }, ground, follower, Vec2(xoffset+follower_axis_x,yoffset+follower_height+0.5)));
     follower.attach_point = Vec2(xoffset+follower_axis_x+lever_length-1, yoffset+follower_height+0.5);
+    return follower;
+}
+
+function create_cam_and_v_follower(world, ground, xoffset, yoffset) {
+    var follower_offset = 17;
+    var follower_axis_y = -15+0.5;
+    var lever_length = 25;
+
+    var cam = create_cam(world, ground, xoffset, yoffset);
+    // Follower assembly
+    var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset+follower_offset, yoffset+follower_axis_y)});
+    var follower_arm = box(0,0,1,lever_length);
+    var follower_point = new Polygon([Vec2(1,15-3), Vec2(-2, 15), Vec2(1,15+3)]);
+    var follower_bias = box(0,lever_length-1,lever_length/2, 1);
+    addFixture(follower, follower_arm, mass_normal, collisions_toplayer);
+    addFixture(follower, follower_point, mass_normal, collisions_toplayer);
+    addFixture(follower, follower_bias, mass_normal, collisions_toplayer);
+
+    var follower_shape = new Polygon();
+    follower_shape.m_vertices = union(follower_arm, follower_point);
+    follower_shape.m_vertices = union(follower_shape, follower_bias);
+    follower.shapeOverride = [follower_shape];
+
+    var revoluteJoint = world.createJoint(pl.RevoluteJoint({
+    }, ground, follower, Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y+0.5+lever_length-1)));
+    follower.attach_point = Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y+0.5+lever_length-1);
     return follower;
 }
 
@@ -415,11 +441,11 @@ function createWorld(world) {
     create_regen(world, ground, 0, -60, part_index);
     create_fake_data(world, ground, 2, -60+5);
 
-    var decoder_holdoff_cam_follower = create_cam_and_follower(world, ground, 80, 40);
-    var memory_holdoff_cam_follower = create_cam_and_follower(world, ground, 115, 40);
-    var all_inject_cam_follower = create_cam_and_follower(world, ground, 22, 40);
+    var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40);
+    var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40);
+    var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40);
 
-    var regen1_cam_follower = create_cam_and_follower(world, ground, 100, -60);
+    var regen1_cam_follower = create_cam_and_v_follower(world, ground, 100, -60);
 
     var distanceJoint = world.createJoint(pl.DistanceJoint({
     }, decoder_holdoff_cam_follower, decoder_holdoff_cam_follower.attach_point, part_index['decoder_holdoff_bar'], Vec2(82.0,2.0)));
