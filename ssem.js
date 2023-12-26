@@ -154,6 +154,17 @@ function create_injectors(world, ground, part_index) {
     part_index['all_inject'] = all_inject;
 }
 
+function create_fake_data(world, ground, x, y) {
+    for(var i=0;i<8;i++) {
+	let ball1 = world.createBody({
+	    type: "dynamic",
+	    position: new Vec2(x+channel_pitch*i, y)
+	});
+	addFixture(ball1, new Circle(1.0), mass_normal, collisions_toplayer);
+    }
+
+}
+
 function create_memory(world, ground, part_index) {
     var memory_lines = [];
     for(var row=0; row<8; row++) {
@@ -376,8 +387,8 @@ function create_regen(world, ground, origin_x, origin_y, part_index) {
     var regen_bar = world.createBody({type: "dynamic", position: new Vec2(origin_x, origin_y)});
     var blocking_bar = world.createBody({type: "static", position: new Vec2(origin_x, origin_y)});
     for(var col=0; col<8; col++) {
-	addFixture(regen_bar, box(col*channel_pitch, 0, 1, 2), mass_normal, collisions_toplayer)
-	addFixture(blocking_bar, box(col*channel_pitch, -1, channel_pitch-2, 1), mass_normal, collisions_toplayer)
+	addFixture(regen_bar, box(col*channel_pitch, 0, 1, 3), mass_normal, collisions_toplayer)
+	addFixture(blocking_bar, box(col*channel_pitch, -1, channel_pitch-3, 1), mass_normal, collisions_toplayer)
     }
 
     var joining_bar = box(0,0,8*channel_pitch, 2);
@@ -395,7 +406,9 @@ function createWorld(world) {
     create_memory(world, ground, part_index);
     create_memory_decoder(world, ground, channel_pitch*8+10, -29.5, part_index);
     create_discarder(world, ground, 0, -50, part_index);
+
     create_regen(world, ground, 0, -60, part_index);
+    create_fake_data(world, ground, 2, -60+5);
 
     var decoder_holdoff_cam_follower = create_cam(world, ground, 80, 40);
     var memory_holdoff_cam_follower = create_cam(world, ground, 115, 40);
