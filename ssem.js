@@ -396,9 +396,11 @@ function createWorld(world) {
     create_memory_decoder(world, ground, channel_pitch*8+10, -29.5, part_index);
     create_discarder(world, ground, 0, -50, part_index);
     create_regen(world, ground, 0, -60, part_index);
+
     var decoder_holdoff_cam_follower = create_cam(world, ground, 80, 40);
     var memory_holdoff_cam_follower = create_cam(world, ground, 115, 40);
     var all_inject_cam_follower = create_cam(world, ground, 22, 40);
+
     var distanceJoint = world.createJoint(pl.DistanceJoint({
     }, decoder_holdoff_cam_follower, decoder_holdoff_cam_follower.attach_point, part_index['decoder_holdoff_bar'], Vec2(82.0,2.0)));
     var distanceJoint = world.createJoint(pl.DistanceJoint({
