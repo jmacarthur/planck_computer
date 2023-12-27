@@ -17,6 +17,7 @@ window.onload = (() => {
 
 function union(polygon1, polygon2) {
     // Convert polygons into a form clipper will understand
+    // polygon1, polygon2 should be Polygons, or other things which have the attribute m_vertices
     var path1 = [[]];
     var path2 = [[]];
     for(let i=0;i<polygon1.m_vertices.length;i++) {
@@ -50,6 +51,7 @@ function union(polygon1, polygon2) {
 }
 
 function multi_union(polygon1list, polygon2list) {
+    // Merge two lists of polygons into another list of polygons
     // Convert polygons into a form clipper will understand
     var path1 = [[]];
     var path2 = [[]];
@@ -91,4 +93,49 @@ function multi_union(polygon1list, polygon2list) {
 	}
     }
     return result;
+}
+
+function new_union(polygonlist) {
+    // Merge all the polygons in polygonlist into one new one.
+    // The argument should be an array of arrays of coordinates; the return value is an array of coordinates.
+    // Convert polygons into a form clipper will understand
+    // polygon1, polygon2 should be Polygons, or other things which have the attribute m_vertices
+    var path1 = [[]];
+    if(polygonlist.length < 2) {
+	return polygonlist;
+    }
+
+    for(let i=0;i<polygonlist[0].length;i++) {
+	var v = polygonlist[0][i];
+	path1[0].push({X:v.x, Y:v.y});
+    }
+    var scale = 100;
+    ClipperLib.JS.ScaleUpPaths(path1, scale);
+	
+    for(let p=1; p<polygonlist.length; p++) {
+	var path2 = [[]];
+	for(let i=0;i<polygonlist[p].length;i++) {
+	    var v = polygonlist[p][i];
+	    path2[0].push({X:v.x, Y:v.y});
+	}
+
+	ClipperLib.JS.ScaleUpPaths(path2, scale);
+
+	var cpr = new ClipperLib.Clipper();
+	cpr.AddPaths(path1, ClipperLib.PolyType.ptSubject, true);
+	cpr.AddPaths(path2, ClipperLib.PolyType.ptClip, true);
+	var solution_paths = new ClipperLib.Paths();
+	var succeeded = cpr.Execute(ClipperLib.ClipType.ctUnion, solution_paths, ClipperLib.PolyFillType.pftNonZero, ClipperLib.PolyFillType.pftNonZero);
+	path1 = solution_paths;
+    }
+    ClipperLib.JS.ScaleDownPaths(path1, scale);
+
+    // Convert back to planck.js polygons
+    var result = [];
+    for(let i=0;i<path1[0].length;i++) {
+	var v = path1[0][i];
+	result.push(Vec2(v.X, v.Y));
+    }
+    return result;
+
 }

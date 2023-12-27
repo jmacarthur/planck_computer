@@ -368,8 +368,7 @@ function create_cam_and_v_follower(world, ground, xoffset, yoffset) {
     addFixture(follower, follower_bias, mass_normal, collisions_toplayer);
 
     var follower_shape = new Polygon();
-    follower_shape.m_vertices = union(follower_arm, follower_point);
-    follower_shape.m_vertices = union(follower_shape, follower_bias);
+    follower_shape.m_vertices = new_union([follower_arm.m_vertices, follower_point.m_vertices, follower_bias.m_vertices])
     follower.shapeOverride = [follower_shape];
 
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
