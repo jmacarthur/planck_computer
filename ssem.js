@@ -373,7 +373,7 @@ function create_cam_and_v_follower(world, ground, xoffset, yoffset) {
 
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
     }, ground, follower, Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y+0.5+lever_length-1)));
-    follower.attach_point = Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y+0.5+lever_length-1);
+    follower.attach_point = Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y+0.5);
     return follower;
 }
 
@@ -410,7 +410,7 @@ function horizontal_prismatic(world, ground, object) {
     return prismaticJoint;
 }
 
-function create_regen(world, ground, origin_x, origin_y, part_index) {
+function create_regen(world, ground, origin_x, origin_y, part_index, base_name) {
 
     create_transparent_lever(world, ground, origin_x+5, origin_y+3.5);
     // Create pusher line
@@ -424,6 +424,8 @@ function create_regen(world, ground, origin_x, origin_y, part_index) {
     var joining_bar = box(0,0,8*channel_pitch, 2);
     addFixture(regen_bar, joining_bar, mass_none, collisions_none);
     horizontal_prismatic(world, ground, regen_bar);
+    regen_bar.attach_point = new Vec2(origin_x+(col-1)*channel_pitch+0.5, origin_y+1);
+    part_index[base_name] = regen_bar;
 }
 
 function createWorld(world) {
@@ -437,7 +439,7 @@ function createWorld(world) {
     create_memory_decoder(world, ground, channel_pitch*8+10, -29.5, part_index);
     create_discarder(world, ground, 0, -50, part_index);
 
-    create_regen(world, ground, 0, -60, part_index);
+    create_regen(world, ground, 0, -60, part_index, 'regen1');
     create_fake_data(world, ground, 2, -60+5);
 
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40);
@@ -452,4 +454,6 @@ function createWorld(world) {
     }, decoder_holdoff_cam_follower, memory_holdoff_cam_follower.attach_point, part_index['memory_holdoff_crank'], part_index['memory_holdoff_crank'].attach1));
     var distanceJoint = world.createJoint(pl.DistanceJoint({
     }, all_inject_cam_follower, all_inject_cam_follower.attach_point, part_index['all_inject'], part_index['all_inject'].attach_point));
+    var distanceJoint = world.createJoint(pl.DistanceJoint({
+    }, regen1_cam_follower, regen1_cam_follower.attach_point, part_index['regen1'], part_index['regen1'].attach_point));
 }
