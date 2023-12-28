@@ -58,6 +58,7 @@ function create_crank(world, ground, x, y, initial_rotation) {
     crank.setAngle(initial_rotation);
     crank.attach1 = Vec2(x,y).add(Rot.mul(Rot(initial_rotation),Vec2(-4.5, 0)));
     crank.attach2 = Vec2(x,y).add(Rot.mul(Rot(initial_rotation),Vec2(0, 4.5)));
+    crank.attach_point = crank.attach1;
     return crank;
 }
 
@@ -282,6 +283,7 @@ function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
 	upperTranslation : row_separation,
 	enableLimit : true
     }, ground, decoder_holdoff_bar, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
+    decoder_holdoff_bar.attach_point = Vec2(xoffset-3.0+10.5, yoffset+row_separation*8-0.5);
     part_index['decoder_holdoff_bar'] = decoder_holdoff_bar;
 }
 
@@ -428,6 +430,13 @@ function create_regen(world, ground, origin_x, origin_y, part_index, base_name) 
     part_index[base_name] = regen_bar;
 }
 
+function connect(world, body1, body2) {
+    // Make a distance joint between two Body objects, both of which should have 'attach_point' defined.
+    var distanceJoint = world.createJoint(pl.DistanceJoint({
+    }, body1, body1.attach_point, body2, body2.attach_point));
+    return distanceJoint;
+}
+
 function createWorld(world) {
 
     var part_index = [];
@@ -448,12 +457,8 @@ function createWorld(world) {
 
     var regen1_cam_follower = create_cam_and_v_follower(world, ground, 100, -60);
 
-    var distanceJoint = world.createJoint(pl.DistanceJoint({
-    }, decoder_holdoff_cam_follower, decoder_holdoff_cam_follower.attach_point, part_index['decoder_holdoff_bar'], Vec2(82.0,2.0)));
-    var distanceJoint = world.createJoint(pl.DistanceJoint({
-    }, decoder_holdoff_cam_follower, memory_holdoff_cam_follower.attach_point, part_index['memory_holdoff_crank'], part_index['memory_holdoff_crank'].attach1));
-    var distanceJoint = world.createJoint(pl.DistanceJoint({
-    }, all_inject_cam_follower, all_inject_cam_follower.attach_point, part_index['all_inject'], part_index['all_inject'].attach_point));
-    var distanceJoint = world.createJoint(pl.DistanceJoint({
-    }, regen1_cam_follower, regen1_cam_follower.attach_point, part_index['regen1'], part_index['regen1'].attach_point));
+    connect(world, decoder_holdoff_cam_follower, part_index['decoder_holdoff_bar']);
+    connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
+    connect(world, all_inject_cam_follower, part_index['all_inject']);
+    connect(world, regen1_cam_follower, part_index['regen1']);
 }
