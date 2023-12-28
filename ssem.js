@@ -74,7 +74,7 @@ function create_transparent_lever(world, ground, x, y) {
     addFixture(injector_lever, fix2, mass_normal, collisions_toplayer);
 
     var lever_shape = new Polygon();
-    lever_shape.m_vertices = union(fix1, fix2);
+    lever_shape.m_vertices = new_union([fix1.m_vertices, fix2.m_vertices]);
     injector_lever.shapeOverride = [lever_shape];
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	lowerAngle: -0.25 * Math.PI,
@@ -176,7 +176,7 @@ function create_memory(world, ground, part_index) {
 	    addFixture(eject_line, box(col*channel_pitch+2.0, 0, 5.0, 1.0), mass_normal, collisions_toplayer);
 	}
 
-	line_shapes.push(new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,2.5), Vec2(0,2.5)], col*7+7.0, 0)));
+	var blocker = new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,2.5), Vec2(0,2.5)], col*7+7.0, 0));
 	for(var col=0;col<4;col++) {
 	    line_shapes.push(box(8*channel_pitch+10+10*col+1.1, -0.1, 1.0, 1.0));
 	}
@@ -185,23 +185,23 @@ function create_memory(world, ground, part_index) {
 	// shapes into one polygon
 	var compound_shape = new Polygon();
 	var compound_shapes = [];
+	block_line.shapeOverride = [];
 	for(var i=0;i<line_shapes.length;i++) {
 	    addFixture(block_line, line_shapes[i], mass_normal, collisions_toplayer);
-	    if(i==1) {
-		compound_shape.m_vertices = union(line_shapes[0], line_shapes[1]);
-		compound_shapes = multi_union([line_shapes[0]], [line_shapes[1]]);
-	    } else if(i>1) {
-		compound_shape.m_vertices = union(compound_shape, line_shapes[i]);
-		compound_shapes = multi_union(compound_shapes, [line_shapes[i]]);
+	    if(i!=7) {
+		block_line.shapeOverride.push(line_shapes[i]);
 	    }
 	}
+	addFixture(block_line, blocker, mass_normal, collisions_toplayer);
 
+	compound_shape.m_vertices = new_union([line_shapes[7], blocker]);
 	// Add another ghost fixture to hold the line together
 	var joining_bar = box(0,0,8*channel_pitch+10+10*2+2, 1);
 	addFixture(block_line, joining_bar, mass_none, collisions_none);
 	joining_bar.colour = "#c0c0c0";
-	block_line.shapeOverride = compound_shapes;
+	block_line.shapeOverride.push(compound_shape);
 	block_line.shapeOverride.push(joining_bar);
+	
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : -channel_pitch,
 	    upperTranslation : 0.0,
@@ -324,7 +324,7 @@ function create_cam(world, ground, xoffset, yoffset) {
     }, ground, cam, Vec2(xoffset,yoffset)));
 
     var cam_shape = new Polygon();
-    cam_shape.m_vertices = union(fake_circle, profile_polygon);
+    cam_shape.m_vertices = new_union([fake_circle.m_vertices, profile_polygon.m_vertices]);
     cam.shapeOverride = [cam_shape];
     return cam;
 }
@@ -343,7 +343,7 @@ function create_cam_and_h_follower(world, ground, xoffset, yoffset) {
     addFixture(follower, follower_point, mass_normal, collisions_toplayer);
 
     var follower_shape = new Polygon();
-    follower_shape.m_vertices = union(follower_arm, follower_point);
+    follower_shape.m_vertices = new_union([follower_arm.m_vertices, follower_point.m_vertices]);
     follower.shapeOverride = [follower_shape];
 
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
