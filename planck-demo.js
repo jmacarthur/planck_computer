@@ -100,22 +100,35 @@ function new_union(polygonlist) {
     // The argument should be an array of arrays of coordinates; the return value is an array of coordinates.
     // Convert polygons into a form clipper will understand
     // polygon1, polygon2 should be Polygons, or other things which have the attribute m_vertices
-    var path1 = [[]];
+    // All polygons should overlap! If not, it will only return the first contiguous object.
     if(polygonlist.length < 2) {
+	console.log("Degenerate union ("+polygonlist.length+" entries)");
 	return polygonlist;
     }
 
-    for(let i=0;i<polygonlist[0].length;i++) {
-	var v = polygonlist[0][i];
+    var path1 = [[]];
+
+    var firstpoly = polygonlist[0];
+    if ('m_vertices' in firstpoly) {
+	firstpoly = firstpoly.m_vertices;
+    }
+
+    for(let i=0;i<firstpoly.length;i++) {
+	var v = firstpoly[i];
 	path1[0].push({X:v.x, Y:v.y});
     }
+
     var scale = 100;
     ClipperLib.JS.ScaleUpPaths(path1, scale);
 	
     for(let p=1; p<polygonlist.length; p++) {
 	var path2 = [[]];
-	for(let i=0;i<polygonlist[p].length;i++) {
-	    var v = polygonlist[p][i];
+	var nextpoly = polygonlist[p];
+	if('m_vertices' in nextpoly) {
+	    nextpoly = nextpoly.m_vertices;
+	}
+	for(let i=0;i<nextpoly.length;i++) {
+	    var v = nextpoly[i];
 	    path2[0].push({X:v.x, Y:v.y});
 	}
 
