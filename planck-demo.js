@@ -15,7 +15,7 @@ window.onload = (() => {
     console.log("Created world");
 });
 
-function new_union(polygonlist) {
+function union(polygonlist) {
     // Merge all the polygons in polygonlist into one new one.
     // The argument should be an array of arrays of coordinates; the return value is an array of coordinates.
     // Convert polygons into a form clipper will understand

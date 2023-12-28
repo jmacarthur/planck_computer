@@ -74,7 +74,7 @@ function create_transparent_lever(world, ground, x, y) {
     addFixture(injector_lever, fix2, mass_normal, collisions_toplayer);
 
     var lever_shape = new Polygon();
-    lever_shape.m_vertices = new_union([fix1.m_vertices, fix2.m_vertices]);
+    lever_shape.m_vertices = union([fix1.m_vertices, fix2.m_vertices]);
     injector_lever.shapeOverride = [lever_shape];
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	lowerAngle: -0.25 * Math.PI,
@@ -194,7 +194,7 @@ function create_memory(world, ground, part_index) {
 	}
 	addFixture(block_line, blocker, mass_normal, collisions_toplayer);
 
-	compound_shape.m_vertices = new_union([line_shapes[7], blocker]);
+	compound_shape.m_vertices = union([line_shapes[7], blocker]);
 	// Add another ghost fixture to hold the line together
 	var joining_bar = box(0,0,8*channel_pitch+10+10*2+2, 1);
 	addFixture(block_line, joining_bar, mass_none, collisions_none);
@@ -324,7 +324,7 @@ function create_cam(world, ground, xoffset, yoffset) {
     }, ground, cam, Vec2(xoffset,yoffset)));
 
     var cam_shape = new Polygon();
-    cam_shape.m_vertices = new_union([fake_circle.m_vertices, profile_polygon.m_vertices]);
+    cam_shape.m_vertices = union([fake_circle.m_vertices, profile_polygon.m_vertices]);
     cam.shapeOverride = [cam_shape];
     return cam;
 }
@@ -343,7 +343,7 @@ function create_cam_and_h_follower(world, ground, xoffset, yoffset) {
     addFixture(follower, follower_point, mass_normal, collisions_toplayer);
 
     var follower_shape = new Polygon();
-    follower_shape.m_vertices = new_union([follower_arm.m_vertices, follower_point.m_vertices]);
+    follower_shape.m_vertices = union([follower_arm.m_vertices, follower_point.m_vertices]);
     follower.shapeOverride = [follower_shape];
 
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
@@ -368,7 +368,7 @@ function create_cam_and_v_follower(world, ground, xoffset, yoffset) {
     addFixture(follower, follower_bias, mass_normal, collisions_toplayer);
 
     var follower_shape = new Polygon();
-    follower_shape.m_vertices = new_union([follower_arm.m_vertices, follower_point.m_vertices, follower_bias.m_vertices])
+    follower_shape.m_vertices = union([follower_arm.m_vertices, follower_point.m_vertices, follower_bias.m_vertices])
     follower.shapeOverride = [follower_shape];
 
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
