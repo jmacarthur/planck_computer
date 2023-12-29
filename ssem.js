@@ -88,8 +88,8 @@ function create_transparent_lever(world, ground, x, y) {
 	upperAngle: 0.25 * Math.PI,
 	enableLimit: false,
     }, ground, injector_lever, Vec2(x, y)));
-
-    return injector_lever
+    injector_lever.attach_point = Vec2(x+3.5, y);
+    return injector_lever;
 }
 
 var channel_pitch = 8.0;
@@ -436,13 +436,16 @@ function horizontal_prismatic(world, ground, object) {
 
 function create_regen(world, ground, origin_x, origin_y, part_index, base_name) {
 
-    create_transparent_lever(world, ground, origin_x+5, origin_y+3.5);
+    for(var col=0;col<8;col++) {
+	var lever = create_transparent_lever(world, ground, origin_x+5+channel_pitch*col, origin_y+3);
+	part_index[base_name + 'lever' + col] = lever.attach_point;
+    }
     // Create pusher line
     var regen_bar = world.createBody({type: "dynamic", position: new Vec2(origin_x, origin_y)});
     var blocking_bar = world.createBody({type: "static", position: new Vec2(origin_x, origin_y)});
     for(var col=0; col<8; col++) {
-	addFixture(regen_bar, box(col*channel_pitch, 0, 1, 3), mass_normal, collisions_toplayer)
-	addFixture(blocking_bar, box(col*channel_pitch, -1, channel_pitch-3, 1), mass_normal, collisions_toplayer)
+	addFixture(regen_bar, box(col*channel_pitch+0.5, 0, 1, 3), mass_normal, collisions_toplayer)
+	addFixture(blocking_bar, box(col*channel_pitch, -1, channel_pitch-3.5, 0.8), mass_normal, collisions_toplayer)
     }
 
     var joining_bar = box(0,0,8*channel_pitch, 2);
@@ -476,7 +479,7 @@ function createWorld(world) {
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing);
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing);
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, null_timing);
-    var regen1_cam_follower = create_cam_and_v_follower(world, ground, 100, -60, regen_timing);
+    var regen1_cam_follower = create_cam_and_v_follower(world, ground, 120, -45, regen_timing);
 
     connect(world, decoder_holdoff_cam_follower, part_index['decoder_holdoff_bar']);
     connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
