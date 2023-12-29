@@ -295,7 +295,8 @@ function create_cam(world, ground, xoffset, yoffset) {
     // Profile starts at start angle and is at full height by start angle + rise angle.
     // Profile starts to drop at start angle + rise angle + length
     // Profile fully low at start angle + rise angle + length + fall angle.
-    var timing = [ [ 0, 0.1, 1.3, 0 ] ];
+    // All angles in radians.
+    var timing = [ [ 0, 0.1, 0.5, 0.1 ] ];
 
     // Cam base circle
     var fake_circle_shape_points = [];
@@ -310,7 +311,7 @@ function create_cam(world, ground, xoffset, yoffset) {
 
     // Cam profile
     var t = 0; // In future, used to iterate over timing array
-    var max_segments = 13;
+    var max_segments = 10;
     var profile_length = timing[t][2]; // Radians!
     var start_angle = timing[t][0];
     var low_height = base_radius;
@@ -318,9 +319,9 @@ function create_cam(world, ground, xoffset, yoffset) {
     var rise_angle = timing[t][1];
     var fall_angle = timing[t][3];
     var point_array = [new Vec2(Math.cos(start_angle)*low_height, Math.sin(start_angle)*low_height)];
-    for(var i=0;i<(max_segments-3);i++) {
-	point_array.push(new Vec2(Math.cos(start_angle+rise_angle+i*profile_length/(max_segments-4)) * high_height,
-				  Math.sin(start_angle+rise_angle+i*profile_length/(max_segments-4)) * high_height));
+    for(var i=0;i<max_segments;i++) {
+	point_array.push(new Vec2(Math.cos(start_angle+rise_angle+i*profile_length/(max_segments-1)) * high_height,
+				  Math.sin(start_angle+rise_angle+i*profile_length/(max_segments-1)) * high_height));
     }
     point_array.push(new Vec2(Math.cos(start_angle+profile_length+rise_angle+fall_angle)*low_height, Math.sin(start_angle+profile_length+rise_angle+fall_angle)*low_height));
     var profile_polygon = new Polygon(point_array);
