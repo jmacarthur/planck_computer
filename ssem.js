@@ -307,9 +307,13 @@ function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
     part_index['decoder_holdoff_bar'] = decoder_holdoff_bar;
 }
 
-function create_cam(world, ground, xoffset, yoffset, timing) {
+function create_cam(world, ground, xoffset, yoffset, timing, params) {
     var base_radius = 15;
     var tab_height = 1;
+
+    if(params && 'bumpheight' in params) {
+	tab_height = params['bumpheight'];
+    }
     var cam = world.createBody({type: "dynamic", position: new Vec2(xoffset, yoffset)});
 
     // Timing is an array of [ start angle, rise angle, length, fall angle ].
@@ -360,7 +364,7 @@ function create_cam(world, ground, xoffset, yoffset, timing) {
     return cam;
 }
 
-function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing) {
+function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing, params) {
     var follower_height = 17;
     var follower_axis_x = -15+0.5;
     var lever_length = 25;
@@ -373,7 +377,7 @@ function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing) {
 	offset_timing.push(segment);
     }
 
-    var cam = create_cam(world, ground, xoffset, yoffset, offset_timing);
+    var cam = create_cam(world, ground, xoffset, yoffset, offset_timing, params);
     // Follower assembly
     var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset+follower_axis_x-0.5, yoffset+follower_height)});
     var follower_arm = box(0,0,lever_length,1);
@@ -391,17 +395,19 @@ function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing) {
     return follower;
 }
 
-function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing) {
+function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing, params) {
     var follower_offset = 17;
-    var follower_axis_y = -15+0.5;
+    var follower_axis_y = 15+0.5;
     var lever_length = 25;
-
-    var cam = create_cam(world, ground, xoffset, yoffset, timing);
+    if(params && 'leverlen' in params) {
+	lever_length = params['leverlen'];
+    }
+    var cam = create_cam(world, ground, xoffset, yoffset, timing, params);
     // Follower assembly
     var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset+follower_offset, yoffset+follower_axis_y)});
-    var follower_arm = box(0,0,1,lever_length);
-    var follower_point = new Polygon([Vec2(1,15-3), Vec2(-2, 15), Vec2(1,15+3)]);
-    var follower_bias = box(0,lever_length-1,lever_length/2, 1);
+    var follower_arm = box(0,-lever_length,1,lever_length);
+    var follower_point = new Polygon([Vec2(1,-15-3), Vec2(-2, -15), Vec2(1,-15+3)]);
+    var follower_bias = box(0,0,lever_length/2, 1);
     addFixture(follower, follower_arm, mass_normal, collisions_toplayer);
     addFixture(follower, follower_point, mass_normal, collisions_toplayer);
     addFixture(follower, follower_bias, mass_normal, collisions_toplayer);
@@ -411,8 +417,8 @@ function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing) {
     follower.shapeOverride = [follower_shape];
 
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
-    }, ground, follower, Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y+0.5+lever_length-1)));
-    follower.attach_point = Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y+0.5);
+    }, ground, follower, Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y+0.5)));
+    follower.attach_point = Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y-lever_length+0.5);
     return follower;
 }
 
@@ -496,6 +502,7 @@ function createWorld(world) {
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing);
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, null_timing);
     var regen1_cam_follower = create_cam_and_v_follower(world, ground, 120, -45, regen_timing);
+    var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, 160, -55, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5});
 
     connect(world, decoder_holdoff_cam_follower, part_index['decoder_holdoff_bar']);
     connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
