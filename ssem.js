@@ -463,6 +463,32 @@ function connect(world, body1, body2) {
     return distanceJoint;
 }
 
+function create_subtractor_block(world, ground, offsetx, offsety, reader) {
+    var pitch_y = 5;
+    for(var col=0;col<8;col++) {
+	var toggle = world.createBody({type: "dynamic", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
+	var toggle_shapes = [];
+	if(reader) {
+	    var toggle_poly = new Polygon([Vec2(-1,-1), Vec2(1, -1), Vec2(0,3)]);
+	    addFixture(toggle, toggle_poly, mass_normal, collisions_toplayer);
+	    toggle_shapes.push(toggle_poly);
+	} else {
+	    var toggle_poly1 = new Polygon([Vec2(-1,-1), Vec2(1, -1), Vec2(0,3)]);
+	    addFixture(toggle, toggle_poly1, mass_normal, collisions_toplayer);
+	    toggle_shapes.push(toggle_poly1);
+	    var toggle_poly2 = new Polygon([Vec2(-3,-1), Vec2(3, -1), Vec2(4, 0), Vec2(-4,0)]);
+	    addFixture(toggle, toggle_poly2, mass_normal, collisions_toplayer);
+	    toggle_shapes.push(toggle_poly2);
+	}
+	var toggle_shape = new Polygon();
+	toggle_shape.m_vertices= union(toggle_shapes);
+	toggle.shapeOverride = [toggle_shape];
+	var revoluteJoint = world.createJoint(pl.RevoluteJoint({
+	    enableLimit: false,
+	}, ground, toggle, Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)));
+    }
+}
+
 function createWorld(world) {
 
     var part_index = [];
@@ -476,7 +502,7 @@ function createWorld(world) {
 
     create_regen(world, ground, 0, -60, part_index, 'regen1');
     create_fake_data(world, ground, 2, -60+5);
-
+    create_subtractor_block(world, ground, 0, -120, false);
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing);
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing);
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, null_timing);
