@@ -335,7 +335,7 @@ function create_cam(world, ground, xoffset, yoffset, timing, params) {
     var cam_display_polygons = [fake_circle];
     // Cam profile
     for(var t=0;t<timing.length;t++) {
-	var max_segments = 10;
+	var max_segments = 9;
 	var profile_length = timing[t][2]; // Radians!
 	var start_angle = timing[t][0];
 	var low_height = base_radius;
@@ -348,6 +348,7 @@ function create_cam(world, ground, xoffset, yoffset, timing, params) {
 				      Math.sin(start_angle+rise_angle+i*profile_length/(max_segments-1)) * high_height));
 	}
 	point_array.push(new Vec2(Math.cos(start_angle+profile_length+rise_angle+fall_angle)*low_height, Math.sin(start_angle+profile_length+rise_angle+fall_angle)*low_height));
+	point_array.push(new Vec2(0,0));
 	var profile_polygon = new Polygon(point_array);
 	cam_display_polygons.push(profile_polygon);
 	addFixture(cam, profile_polygon, mass_normal, collisions_toplayer);
