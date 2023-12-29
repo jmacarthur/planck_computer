@@ -11,6 +11,7 @@ class Renderer {
     drag_stary_y = 0;
     view_offset_x = 100;
     view_offset_y = -300;
+    spinner = 0;
     simulating = false;
     stoprunloop = false;
     start(world, canvas) {
@@ -75,6 +76,13 @@ class Renderer {
 	this.ctx.moveTo(10, 0);
 	this.ctx.lineTo(-10, 0);
 	this.ctx.stroke();
+
+	// Add spinner
+	this.ctx.beginPath();
+	this.ctx.arc(16-this.view_offset_x, 16-this.view_offset_y-32, 16, (this.spinner/100)*Math.PI*2, (this.spinner/100)*Math.PI*2+Math.PI);
+	this.ctx.fill();
+	this.spinner = (this.spinner+1)%100;
+
 	if(!this.stoprunloop) {
 	    window.requestAnimationFrame(this.loop.bind(this));
 	}
