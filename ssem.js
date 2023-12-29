@@ -296,7 +296,7 @@ function create_cam(world, ground, xoffset, yoffset) {
     // Profile starts to drop at start angle + rise angle + length
     // Profile fully low at start angle + rise angle + length + fall angle.
     // All angles in radians.
-    var timing = [ [ 0, 0.1, 0.5, 0.1 ] ];
+    var timing = [ [ 0, 0.1, 0.5, 0.1 ], [5, 0.1, 0.5, 0.1] ];
 
     // Cam base circle
     var fake_circle_shape_points = [];
@@ -308,24 +308,26 @@ function create_cam(world, ground, xoffset, yoffset) {
     var fake_circle = [];
     fake_circle.m_vertices = fake_circle_shape_points; // If we make this a real Polygon, it'll restrict the number of vertices
     addFixture(cam, new Circle(base_radius), mass_normal, collisions_toplayer);
-
+    var cam_display_polygons = [fake_circle];
     // Cam profile
-    var t = 0; // In future, used to iterate over timing array
-    var max_segments = 10;
-    var profile_length = timing[t][2]; // Radians!
-    var start_angle = timing[t][0];
-    var low_height = base_radius;
-    var high_height = base_radius+tab_height;
-    var rise_angle = timing[t][1];
-    var fall_angle = timing[t][3];
-    var point_array = [new Vec2(Math.cos(start_angle)*low_height, Math.sin(start_angle)*low_height)];
-    for(var i=0;i<max_segments;i++) {
-	point_array.push(new Vec2(Math.cos(start_angle+rise_angle+i*profile_length/(max_segments-1)) * high_height,
-				  Math.sin(start_angle+rise_angle+i*profile_length/(max_segments-1)) * high_height));
+    for(var t=0;t<timing.length;t++) {
+	var max_segments = 10;
+	var profile_length = timing[t][2]; // Radians!
+	var start_angle = timing[t][0];
+	var low_height = base_radius;
+	var high_height = base_radius+tab_height;
+	var rise_angle = timing[t][1];
+	var fall_angle = timing[t][3];
+	var point_array = [new Vec2(Math.cos(start_angle)*low_height, Math.sin(start_angle)*low_height)];
+	for(var i=0;i<max_segments;i++) {
+	    point_array.push(new Vec2(Math.cos(start_angle+rise_angle+i*profile_length/(max_segments-1)) * high_height,
+				      Math.sin(start_angle+rise_angle+i*profile_length/(max_segments-1)) * high_height));
+	}
+	point_array.push(new Vec2(Math.cos(start_angle+profile_length+rise_angle+fall_angle)*low_height, Math.sin(start_angle+profile_length+rise_angle+fall_angle)*low_height));
+	var profile_polygon = new Polygon(point_array);
+	cam_display_polygons.push(profile_polygon);
+	addFixture(cam, profile_polygon, mass_normal, collisions_toplayer);
     }
-    point_array.push(new Vec2(Math.cos(start_angle+profile_length+rise_angle+fall_angle)*low_height, Math.sin(start_angle+profile_length+rise_angle+fall_angle)*low_height));
-    var profile_polygon = new Polygon(point_array);
-    addFixture(cam, profile_polygon, mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	maxMotorTorque: 10000000,
 	motorSpeed: -0.1,
@@ -333,7 +335,7 @@ function create_cam(world, ground, xoffset, yoffset) {
     }, ground, cam, Vec2(xoffset,yoffset)));
 
     var cam_shape = new Polygon();
-    cam_shape.m_vertices = union([fake_circle.m_vertices, profile_polygon.m_vertices]);
+    cam_shape.m_vertices = union(cam_display_polygons);
     cam.shapeOverride = [cam_shape];
     return cam;
 }
