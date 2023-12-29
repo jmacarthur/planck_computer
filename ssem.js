@@ -162,8 +162,8 @@ function create_injectors(world, ground, part_index) {
     part_index['all_inject'] = all_inject;
 }
 
-function create_fake_data(world, ground, x, y) {
-    for(var i=0;i<8;i++) {
+function create_fake_data(world, ground, x, y, n) {
+    for(var i=0;i<n;i++) {
 	let ball1 = world.createBody({
 	    type: "dynamic",
 	    position: new Vec2(x+channel_pitch*i, y)
@@ -501,7 +501,8 @@ function createWorld(world) {
     create_discarder(world, ground, 0, -50, part_index);
 
     create_regen(world, ground, 0, -60, part_index, 'regen1');
-    create_fake_data(world, ground, 2, -60+5);
+    create_fake_data(world, ground, 2, -60+5, 8);
+    create_fake_data(world, ground, -0.1+channel_pitch*7, -80, 1);
     create_subtractor_block(world, ground, 0, -120, false);
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing);
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing);
