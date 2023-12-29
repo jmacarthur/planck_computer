@@ -7,11 +7,11 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	var toggle = world.createBody({type: "dynamic", position: new Vec2(x,y)});
 	var toggle_shapes = [];
 	if(reader) {
-	    var toggle_poly = new Polygon([Vec2(-1,-1), Vec2(1, -1), Vec2(0,3)]);
+	    var toggle_poly = new Polygon([Vec2(-0.5,-1), Vec2(0.5, -1), Vec2(0,3.5)]);
 	    addFixture(toggle, toggle_poly, mass_normal, collisions_toplayer);
 	    toggle_shapes.push(toggle_poly);
 	} else {
-	    var toggle_poly1 = new Polygon([Vec2(-1,-1), Vec2(1, -1), Vec2(0,3)]);
+	    var toggle_poly1 = new Polygon([Vec2(-1,-1), Vec2(1, -1), Vec2(0,4)]);
 	    addFixture(toggle, toggle_poly1, mass_normal, collisions_toplayer);
 	    toggle_shapes.push(toggle_poly1);
 	    var toggle_poly2 = new Polygon([Vec2(-3.5,-1), Vec2(3.5, -1), Vec2(4.5, 0), Vec2(-4.5,0)]);
@@ -25,26 +25,34 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	}
 	var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	    enableLimit: false,
+	    motorSpeed : 0.0,
+	    maxMotorForce: 10.0,
+	    enableMotor: true
 	}, ground, toggle, Vec2(x,y)));
 	toggle.attach_point = Vec2(x,y+3);
 	part_index[base_name+col] = toggle;
 
+	// Create the intake funnel
+	var channel_width = 2.1;
 	var intakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	addFixture(intakechannelleft, box(-3, 2, 1, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	addFixture(intakechannelleft, box(-channel_pitch/2, 4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	addFixture(intakechannelleft, box(-channel_pitch/2, 3, (channel_pitch-channel_width-1)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	if(reader) {
 	    var intakechannelright = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	    addFixture(intakechannelright, box(2, 2, 1, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addFixture(intakechannelright, box(channel_width/2, 4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addFixture(intakechannelright, box(channel_width/2+1, 3, (channel_pitch-channel_width)/2-1, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	} else {
 	    var intakechannelright = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	    addFixture(intakechannelright, box(2, 7, 1, max_height-pitch_y*col-5), mass_none, collisions_topstatic);
+	    addFixture(intakechannelright, box(channel_width/2, 7, (channel_pitch-channel_width)/2, max_height-pitch_y*col-5), mass_none, collisions_topstatic);
 	}
 	if(!reader) {
 	    var outtakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	    addFixture(outtakechannelleft, box(-3, -3, 1, 1), mass_none, collisions_topstatic);
+	    var adderPoly1 = new Polygon([Vec2(-6,-2), Vec2(-6+2.7,-2), Vec2(-6+1.7,-1), Vec2(-6,-1)]);
+	    addFixture(outtakechannelleft, adderPoly1, mass_none, collisions_topstatic);
 	}
 	if(reader) {
 	    var outtakechannelcent = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
-	    addFixture(outtakechannelcent, box(-1, -5, 2, col*pitch_y), mass_none, collisions_topstatic);
+	    addFixture(outtakechannelcent, box(-1, -5, 2, col*pitch_y+3), mass_none, collisions_topstatic);
 	    var outtakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
 	    addFixture(outtakechannelleft, box(-channel_pitch/2-0.5, -5, 1, col*pitch_y+7), mass_none, collisions_topstatic);
 	}
