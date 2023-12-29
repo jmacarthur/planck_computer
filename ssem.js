@@ -224,7 +224,6 @@ function create_memory(world, ground, part_index) {
 	    var crank_y = -35.5 + row_separation*row;
 	    var bias_crank = create_crank(world, ground, crank_x, crank_y, 0);
 	    var distanceJoint = world.createJoint(pl.DistanceJoint({}, bias_crank, new Vec2(crank_x, crank_y+4.5), block_line, new Vec2(-3.0,crank_y+4.5)));
-	    console.log("Creating crank "+row+" and attaching it to things");
 	}
     }
     // Memory line holdoff bar
