@@ -88,7 +88,7 @@ function create_transparent_lever(world, ground, x, y) {
 	upperAngle: 0.25 * Math.PI,
 	enableLimit: false,
     }, ground, injector_lever, Vec2(x, y)));
-    injector_lever.attach_point = Vec2(x+3.5, y);
+    injector_lever.attach_point = Vec2(x+3, y);
     return injector_lever;
 }
 
@@ -104,6 +104,7 @@ function create_injectors(world, ground, part_index) {
 	var injector_lever = create_transparent_lever(world, ground, i*channel_pitch, 4.5);
 
 	injector_levers.push(injector_lever);
+	part_index['injector'+i] = injector_lever;
 
 	// Add channel right side
 	var channel_side = world.createBody({type: "static", position: new Vec2(i*channel_pitch+3.0,3.1)});
@@ -438,7 +439,7 @@ function create_regen(world, ground, origin_x, origin_y, part_index, base_name) 
 
     for(var col=0;col<8;col++) {
 	var lever = create_transparent_lever(world, ground, origin_x+5+channel_pitch*col, origin_y+3);
-	part_index[base_name + 'lever' + col] = lever.attach_point;
+	part_index[base_name + 'lever' + col] = lever;
     }
     // Create pusher line
     var regen_bar = world.createBody({type: "dynamic", position: new Vec2(origin_x, origin_y)});
@@ -485,4 +486,7 @@ function createWorld(world) {
     connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
     connect(world, all_inject_cam_follower, part_index['all_inject']);
     connect(world, regen1_cam_follower, part_index['regen1']);
+    for(var col=0;col<8;col++) {
+	connect(world, part_index['regen1lever'+col], part_index['injector'+col]);
+    }
 }
