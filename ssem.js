@@ -3,7 +3,7 @@
 
 var decoder_timing = [ [0, 0.1, 1, 0.1 ] ];
 var regen_timing = [ [1, 0.1, 0.1, 0 ] ];
-var acc_reset_timing = [ [0.3, 0.2, 0.1, 0 ] ];
+var acc_reset_timing = [ [0.3, 0.1, 0, 0 ] ];
 var null_timing = [ [0, 0.1, 0.1, 0.1 ]];
 
 
