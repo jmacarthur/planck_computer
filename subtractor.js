@@ -30,13 +30,24 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	part_index[base_name+col] = toggle;
 
 	var intakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	addFixture(intakechannelleft, box(-3, 3, 1, max_height-pitch_y*col), mass_none, collisions_topstatic);
-	var intakechannelright = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	addFixture(intakechannelright, box(2, 7, 1, max_height-pitch_y*col-5), mass_none, collisions_topstatic);
-	var outtakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	addFixture(outtakechannelleft, box(-3, -3, 1, 1), mass_none, collisions_topstatic);
-	var outtakechannelcent = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
-	addFixture(outtakechannelcent, box(-1, -5, 2, col*pitch_y), mass_none, collisions_topstatic);
+	addFixture(intakechannelleft, box(-3, 2, 1, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	if(reader) {
+	    var intakechannelright = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
+	    addFixture(intakechannelright, box(2, 2, 1, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	} else {
+	    var intakechannelright = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
+	    addFixture(intakechannelright, box(2, 7, 1, max_height-pitch_y*col-5), mass_none, collisions_topstatic);
+	}
+	if(!reader) {
+	    var outtakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
+	    addFixture(outtakechannelleft, box(-3, -3, 1, 1), mass_none, collisions_topstatic);
+	}
+	if(reader) {
+	    var outtakechannelcent = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
+	    addFixture(outtakechannelcent, box(-1, -5, 2, col*pitch_y), mass_none, collisions_topstatic);
+	    var outtakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
+	    addFixture(outtakechannelleft, box(-channel_pitch/2-0.5, -5, 1, col*pitch_y+7), mass_none, collisions_topstatic);
+	}
     }
 
     // Reset lever

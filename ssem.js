@@ -497,7 +497,9 @@ function createWorld(world) {
     create_regen(world, ground, 0, -60, part_index, 'regen1');
     create_fake_data(world, ground, 2, -60+5, 8);
     create_fake_data(world, ground, -0.1+channel_pitch*7, -80, 1);
-    create_subtractor_block(world, ground, 0, -120, part_index, 'accumulator', true);
+    create_subtractor_block(world, ground, 0, -120, part_index, 'accumulator_read', true);
+    create_subtractor_block(world, ground, -70, -120, part_index, 'accumulator_write', false);
+
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing);
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing);
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, null_timing);
@@ -508,8 +510,9 @@ function createWorld(world) {
     connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
     connect(world, all_inject_cam_follower, part_index['all_inject']);
     connect(world, regen1_cam_follower, part_index['regen1']);
-    connect(world, acc_reset_cam_follower, part_index['accumulator_reset']);
+    connect(world, acc_reset_cam_follower, part_index['accumulator_read_reset']);
     for(var col=0;col<8;col++) {
 	connect(world, part_index['regen1lever'+col], part_index['injector'+col]);
+	connect(world, part_index['accumulator_write'+col], part_index['accumulator_read'+col]);
     }
 }
