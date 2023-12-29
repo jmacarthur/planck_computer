@@ -508,6 +508,7 @@ function createWorld(world) {
     connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
     connect(world, all_inject_cam_follower, part_index['all_inject']);
     connect(world, regen1_cam_follower, part_index['regen1']);
+    connect(world, acc_reset_cam_follower, part_index['accumulator_reset']);
     for(var col=0;col<8;col++) {
 	connect(world, part_index['regen1lever'+col], part_index['injector'+col]);
     }

@@ -19,8 +19,10 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	    toggle_shapes.push(toggle_poly2);
 	}
 	var toggle_shape = new Polygon();
-	toggle_shape.m_vertices= union(toggle_shapes);
-	toggle.shapeOverride = [toggle_shape];
+	if(toggle_shapes.length > 1) {
+	    toggle_shape.m_vertices= union(toggle_shapes);
+	    toggle.shapeOverride = [toggle_shape];
+	}
 	var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	    enableLimit: false,
 	}, ground, toggle, Vec2(x,y)));
@@ -28,26 +30,28 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	part_index[base_name+col] = toggle;
 
 	var intakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	addFixture(intakechannelleft, box(-3, 3, 1, max_height-pitch_y*col), mass_none, collisions_toplayer);
+	addFixture(intakechannelleft, box(-3, 3, 1, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	var intakechannelright = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	addFixture(intakechannelright, box(2, 7, 1, max_height-pitch_y*col-5), mass_none, collisions_toplayer);
+	addFixture(intakechannelright, box(2, 7, 1, max_height-pitch_y*col-5), mass_none, collisions_topstatic);
 	var outtakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	addFixture(outtakechannelleft, box(-3, -3, 1, 1), mass_none, collisions_toplayer);
+	addFixture(outtakechannelleft, box(-3, -3, 1, 1), mass_none, collisions_topstatic);
 	var outtakechannelcent = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
-	addFixture(outtakechannelcent, box(-1, -5, 2, col*pitch_y), mass_none, collisions_toplayer);
+	addFixture(outtakechannelcent, box(-1, -5, 2, col*pitch_y), mass_none, collisions_topstatic);
     }
 
     // Reset lever
     if(reader) {
-	var reset_bar = world.createBody({type: "dynamic", position: new Vec2(offsetx, offsety)});
-	var reset_shape = new Polygon([Vec2(0,0), Vec2(1,0), Vec2(8*channel_pitch+1, 8*pitch_y), Vec2(8*channel_pitch, 8*pitch_y)]);  
-	addFixture(reset_bar, reset_shape, mass_normal, collisions_toplayer);
+	var reset_bar = world.createBody({type: "dynamic", position: new Vec2(offsetx-4, offsety+2)});
+	var reset_shape = new Polygon([Vec2(0,0), Vec2(1,0), Vec2(7*channel_pitch+1, 7*pitch_y), Vec2(7*channel_pitch, 7*pitch_y)]);
+	addFixture(reset_bar, reset_shape, mass_normal, collisions_topbehind);
 
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : 0.0,
 	    upperTranslation : 2.0,
-	    enableLimit : true
-	}, ground, reset_bar, Vec2(0.0, 0.0), Vec2(5.0,0.0)));
-
+	    enableLimit : false
+	}, ground, reset_bar, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
+	reset_bar.attach_point = Vec2(offsetx-8+7*channel_pitch, offsety+7*pitch_y);
+	reset_bar.colour = "#00c0c0"
+	part_index[base_name+"_reset"] = reset_bar;
     }
 }
