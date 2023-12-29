@@ -3,6 +3,7 @@
 
 var decoder_timing = [ [0, 0.1, 1, 0.1 ] ];
 var regen_timing = [ [1, 0.1, 0.1, 0 ] ];
+var acc_reset_timing = [ [0.3, 0.2, 0.1, 0 ] ];
 var null_timing = [ [0, 0.1, 0.1, 0.1 ]];
 
 
@@ -42,8 +43,21 @@ var collisions_none = {
 
 var collisions_toplayer = {
     filterCategoryBits: 0x01,
-    filterMaskBits: 0x01,
-    filterGroupIndex: 1
+    filterMaskBits: 0xFFFF,
+    filterGroupIndex: 0
+}
+
+var collisions_topstatic = {
+    filterCategoryBits: 0x02,
+    filterMaskBits: 0x03,
+    filterGroupIndex: 0
+}
+
+// for moving objects which do not collide with topstatic but collide with everything else
+var collisions_topbehind = {
+    filterCategoryBits: 0x04,
+    filterMaskBits: 0x04 + 0x01,
+    filterGroupIndex: 0
 }
 
 function translate_points(polygon, offsetx, offsety) {
