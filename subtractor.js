@@ -61,15 +61,19 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
     // Reset lever
     if(reader) {
 	var reset_bar = world.createBody({type: "dynamic", position: new Vec2(offsetx-4, offsety+2)});
+	
 	var reset_shape = new Polygon([Vec2(0,0), Vec2(1,0), Vec2(7*channel_pitch+1, 7*pitch_y), Vec2(7*channel_pitch, 7*pitch_y)]);
-	addFixture(reset_bar, reset_shape, mass_normal, collisions_topbehind);
-
+	addFixture(reset_bar, reset_shape, mass_normal, collisions_none);
+	for(var col=0;col<8;col++) {
+	    resetter = new Polygon(translate_points([Vec2(0,0), Vec2(0.5,0), Vec2(0.5,0.5), Vec2(0,0.5)], col*channel_pitch+0.5, col*pitch_y));
+	    addFixture(reset_bar, resetter, mass_normal, collisions_toplayer);
+	}
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : 0.0,
 	    upperTranslation : 2.0,
 	    enableLimit : false
 	}, ground, reset_bar, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
-	reset_bar.attach_point = Vec2(offsetx-8+7*channel_pitch, offsety+7*pitch_y);
+	reset_bar.attach_point = Vec2(offsetx-6+7*channel_pitch, offsety+7*pitch_y);
 	reset_bar.colour = "#00c0c0"
 	part_index[base_name+"_reset"] = reset_bar;
     }
