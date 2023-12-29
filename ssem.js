@@ -498,6 +498,7 @@ function createWorld(world) {
     create_fake_data(world, ground, 2, -60+5, 8);
     create_fake_data(world, ground, -0.1+channel_pitch*6, -80, 1);
     create_fake_data(world, ground, -0.1+channel_pitch*3, -35, 1);
+    create_fake_data(world, ground, -0.1+channel_pitch*7, -35, 1);
     create_subtractor_block(world, ground, 0, -120, part_index, 'accumulator_read', true);
     create_subtractor_block(world, ground, -70, -120, part_index, 'accumulator_write', false);
 
