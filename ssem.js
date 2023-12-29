@@ -465,6 +465,7 @@ function connect(world, body1, body2) {
 
 function create_subtractor_block(world, ground, offsetx, offsety, reader) {
     var pitch_y = 5;
+    var max_height = pitch_y * 8;
     for(var col=0;col<8;col++) {
 	var toggle = world.createBody({type: "dynamic", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
 	var toggle_shapes = [];
@@ -476,7 +477,7 @@ function create_subtractor_block(world, ground, offsetx, offsety, reader) {
 	    var toggle_poly1 = new Polygon([Vec2(-1,-1), Vec2(1, -1), Vec2(0,3)]);
 	    addFixture(toggle, toggle_poly1, mass_normal, collisions_toplayer);
 	    toggle_shapes.push(toggle_poly1);
-	    var toggle_poly2 = new Polygon([Vec2(-3,-1), Vec2(3, -1), Vec2(4, 0), Vec2(-4,0)]);
+	    var toggle_poly2 = new Polygon([Vec2(-3.5,-1), Vec2(3.5, -1), Vec2(4.5, 0), Vec2(-4.5,0)]);
 	    addFixture(toggle, toggle_poly2, mass_normal, collisions_toplayer);
 	    toggle_shapes.push(toggle_poly2);
 	}
@@ -486,6 +487,15 @@ function create_subtractor_block(world, ground, offsetx, offsety, reader) {
 	var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	    enableLimit: false,
 	}, ground, toggle, Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)));
+
+	var intakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
+	addFixture(intakechannelleft, box(-3, 3, 1, max_height-pitch_y*col), mass_none, collisions_toplayer);
+	var intakechannelright = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
+	addFixture(intakechannelright, box(2, 7, 1, max_height-pitch_y*col-5), mass_none, collisions_toplayer);
+	var outtakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
+	addFixture(outtakechannelleft, box(-3, -3, 1, 1), mass_none, collisions_toplayer);
+	var outtakechannelcent = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
+	addFixture(outtakechannelcent, box(-1, -5, 2, col*pitch_y), mass_none, collisions_toplayer);
     }
 }
 
