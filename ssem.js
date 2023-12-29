@@ -1,5 +1,10 @@
 'use strict';
 
+
+var decoder_timing = [ [0, 0.1, 1, 0.1 ] ];
+var null_timing = [ [0, 0.1, 0.1, 0.1 ]];
+
+
 function merge(original_hash, added_hash) {
     Object.keys(added_hash).forEach(function(key) {
 	original_hash[key] = added_hash[key];
@@ -286,7 +291,7 @@ function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
     part_index['decoder_holdoff_bar'] = decoder_holdoff_bar;
 }
 
-function create_cam(world, ground, xoffset, yoffset) {
+function create_cam(world, ground, xoffset, yoffset, timing) {
     var base_radius = 15;
     var tab_height = 1;
     var cam = world.createBody({type: "dynamic", position: new Vec2(xoffset, yoffset)});
@@ -296,7 +301,6 @@ function create_cam(world, ground, xoffset, yoffset) {
     // Profile starts to drop at start angle + rise angle + length
     // Profile fully low at start angle + rise angle + length + fall angle.
     // All angles in radians.
-    var timing = [ [ 0, 0.1, 0.5, 0.1 ], [5, 0.1, 0.5, 0.1] ];
 
     // Cam base circle
     var fake_circle_shape_points = [];
@@ -340,12 +344,12 @@ function create_cam(world, ground, xoffset, yoffset) {
     return cam;
 }
 
-function create_cam_and_h_follower(world, ground, xoffset, yoffset) {
+function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing) {
     var follower_height = 17;
     var follower_axis_x = -15+0.5;
     var lever_length = 25;
 
-    var cam = create_cam(world, ground, xoffset, yoffset);
+    var cam = create_cam(world, ground, xoffset, yoffset, timing);
     // Follower assembly
     var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset+follower_axis_x-0.5, yoffset+follower_height)});
     var follower_arm = box(0,0,lever_length,1);
@@ -363,12 +367,12 @@ function create_cam_and_h_follower(world, ground, xoffset, yoffset) {
     return follower;
 }
 
-function create_cam_and_v_follower(world, ground, xoffset, yoffset) {
+function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing) {
     var follower_offset = 17;
     var follower_axis_y = -15+0.5;
     var lever_length = 25;
 
-    var cam = create_cam(world, ground, xoffset, yoffset);
+    var cam = create_cam(world, ground, xoffset, yoffset, timing);
     // Follower assembly
     var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset+follower_offset, yoffset+follower_axis_y)});
     var follower_arm = box(0,0,1,lever_length);
@@ -460,11 +464,10 @@ function createWorld(world) {
     create_regen(world, ground, 0, -60, part_index, 'regen1');
     create_fake_data(world, ground, 2, -60+5);
 
-    var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40);
-    var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40);
-    var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40);
-
-    var regen1_cam_follower = create_cam_and_v_follower(world, ground, 100, -60);
+    var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing);
+    var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing);
+    var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, null_timing);
+    var regen1_cam_follower = create_cam_and_v_follower(world, ground, 100, -60, null_timing);
 
     connect(world, decoder_holdoff_cam_follower, part_index['decoder_holdoff_bar']);
     connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
