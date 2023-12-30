@@ -477,6 +477,19 @@ function create_regen(world, ground, origin_x, origin_y, part_index, base_name) 
     part_index[base_name] = regen_bar;
 }
 
+function create_pitch_reducer(world, ground, offsetx, offsety) {
+    var reducer = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
+    var centre_x = offsetx+channel_pitch*4;
+    var narrow_pitch = 4;
+    for(var col=0;col<9;col++) {
+	var pos = col-4;
+	addFixture(reducer, new Polygon([Vec2(centre_x+narrow_pitch*pos, offsety-10),
+				     Vec2(centre_x+narrow_pitch*pos+0.5, offsety-10),
+				     Vec2(centre_x+channel_pitch*pos+0.5, offsety),
+				     Vec2(centre_x+channel_pitch*pos, offsety)]), mass_normal, collisions_toplayer)
+    }
+}
+
 function connect(world, body1, body2) {
     // Make a distance joint between two Body objects, both of which should have 'attach_point' defined.
     var distanceJoint = world.createJoint(pl.DistanceJoint({
@@ -502,7 +515,8 @@ function createWorld(world) {
     create_fake_data(world, ground, -0.1+channel_pitch*7, -35, 1);
     create_subtractor_block(world, ground, 0, -200, part_index, 'accumulator_read', true);
     create_subtractor_block(world, ground, -70, -200, part_index, 'accumulator_write', false);
-    create_router_block(world, ground, 0, -70, part_index);
+    create_pitch_reducer(world, ground, 0, -31);
+    create_router_block(world, ground, 0, -75, part_index);
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing);
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing);
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, null_timing);
