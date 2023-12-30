@@ -500,14 +500,14 @@ function createWorld(world) {
     create_fake_data(world, ground, -0.1+channel_pitch*6, -80, 1);
     create_fake_data(world, ground, -0.1+channel_pitch*3, -35, 1);
     create_fake_data(world, ground, -0.1+channel_pitch*7, -35, 1);
-    create_subtractor_block(world, ground, 0, -120, part_index, 'accumulator_read', true);
-    create_subtractor_block(world, ground, -70, -120, part_index, 'accumulator_write', false);
+    create_subtractor_block(world, ground, 0, -200, part_index, 'accumulator_read', true);
+    create_subtractor_block(world, ground, -70, -200, part_index, 'accumulator_write', false);
 
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing);
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing);
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, null_timing);
     var regen1_cam_follower = create_cam_and_v_follower(world, ground, 120, -45, regen_timing);
-    var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, 160, -55, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5});
+    var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, 160, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5});
 
     connect(world, decoder_holdoff_cam_follower, part_index['decoder_holdoff_bar']);
     connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
