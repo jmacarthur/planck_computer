@@ -477,16 +477,27 @@ function create_regen(world, ground, origin_x, origin_y, part_index, base_name) 
     part_index[base_name] = regen_bar;
 }
 
+function reducer_y_func(pos) {
+    // Slightly quadratic forumla allowing more space at the outside edges of the reducer
+    var x = Math.abs(pos);
+    var y = x*x*0.2+x*0.7;
+    return y;
+}
+
 function create_pitch_reducer(world, ground, offsetx, offsety) {
     var reducer = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
     var centre_x = offsetx+channel_pitch*4;
-    var narrow_pitch = 4;
+    var narrow_pitch = 3;
     for(var col=0;col<9;col++) {
 	var pos = col-4;
-	addFixture(reducer, new Polygon([Vec2(centre_x+narrow_pitch*pos, offsety-10),
-				     Vec2(centre_x+narrow_pitch*pos+0.5, offsety-10),
+	addFixture(reducer, new Polygon([Vec2(centre_x+narrow_pitch*pos, offsety-1-reducer_y_func(pos)),
+					 Vec2(centre_x+narrow_pitch*pos+0.5, offsety-1-reducer_y_func(pos)),
 				     Vec2(centre_x+channel_pitch*pos+0.5, offsety),
 				     Vec2(centre_x+channel_pitch*pos, offsety)]), mass_normal, collisions_toplayer)
+	addFixture(reducer, new Polygon([Vec2(centre_x+narrow_pitch*pos, offsety-10),
+				     Vec2(centre_x+narrow_pitch*pos+0.5, offsety-10),
+					 Vec2(centre_x+narrow_pitch*pos+0.5, offsety-1-reducer_y_func(pos)),
+					 Vec2(centre_x+narrow_pitch*pos, offsety-1-reducer_y_func(pos))]), mass_normal, collisions_toplayer)
     }
 }
 
@@ -515,7 +526,7 @@ function createWorld(world) {
     create_fake_data(world, ground, -0.1+channel_pitch*7, -35, 1);
     create_subtractor_block(world, ground, 0, -200, part_index, 'accumulator_read', true);
     create_subtractor_block(world, ground, -70, -200, part_index, 'accumulator_write', false);
-    create_pitch_reducer(world, ground, 0, -31);
+    create_pitch_reducer(world, ground, 0, -32);
     create_router_block(world, ground, 0, -75, part_index);
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing);
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing);
