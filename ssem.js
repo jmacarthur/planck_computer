@@ -107,6 +107,7 @@ function create_transparent_lever(world, ground, x, y) {
 }
 
 var channel_pitch = 8.0;
+var narrow_pitch = 3; // For compressed channels
 var row_separation = 4.0;
 function create_injectors(world, ground, part_index) {
     // Create the hopper and injector
@@ -487,7 +488,6 @@ function reducer_y_func(pos) {
 function create_pitch_reducer(world, ground, offsetx, offsety) {
     var reducer = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
     var centre_x = offsetx+channel_pitch*4;
-    var narrow_pitch = 3;
     for(var col=0;col<9;col++) {
 	var pos = col-4;
 	addFixture(reducer, new Polygon([Vec2(centre_x+narrow_pitch*pos, offsety-1-reducer_y_func(pos)),
@@ -527,7 +527,7 @@ function createWorld(world) {
     create_subtractor_block(world, ground, 0, -200, part_index, 'accumulator_read', true);
     create_subtractor_block(world, ground, -70, -200, part_index, 'accumulator_write', false);
     create_pitch_reducer(world, ground, 0, -32);
-    create_router_block(world, ground, 0, -75, part_index);
+    create_router_block(world, ground, -4, -77, part_index);
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing);
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing);
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, null_timing);
