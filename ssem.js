@@ -78,7 +78,9 @@ function create_crank(world, ground, x, y, initial_rotation) {
     crank.setAngle(initial_rotation);
     crank.attach1 = Vec2(x,y).add(Rot.mul(Rot(initial_rotation),Vec2(-4.5, 0)));
     crank.attach2 = Vec2(x,y).add(Rot.mul(Rot(initial_rotation),Vec2(0, 4.5)));
-    crank.attach_point = crank.attach1;
+    crank.attach_points = [];
+    crank.attach_points[0] = crank.attach1;
+    crank.attach_points[1] = crank.attach2;
     return crank;
 }
 
@@ -102,7 +104,8 @@ function create_transparent_lever(world, ground, x, y) {
 	upperAngle: 0.25 * Math.PI,
 	enableLimit: false,
     }, ground, injector_lever, Vec2(x, y)));
-    injector_lever.attach_point = Vec2(x+3, y);
+    injector_lever.attach_points = [];
+    injector_lever.attach_points[0] = Vec2(x+3, y);
     return injector_lever;
 }
 
@@ -173,7 +176,8 @@ function create_injectors(world, ground, part_index) {
 	upperTranslation : 2.0,
 	enableLimit : true
     }, ground, all_inject, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
-    all_inject.attach_point = Vec2(4*channel_pitch, 19.5);
+    all_inject.attach_points = [];
+    all_inject.attach_points[0] = Vec2(4*channel_pitch, 19.5);
     part_index['all_inject'] = all_inject;
 }
 
@@ -263,7 +267,7 @@ function create_memory(world, ground, part_index) {
     addFixture(memory_limit, box(0, 0, 1.0,1.0), mass_none, collisions_toplayer);
     // Memory holdoff crank
     var holdoff_crank = create_crank(world, ground, memory_right_x+10, -16, Math.PI);
-    var distanceJoint = world.createJoint(pl.DistanceJoint({}, holdoff_crank, holdoff_crank.attach2, memory_holdoff, new Vec2(memory_right_x-3.5,-16.0)));
+    var distanceJoint = world.createJoint(pl.DistanceJoint({}, holdoff_crank, holdoff_crank.attach_points[1], memory_holdoff, new Vec2(memory_right_x-3.5,-16.0)));
     part_index['memory_block_lines'] = memory_lines;
     part_index['memory_holdoff_crank'] = holdoff_crank;
 }
@@ -304,7 +308,8 @@ function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
 	upperTranslation : row_separation,
 	enableLimit : true
     }, ground, decoder_holdoff_bar, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
-    decoder_holdoff_bar.attach_point = Vec2(xoffset-3.0+10.5, yoffset+row_separation*8-0.5);
+    decoder_holdoff_bar.attach_points = [];
+    decoder_holdoff_bar.attach_points[0] = Vec2(xoffset-3.0+10.5, yoffset+row_separation*8-0.5);
     part_index['decoder_holdoff_bar'] = decoder_holdoff_bar;
 }
 
@@ -393,7 +398,8 @@ function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing, para
 
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
     }, ground, follower, Vec2(xoffset+follower_axis_x,yoffset+follower_height+0.5)));
-    follower.attach_point = Vec2(xoffset+follower_axis_x+lever_length-1, yoffset+follower_height+0.5);
+    follower.attach_points = [];
+    follower.attach_points[0] = Vec2(xoffset+follower_axis_x+lever_length-1, yoffset+follower_height+0.5);
     return follower;
 }
 
@@ -420,7 +426,8 @@ function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing, para
 
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
     }, ground, follower, Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y+0.5)));
-    follower.attach_point = Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y-lever_length+0.5);
+    follower.attach_points = [];
+    follower.attach_points[0] = Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y-lever_length+0.5);
     return follower;
 }
 
@@ -438,9 +445,10 @@ function create_discarder(world, ground, origin_x, origin_y, part_index) {
 	}, ground, discard_flap, Vec2(origin_x+i*channel_pitch+0.1, origin_y+i*1+2.1)));
 	if(i>0) {
 	    var local_pos = Rot.mul(Rot(initial_rotation),Vec2(0.5, -3.5));
-	    discard_flap.attach_point = Vec2(origin_x+i*channel_pitch,origin_y+i*vertical_pitch+2).add(local_pos);
+	    discard_flap.attach_points = [];
+	    discard_flap.attach_points[0] = Vec2(origin_x+i*channel_pitch,origin_y+i*vertical_pitch+2).add(local_pos);
 	    var distanceJoint = world.createJoint(pl.DistanceJoint({
-	    }, discard_flaps[i-1], Vec2(origin_x+(i-1)*channel_pitch,origin_y+(i-1)*vertical_pitch+2).add(local_pos), discard_flap, discard_flap.attach_point));
+	    }, discard_flaps[i-1], Vec2(origin_x+(i-1)*channel_pitch,origin_y+(i-1)*vertical_pitch+2).add(local_pos), discard_flap, discard_flap.attach_points[0]));
 	}
 	discard_flaps.push(discard_flap);
     }
@@ -474,7 +482,8 @@ function create_regen(world, ground, origin_x, origin_y, part_index, base_name) 
     var joining_bar = box(0,0,8*channel_pitch, 2);
     addFixture(regen_bar, joining_bar, mass_none, collisions_none);
     horizontal_prismatic(world, ground, regen_bar);
-    regen_bar.attach_point = new Vec2(origin_x+(col-1)*channel_pitch+0.5, origin_y+1);
+    regen_bar.attach_points = [];
+    regen_bar.attach_points[0] = new Vec2(origin_x+(col-1)*channel_pitch+0.5, origin_y+1);
     part_index[base_name] = regen_bar;
 }
 
@@ -501,10 +510,18 @@ function create_pitch_reducer(world, ground, offsetx, offsety) {
     }
 }
 
-function connect(world, body1, body2) {
-    // Make a distance joint between two Body objects, both of which should have 'attach_point' defined.
+function connect(world, body1, body2, attachpoint1, attachpoint2) {
+    if(attachpoint1 === undefined) {
+	attachpoint1 = 0;
+    }
+    if(attachpoint2 === undefined) {
+	attachpoint2 = 0;
+    }
+    attachpoint1 = 0;
+    attachpoint2 = 0;
+    // Make a distance joint between two Body objects, both of which should have 'attach_points' defined.
     var distanceJoint = world.createJoint(pl.DistanceJoint({
-    }, body1, body1.attach_point, body2, body2.attach_point));
+    }, body1, body1.attach_points[attachpoint1], body2, body2.attach_points[attachpoint2]));
     return distanceJoint;
 }
 

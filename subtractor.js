@@ -29,7 +29,8 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	    maxMotorForce: 10.0,
 	    enableMotor: true
 	}, ground, toggle, Vec2(x,y)));
-	toggle.attach_point = Vec2(x,y+3);
+	toggle.attach_points = [];
+	toggle.attach_points[0] = Vec2(x,y+3);
 	part_index[base_name+col] = toggle;
 
 	// Create the intake funnel
@@ -73,7 +74,8 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	    upperTranslation : 2.0,
 	    enableLimit : false
 	}, ground, reset_bar, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
-	reset_bar.attach_point = Vec2(offsetx-6+7*channel_pitch, offsety+7*pitch_y);
+	reset_bar.attach_points = [];
+	reset_bar.attach_points[0] = Vec2(offsetx-6+7*channel_pitch, offsety+7*pitch_y);
 	reset_bar.colour = "#00c0c0"
 	part_index[base_name+"_reset"] = reset_bar;
     }

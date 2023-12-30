@@ -14,7 +14,8 @@ function create_router_block(world, ground, offsetx, offsety, part_index) {
 	upperTranslation : 8*narrow_pitch+1,
 	enableLimit : true
     }, ground, diverter, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
-    diverter.attach_point = Vec2(offsetx, offsety);
+    diverter.attach_points = [];
+    diverter.attach_points[0] = Vec2(offsetx, offsety);
     part_index["router0"] = diverter;
 
     // Create a motion amplification lever
@@ -27,8 +28,9 @@ function create_router_block(world, ground, offsetx, offsety, part_index) {
 	motorSpeed: -0.1,
 	enableMotor: true,
     }, ground, amp_lever, Vec2(x+0.5,y)));
-    amp_lever.attach_point = Vec2(x,y+30);
-    amp_lever.attach_point2 = Vec2(x,y-5);
-    connect(world, diverter, amp_lever);
+    amp_lever.attach_points = [];
+    amp_lever.attach_points[0] = Vec2(x,y+30);
+    amp_lever.attach_points[1] = Vec2(x,y-5);
+    connect(world, diverter, amp_lever, 0, 0);
 
 }
