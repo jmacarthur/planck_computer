@@ -44,7 +44,7 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	    addFixture(intakechannelright, box(channel_width/2+1, 3, (channel_pitch-channel_width)/2-1, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	} else {
 	    var intakechannelright = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	    addFixture(intakechannelright, box(channel_width/2, 7, (channel_pitch-channel_width)/2, max_height-pitch_y*col-5), mass_none, collisions_topstatic);
+	    addFixture(intakechannelright, box(channel_width/2, 7, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	}
 	if(!reader) {
 	    var outtakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
@@ -62,7 +62,6 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
     // Reset lever
     if(reader) {
 	var reset_bar = world.createBody({type: "dynamic", position: new Vec2(offsetx-4, offsety+2)});
-	
 	var reset_shape = new Polygon([Vec2(0,0), Vec2(1,0), Vec2(7*channel_pitch+1, 7*pitch_y), Vec2(7*channel_pitch, 7*pitch_y)]);
 	addFixture(reset_bar, reset_shape, mass_normal, collisions_none);
 	for(var col=0;col<8;col++) {

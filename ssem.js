@@ -22,7 +22,7 @@ function addFixture(body, shape, physics, collisions) {
 }
 
 function box(x, y, width, height) {
-    return new Box(width/2, height/2, new Vec2(x+width/2, y+height/2));
+    return new Polygon([Vec2(x,y), Vec2(x+width,y), Vec2(x+width,y+height), Vec2(x, y+height)]);
 }
 
 var mass_none = {
