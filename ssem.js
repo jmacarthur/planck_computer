@@ -4,6 +4,7 @@
 var decoder_timing = [ [0, 0.1, 1, 0.1 ] ];
 var regen_timing = [ [1, 0.1, 0.1, 0 ] ];
 var acc_reset_timing = [ [0.3, 0.1, 0, 0 ] ];
+var instruction_holdoff_timing = [ [0.2, 0.1, 1, 0], [1.3,0.1,1,0], [2.6, 0.1,1,0] ];
 var null_timing = [ [0, 0.1, 0.1, 0.1 ]];
 
 
@@ -455,6 +456,7 @@ function createWorld(world) {
     var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, 160, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5});
     var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -265, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5});
     var instruction_reset_cam_follower = create_cam_and_v_follower(world, ground, 100, -280, acc_reset_timing, {'bumpheight': 1.5, 'left': true});
+    var instruction_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 10, -330, instruction_holdoff_timing, {'bumpheight': 1.5});
 
     connect(world, decoder_holdoff_cam_follower, part_index['decoder_holdoff_bar']);
     connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
@@ -467,5 +469,6 @@ function createWorld(world) {
     }
     connect(world, instruction_reader_cam_follower, part_index['instruction_reader']);
     connect(world, instruction_reset_cam_follower, part_index['instruction_resetter']);
+    connect(world, instruction_holdoff_cam_follower, part_index['instruction_holdoff']);
 
 }
