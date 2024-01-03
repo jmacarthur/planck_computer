@@ -29,18 +29,24 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
 	    addFixture(follower_block, new Polygon(translate_points(follower_trapezium, follower*block_width*2+block_width, row*profile_separation)), mass_normal, collisions_toplayer);
 	}
 	addFixture(follower_block, box(follower*block_width*2+block_width-1, -1, block_width+2, 3*profile_separation+2), mass_none, collisions_none);
+
+
+	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
+	    lowerTranslation : 0.0,
+	    upperTranslation : 10.0,
+	    enableLimit : false
+	}, ground, follower_block, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
     }
 
     var driver = world.createBody({type: "dynamic", position: new Vec2(offsetx-10-5-block_width,offsety)});
-    var vertical_box = box(0,0,1,profile_separation*3);
-    addUnionFixture(driver, vertical_box, mass_normal, collisions_toplayer);
+    addUnionFixture(driver, box(0,0,1,profile_separation*3), mass_normal, collisions_toplayer);
     for(var row=0;row<3;row++) {
-	var tine = box(0,profile_separation*row,5,1);
-	addUnionFixture(driver, tine, mass_normal, collisions_toplayer);
+	var driver_tine = [Vec2(0,0), Vec2(5.5,0), Vec2(6,1), Vec2(0,1)];
+	addUnionFixture(driver, new Polygon(translate_points(driver_tine, 0, profile_separation*row+1.1)), mass_normal, collisions_toplayer);
     }
     var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	lowerTranslation : 0.0,
-	upperTranslation : block_width,
+	upperTranslation : block_width+5,
 	enableLimit : true
     }, ground, driver, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
     completeUnion(driver);
@@ -48,8 +54,19 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
     driver.attach_points = [Vec2(offsetx-10-5-block_width+0.5, offsety+1.5*profile_separation)];
     part_index['instruction_reader'] = driver;
 
-    var blockbox = world.createBody({type: "static", position: new Vec2(offsetx-10-block_width,offsety-2)});
+    var blockbox = world.createBody({type: "static", position: new Vec2(offsetx-10-block_width,offsety-1.1)});
     for(var row=0;row<3;row++) {
-	addFixture(blockbox, box(0,profile_separation*row,5,1), mass_normal, collisions_toplayer);
+	addFixture(blockbox, box(0,profile_separation*row,3.8,1), mass_normal, collisions_toplayer);
     }
+
+    // Resetting option
+    var resetter = world.createBody({type: "dynamic", position: new Vec2(offsetx+16*block_width+10,offsety)});
+    addUnionFixture(resetter, box(0,0,1,profile_separation*3), mass_normal, collisions_toplayer);
+    var prismaticJoint = world.createJoint(pl.PrismaticJoint({
+	lowerTranslation : 0.0,
+	upperTranslation : block_width,
+	enableLimit : true
+    }, ground, resetter, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
+    resetter.attach_points = [Vec2(offsetx+16*block_width+10+0.5, offsety+1.5*profile_separation)];
+    part_index['instruction_resetter'] = resetter;
 }
