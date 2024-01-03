@@ -23,7 +23,7 @@ function create_cam(world, ground, xoffset, yoffset, timing, params) {
     var fake_circle = [];
     fake_circle.m_vertices = fake_circle_shape_points; // If we make this a real Polygon, it'll restrict the number of vertices
     addFixture(cam, new Circle(base_radius), mass_normal, collisions_toplayer);
-    var cam_display_polygons = [fake_circle];
+    cam.union_shapes = [fake_circle];
     // Cam profile
     for(var t=0;t<timing.length;t++) {
 	var max_segments = 9;
@@ -41,8 +41,7 @@ function create_cam(world, ground, xoffset, yoffset, timing, params) {
 	point_array.push(new Vec2(Math.cos(start_angle+profile_length+rise_angle+fall_angle)*low_height, Math.sin(start_angle+profile_length+rise_angle+fall_angle)*low_height));
 	point_array.push(new Vec2(0,0));
 	var profile_polygon = new Polygon(point_array);
-	cam_display_polygons.push(profile_polygon);
-	addFixture(cam, profile_polygon, mass_normal, collisions_toplayer);
+	addUnionFixture(cam, profile_polygon, mass_normal, collisions_toplayer);
     }
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	maxMotorTorque: 10000000,
@@ -50,9 +49,7 @@ function create_cam(world, ground, xoffset, yoffset, timing, params) {
 	enableMotor: true,
     }, ground, cam, Vec2(xoffset,yoffset)));
 
-    var cam_shape = new Polygon();
-    cam_shape.m_vertices = union(cam_display_polygons);
-    cam.shapeOverride = [cam_shape];
+    completeUnion(cam);
     return cam;
 }
 

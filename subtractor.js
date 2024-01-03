@@ -5,23 +5,17 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	var x = offsetx + col*channel_pitch;
 	var y = offsety + col*pitch_y;
 	var toggle = world.createBody({type: "dynamic", position: new Vec2(x,y)});
-	var toggle_shapes = [];
 	if(reader) {
 	    var toggle_poly = new Polygon([Vec2(-0.5,-1), Vec2(0.5, -1), Vec2(0,3.5)]);
-	    addFixture(toggle, toggle_poly, mass_normal, collisions_toplayer);
-	    toggle_shapes.push(toggle_poly);
+	    addUnionFixture(toggle, toggle_poly, mass_normal, collisions_toplayer);
 	} else {
 	    var toggle_poly1 = new Polygon([Vec2(-1,-1), Vec2(1, -1), Vec2(0,4)]);
-	    addFixture(toggle, toggle_poly1, mass_normal, collisions_toplayer);
-	    toggle_shapes.push(toggle_poly1);
+	    addUnionFixture(toggle, toggle_poly1, mass_normal, collisions_toplayer);
 	    var toggle_poly2 = new Polygon([Vec2(-3.5,-1), Vec2(3.5, -1), Vec2(4.5, 0), Vec2(-4.5,0)]);
-	    addFixture(toggle, toggle_poly2, mass_normal, collisions_toplayer);
-	    toggle_shapes.push(toggle_poly2);
+	    addUnionFixture(toggle, toggle_poly2, mass_normal, collisions_toplayer);
 	}
-	var toggle_shape = new Polygon();
-	if(toggle_shapes.length > 1) {
-	    toggle_shape.m_vertices= union(toggle_shapes);
-	    toggle.shapeOverride = [toggle_shape];
+	if(toggle.union_shapes.length > 1) {
+	    completeUnion(toggle);
 	}
 	var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	    enableLimit: false,

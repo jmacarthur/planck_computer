@@ -21,6 +21,25 @@ function addFixture(body, shape, physics, collisions) {
     return body.createFixture(properties);
 }
 
+function addUnionFixture(body, shape, physics, collisions) {
+    var properties = {shape: shape};
+    merge(properties, physics);
+    merge(properties, collisions);
+
+    if('union_shapes' in body) {
+	body.union_shapes.push(shape);
+    } else {
+	body.union_shapes = [shape];
+    }
+    return body.createFixture(properties);
+}
+
+function completeUnion(body) {
+    var union_shape = new Polygon();
+    union_shape.m_vertices = union(body.union_shapes);
+    body.shapeOverride = [union_shape];
+}
+
 function box(x, y, width, height) {
     return new Polygon([Vec2(x,y), Vec2(x+width,y), Vec2(x+width,y+height), Vec2(x, y+height)]);
 }
