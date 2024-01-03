@@ -228,7 +228,7 @@ function create_memory(world, ground, part_index) {
 	joining_bar.colour = "#c0c0c0";
 	block_line.shapeOverride.push(compound_shape);
 	block_line.shapeOverride.push(joining_bar);
-	
+
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : -channel_pitch,
 	    upperTranslation : 0.0,
@@ -428,11 +428,15 @@ function createWorld(world) {
     create_pitch_reducer(world, ground, 0, -32);
     create_router_block(world, ground, -4, -77, part_index);
     create_instruction_decoder(world, ground, 0, -300, part_index);
+
+    create_fake_data(world, ground, -11, -250, 1);
+
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing);
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing);
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, null_timing);
     var regen1_cam_follower = create_cam_and_v_follower(world, ground, 120, -45, regen_timing);
     var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, 160, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5});
+    var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -270, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5});
 
     connect(world, decoder_holdoff_cam_follower, part_index['decoder_holdoff_bar']);
     connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
@@ -443,4 +447,6 @@ function createWorld(world) {
 	connect(world, part_index['regen1lever'+col], part_index['injector'+col]);
 	connect(world, part_index['accumulator_write'+col], part_index['accumulator_read'+col]);
     }
+    connect(world, instruction_reader_cam_follower, part_index['instruction_reader']);
+
 }
