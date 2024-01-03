@@ -71,12 +71,10 @@ function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing, para
     var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset+follower_axis_x-0.5, yoffset+follower_height)});
     var follower_arm = box(0,0,lever_length,1);
     var follower_point = new Polygon([Vec2(15-3,1), Vec2(15, -2), Vec2(15+3,1)]);
-    addFixture(follower, follower_arm, mass_normal, collisions_toplayer);
-    addFixture(follower, follower_point, mass_normal, collisions_toplayer);
+    addUnionFixture(follower, follower_arm, mass_normal, collisions_toplayer);
+    addUnionFixture(follower, follower_point, mass_normal, collisions_toplayer);
 
-    var follower_shape = new Polygon();
-    follower_shape.m_vertices = union([follower_arm.m_vertices, follower_point.m_vertices]);
-    follower.shapeOverride = [follower_shape];
+    completeUnion(follower);
 
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
     }, ground, follower, Vec2(xoffset+follower_axis_x,yoffset+follower_height+0.5)));
@@ -98,13 +96,11 @@ function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing, para
     var follower_arm = box(0,-lever_length,1,lever_length);
     var follower_point = new Polygon([Vec2(1,-15-3), Vec2(-2, -15), Vec2(1,-15+3)]);
     var follower_bias = box(0,0,lever_length/2, 1);
-    addFixture(follower, follower_arm, mass_normal, collisions_toplayer);
-    addFixture(follower, follower_point, mass_normal, collisions_toplayer);
-    addFixture(follower, follower_bias, mass_normal, collisions_toplayer);
+    addUnionFixture(follower, follower_arm, mass_normal, collisions_toplayer);
+    addUnionFixture(follower, follower_point, mass_normal, collisions_toplayer);
+    addUnionFixture(follower, follower_bias, mass_normal, collisions_toplayer);
 
-    var follower_shape = new Polygon();
-    follower_shape.m_vertices = union([follower_arm.m_vertices, follower_point.m_vertices, follower_bias.m_vertices])
-    follower.shapeOverride = [follower_shape];
+    completeUnion(follower);
 
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
     }, ground, follower, Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y+0.5)));
