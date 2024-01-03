@@ -84,7 +84,15 @@ function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing, para
 }
 
 function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing, params) {
+    if (params && 'left' in params) {
+	var left = true;
+    } else {
+	var left = false;
+    }
     var follower_offset = 17;
+    if(left) {
+	follower_offset = -follower_offset-1;
+    }
     var follower_axis_y = 15+0.5;
     var lever_length = 25;
     if(params && 'leverlen' in params) {
@@ -93,9 +101,17 @@ function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing, para
     var cam = create_cam(world, ground, xoffset, yoffset, timing, params);
     // Follower assembly
     var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset+follower_offset, yoffset+follower_axis_y)});
-    var follower_arm = box(0,-lever_length,1,lever_length);
-    var follower_point = new Polygon([Vec2(1,-15-3), Vec2(-2, -15), Vec2(1,-15+3)]);
-    var follower_bias = box(0,0,lever_length/2, 1);
+    var follower_arm = box(0,-lever_length+1,1,lever_length);
+    if(left) {
+	var follower_point = new Polygon([Vec2(0,-15-3), Vec2(3, -15), Vec2(0,-15+3)]);
+    } else {
+	var follower_point = new Polygon([Vec2(1,-15-3), Vec2(-2, -15), Vec2(1,-15+3)]);
+    }
+    if(left) {
+	var follower_bias = box(-lever_length/2,0,lever_length/2, 1);
+    } else {
+	var follower_bias = box(0,0,lever_length/2, 1);
+    }
     addUnionFixture(follower, follower_arm, mass_normal, collisions_toplayer);
     addUnionFixture(follower, follower_point, mass_normal, collisions_toplayer);
     addUnionFixture(follower, follower_bias, mass_normal, collisions_toplayer);
@@ -105,6 +121,6 @@ function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing, para
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
     }, ground, follower, Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y+0.5)));
     follower.attach_points = [];
-    follower.attach_points[0] = Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y-lever_length+0.5);
+    follower.attach_points[0] = Vec2(xoffset+follower_offset+0.5, yoffset+follower_axis_y-lever_length+1.5);
     return follower;
 }

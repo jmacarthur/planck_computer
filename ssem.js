@@ -453,7 +453,8 @@ function createWorld(world) {
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, null_timing);
     var regen1_cam_follower = create_cam_and_v_follower(world, ground, 120, -45, regen_timing);
     var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, 160, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5});
-    var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -270, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5});
+    var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -265, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5});
+    var instruction_reset_cam_follower = create_cam_and_v_follower(world, ground, 100, -280, acc_reset_timing, {'bumpheight': 1.5, 'left': true});
 
     connect(world, decoder_holdoff_cam_follower, part_index['decoder_holdoff_bar']);
     connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
@@ -465,5 +466,6 @@ function createWorld(world) {
 	connect(world, part_index['accumulator_write'+col], part_index['accumulator_read'+col]);
     }
     connect(world, instruction_reader_cam_follower, part_index['instruction_reader']);
+    connect(world, instruction_reset_cam_follower, part_index['instruction_resetter']);
 
 }
