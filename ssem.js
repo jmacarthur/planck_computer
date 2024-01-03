@@ -427,7 +427,7 @@ function createWorld(world) {
     create_subtractor_block(world, ground, -70, -200, part_index, 'accumulator_write', false);
     create_pitch_reducer(world, ground, 0, -32);
     create_router_block(world, ground, -4, -77, part_index);
-    create_instruction_decoder(world, ground, 0, -230, part_index);
+    create_instruction_decoder(world, ground, 0, -300, part_index);
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing);
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing);
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, null_timing);
