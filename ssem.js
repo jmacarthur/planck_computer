@@ -112,12 +112,10 @@ function create_transparent_lever(world, ground, x, y) {
 
     var fix1 = box(-0.5, -0.5, 4.0, 1.0);
     var fix2 = box(-0.5, -3.5, 1.0, 4.0);
-    addFixture(injector_lever, fix1, mass_none, collisions_none);
-    addFixture(injector_lever, fix2, mass_normal, collisions_toplayer);
+    addUnionFixture(injector_lever, fix1, mass_none, collisions_none);
+    addUnionFixture(injector_lever, fix2, mass_normal, collisions_toplayer);
 
-    var lever_shape = new Polygon();
-    lever_shape.m_vertices = union([fix1.m_vertices, fix2.m_vertices]);
-    injector_lever.shapeOverride = [lever_shape];
+    completeUnion(injector_lever);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	lowerAngle: -0.25 * Math.PI,
 	upperAngle: 0.25 * Math.PI,
