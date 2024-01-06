@@ -89,6 +89,15 @@ function translate_points(polygon, offsetx, offsety) {
     return newpoints;
 }
 
+function hMirror(polygon) {
+    var newpoints = [];
+    for(var i=0; i<polygon.length; i++) {
+	var v = polygon[i];
+	newpoints.push(new Vec2(-v.x, v.y));
+    }
+    return newpoints;
+}
+
 function create_crank(world, ground, x, y, initial_rotation) {
     // Rotation in radians. Zero rotation is an 'L' shape going up and left from the origin.
     var crank = world.createBody({type: "dynamic", position: new Vec2(x, y)});
@@ -444,7 +453,8 @@ function createWorld(world) {
     create_subtractor_block(world, ground, 0, -200, part_index, 'accumulator_read', true);
     create_subtractor_block(world, ground, -70, -200, part_index, 'accumulator_write', false);
     create_pitch_reducer(world, ground, 0, -32);
-    create_router_block(world, ground, -4, -77, part_index);
+    create_router_block(world, ground, -4, -77, part_index, false);
+    create_router_block(world, ground, -4+narrow_pitch*17, -77, part_index, true);
     create_instruction_decoder(world, ground, 0, -300, part_index);
 
     create_fake_data(world, ground, -11, -250, 1);
