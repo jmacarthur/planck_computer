@@ -30,7 +30,7 @@ function create_router_block(world, ground, offsetx, offsety, part_index, revers
 
     // Create a motion amplification lever
     var x = offsetx+(reverse?-1:1)*-16*narrow_pitch;
-    var y = offsety-8*y_pitch;
+    var y = offsety-8*y_pitch+20;
     var amp_lever = world.createBody({type: "dynamic", position: new Vec2(x,y)});
     addFixture(amp_lever, box(0,0,1,30), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({

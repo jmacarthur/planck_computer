@@ -419,6 +419,18 @@ function create_pitch_reducer(world, ground, offsetx, offsety) {
     }
 }
 
+function create_narrow_channel(world, ground, offsetx, offsety) {
+    var reducer = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
+    var centre_x = offsetx+channel_pitch*4;
+    for(var col=0;col<9;col++) {
+	var pos = col-4;
+	addFixture(reducer, new Polygon([Vec2(centre_x+narrow_pitch*pos, offsety-10),
+				     Vec2(centre_x+narrow_pitch*pos+0.5, offsety-10),
+					 Vec2(centre_x+narrow_pitch*pos+0.5, offsety-1),
+					 Vec2(centre_x+narrow_pitch*pos, offsety-1)]), mass_normal, collisions_toplayer)
+    }
+}
+
 function connect(world, body1, body2, attachpoint1, attachpoint2) {
     if(attachpoint1 === undefined) {
 	attachpoint1 = 0;
@@ -450,11 +462,18 @@ function createWorld(world) {
     create_fake_data(world, ground, -0.1+channel_pitch*6, -80, 1);
     create_fake_data(world, ground, -0.1+channel_pitch*3, -35, 1);
     create_fake_data(world, ground, -0.1+channel_pitch*7, -35, 1);
-    create_subtractor_block(world, ground, 0, -200, part_index, 'accumulator_read', true);
-    create_subtractor_block(world, ground, -70, -200, part_index, 'accumulator_write', false);
+    create_subtractor_block(world, ground, -70, -200, part_index, 'accumulator_read', true);
+    create_subtractor_block(world, ground, -140, -200, part_index, 'accumulator_write', false);
+    create_subtractor_block(world, ground, 70, -200, part_index, 'pc_read', true);
+    create_subtractor_block(world, ground, 140, -200, part_index, 'pc_write', false);
     create_pitch_reducer(world, ground, 0, -32);
     create_router_block(world, ground, -4, -77, part_index, false);
     create_router_block(world, ground, -4+narrow_pitch*17, -77, part_index, true);
+
+    create_narrow_channel(world, ground, 0, -53);
+    create_router_block(world, ground, -4, -120, part_index, false);
+    create_router_block(world, ground, -4+narrow_pitch*17, -120, part_index, true);
+
     create_instruction_decoder(world, ground, 0, -300, part_index);
 
     create_fake_data(world, ground, -11, -250, 1);
@@ -463,7 +482,7 @@ function createWorld(world) {
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing);
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, null_timing);
     var regen1_cam_follower = create_cam_and_v_follower(world, ground, 120, -45, regen_timing);
-    var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, 160, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5});
+    var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, -200, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5});
     var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -265, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5});
     var instruction_reset_cam_follower = create_cam_and_v_follower(world, ground, 100, -280, acc_reset_timing, {'bumpheight': 1.5, 'left': true});
     var instruction_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 10, -330, instruction_holdoff_timing, {'bumpheight': 1.5});
