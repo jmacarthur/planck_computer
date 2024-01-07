@@ -36,7 +36,7 @@ function create_router_block(world, ground, offsetx, offsety, part_index, revers
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	maxMotorTorque: 10000,
 	motorSpeed: -0.1,
-	enableMotor: true,
+	enableMotor: false,
     }, ground, amp_lever, Vec2(x+0.5,y)));
     amp_lever.attach_points = [];
     amp_lever.attach_points[0] = Vec2(x,y+30);
