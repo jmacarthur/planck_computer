@@ -143,8 +143,12 @@ class Renderer {
 	// Does this thing have a text label?
 	if('label' in body) {
 	    this.ctx.fillStyle = "#000000";
-	    this.ctx.font = "30pt Arial";
-	    this.ctx.fillText(body.label, 0, 0);
+	    this.ctx.font = "10pt Arial";
+	    this.ctx.textAlign = "center";
+	    this.ctx.save();
+	    this.ctx.scale(1,-1);
+	    this.ctx.fillText(body.label, body.labelx, -body.labely);
+	    this.ctx.restore();
 	}
 	this.ctx.restore();
     }

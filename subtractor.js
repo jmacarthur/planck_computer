@@ -52,6 +52,10 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	    addFixture(outtakechannelleft, box(-channel_pitch/2-0.5, -5, 1, col*pitch_y+7), mass_none, collisions_topstatic);
 	}
     }
+    var labelbody = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
+    labelbody.label = base_name;
+    labelbody.labelx = 4*channel_pitch;
+    labelbody.labely = -70;
 
     // Reset lever
     if(reader) {

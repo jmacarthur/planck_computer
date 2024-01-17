@@ -52,6 +52,8 @@ function create_cam(world, ground, xoffset, yoffset, timing, params) {
     completeUnion(cam);
     if (params && 'label' in params) {
 	cam.label = params.label;
+	cam.labelx = 0;
+	cam.labely = 0;
     }
     return cam;
 }
