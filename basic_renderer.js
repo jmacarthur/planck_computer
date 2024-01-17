@@ -140,6 +140,12 @@ class Renderer {
 		this.renderFixture(fixture, 0, 0);
 	    }
 	}
+	// Does this thing have a text label?
+	if('label' in body) {
+	    this.ctx.fillStyle = "#000000";
+	    this.ctx.font = "30pt Arial";
+	    this.ctx.fillText(body.label, 0, 0);
+	}
 	this.ctx.restore();
     }
     renderPolygon(vertices, offsetx, offsety) {

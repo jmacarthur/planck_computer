@@ -50,6 +50,9 @@ function create_cam(world, ground, xoffset, yoffset, timing, params) {
     }, ground, cam, Vec2(xoffset,yoffset)));
 
     completeUnion(cam);
+    if (params && 'label' in params) {
+	cam.label = params.label;
+    }
     return cam;
 }
 
