@@ -30,9 +30,12 @@ class Renderer {
 	console.log("Key down: '"+e.key+"'");
 	if (e.key == " "){
 	    this.simulating = !this.simulating;
-	}
-	else if (e.key == "q"){
+	} else if (e.key == "q"){
 	    this.stoprunloop = true;
+	} else if (e.key == "="){
+	    this.scale += 1;
+	} else if (e.key == "-"){
+	    this.scale -= 1;
 	}
     }
     mousedown(e) {
