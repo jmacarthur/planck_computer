@@ -55,7 +55,7 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
     var labelbody = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
     labelbody.label = base_name;
     labelbody.labelx = 4*channel_pitch;
-    labelbody.labely = -70;
+    labelbody.labely = -50;
 
     // Reset lever
     if(reader) {

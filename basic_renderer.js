@@ -4,7 +4,7 @@ const {Vec2, Box, Polygon, Circle, Rot} = pl;
 class Renderer {
     world = null;
     started = false;
-    scale = 10.0;
+    scale = 5.0;
     canvas = null;
     dragging = false;
     drag_start_x = 0;
@@ -143,7 +143,8 @@ class Renderer {
 	// Does this thing have a text label?
 	if('label' in body) {
 	    this.ctx.fillStyle = "#000000";
-	    this.ctx.font = "10pt Arial";
+	    var fontsize = Math.floor(this.scale*2);
+	    this.ctx.font = fontsize+"px Arial";
 	    this.ctx.textAlign = "center";
 	    this.ctx.save();
 	    this.ctx.scale(1,-1);

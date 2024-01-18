@@ -40,7 +40,7 @@ function union(polygonlist) {
 
     var scale = 100;
     ClipperLib.JS.ScaleUpPaths(path1, scale);
-	
+
     for(let p=1; p<polygonlist.length; p++) {
 	var path2 = [[]];
 	var nextpoly = polygonlist[p];
