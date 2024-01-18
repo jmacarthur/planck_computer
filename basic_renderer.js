@@ -34,7 +34,7 @@ class Renderer {
 	    this.stoprunloop = true;
 	} else if (e.key == "="){
 	    this.scale += 1;
-	} else if (e.key == "-"){
+	} else if (e.key == "-" && this.scale > 1.0){
 	    this.scale -= 1;
 	}
     }
