@@ -170,6 +170,10 @@ function create_injectors(world, ground, part_index) {
 	addFixture(channel_side, box(-0.5, 0, 1.0, 2.0), mass_none, collisions_toplayer);
     }
 
+    // Final channel right side (backstop)
+    var channel_side = world.createBody({type: "static", position: new Vec2(8*channel_pitch-1.25,0)});
+    addFixture(channel_side, box(-0.5, 0, 1.0, 2.0), mass_none, collisions_toplayer);
+
     // Add hopper
     var hopper_left = world.createBody({type: "static", position: new Vec2(-3.0,5.5)});
     addFixture(hopper_left, new Polygon([Vec2(0,0), Vec2(3,0), Vec2(-10,10), Vec2(-13,10)]), mass_none, collisions_toplayer);
