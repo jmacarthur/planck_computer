@@ -303,7 +303,7 @@ function create_memory(world, ground, part_index) {
 function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
     /* This is the decoder pattern and holdoff bar */
     var decoder_lines = [];
-    var sensor_drop = -100;
+    var sensor_drop = -200;
     var cols = 3;
     for(var col=0; col<cols; col++) {
 	var decoder_line = world.createBody({type: "dynamic", position: new Vec2(-3.0+xoffset+col*10.0, yoffset)});
