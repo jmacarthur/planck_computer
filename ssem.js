@@ -3,6 +3,7 @@
 
 var decoder_timing = [ [0, 0.1, 1, 0.1 ] ];
 var pc_read_timing = [ [0, 0.1, 1, 0.1 ] ];
+var all_inject_timing = [ [0.2, 0.1, 0.1, 0.1 ] ];
 var regen_timing = [ [1, 0.1, 0.1, 0 ] ];
 var acc_reset_timing = [ [0.3, 0.1, 0, 0 ] ];
 var instruction_holdoff_timing = [ [0.2, 0.1, 1, 0], [1.3,0.1,1,0], [2.6, 0.1,1,0] ];
@@ -154,7 +155,7 @@ function create_injectors(world, ground, part_index) {
 
 	// Add channel right side
 	var channel_side = world.createBody({type: "static", position: new Vec2(i*channel_pitch+3.0,3.1)});
-	var side_poly = Polygon([Vec2(-0.5,-0.5), Vec2(0.8,-0.4), Vec2(0.8, 2.1), Vec2(-0.2, 2.1)]);
+	var side_poly = Polygon([Vec2(-0.4,-0.5), Vec2(0.8,-0.4), Vec2(0.8, 2.1), Vec2(-0.2, 2.1)]);
 	addFixture(channel_side, side_poly, mass_none, collisions_toplayer);
 	addFixture(channel_side, box(1.0, 1.0, 3.0, 1.0), mass_none, collisions_toplayer);
 
@@ -344,7 +345,7 @@ function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
 function create_discarder(world, ground, origin_x, origin_y, part_index) {
     var block_width = channel_pitch - 2.2;
     var vertical_pitch = 1;
-    var initial_rotation = 0.3;
+    var initial_rotation = 0.15;
     var discard_flaps = [];
     for(var i=0;i<8;i++) {
 	var discard_flap = world.createBody({type: "dynamic", position: new Vec2(origin_x+i*channel_pitch, origin_y+i*vertical_pitch+2)});
@@ -353,10 +354,10 @@ function create_discarder(world, ground, origin_x, origin_y, part_index) {
 	discard_flap.setAngle(initial_rotation);
 	var revoluteJoint = world.createJoint(pl.RevoluteJoint({
 	}, ground, discard_flap, Vec2(origin_x+i*channel_pitch+0.1, origin_y+i*1+2.1)));
+	var local_pos = Rot.mul(Rot(initial_rotation),Vec2(0.5, -3));
+	discard_flap.attach_points = [];
+	discard_flap.attach_points[0] = Vec2(origin_x+i*channel_pitch,origin_y+i*vertical_pitch+2).add(local_pos);
 	if(i>0) {
-	    var local_pos = Rot.mul(Rot(initial_rotation),Vec2(0.5, -3.5));
-	    discard_flap.attach_points = [];
-	    discard_flap.attach_points[0] = Vec2(origin_x+i*channel_pitch,origin_y+i*vertical_pitch+2).add(local_pos);
 	    var distanceJoint = world.createJoint(pl.DistanceJoint({
 	    }, discard_flaps[i-1], Vec2(origin_x+(i-1)*channel_pitch,origin_y+(i-1)*vertical_pitch+2).add(local_pos), discard_flap, discard_flap.attach_points[0]));
 	}
@@ -365,7 +366,7 @@ function create_discarder(world, ground, origin_x, origin_y, part_index) {
     // One final rest
     var discarder_block = world.createBody({type: "static", position: new Vec2(origin_x+8*channel_pitch-1, origin_y+9)});
     addFixture(discarder_block, box(0,0,1,1), mass_none, collisions_toplayer);
-    part_index['discarder'] = discard_flap;
+    part_index['discarder'] = discard_flaps[0];
 }
 
 function horizontal_prismatic(world, ground, object) {
@@ -479,14 +480,16 @@ function createWorld(world) {
 
     create_fake_data(world, ground, -11, -250, 1);
 
+    var discarder_cam = create_cam_and_v_follower(world, ground, -80, -40, decoder_timing, {'label': "Discard"});
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing, {'label': "Decoder holdoff"});
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing, {'label': "Memory holdoff"});
-    var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, null_timing, {'label': "All inject"});
+    var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, all_inject_timing, {'label': "All inject"});
     var regen1_cam_follower = create_cam_and_v_follower(world, ground, 120, -45, regen_timing, {'bumpheight':1.5, 'label': "Regenerator 1"});
     var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, -200, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Accumulator reset"});
     var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -265, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Instruction read"});
     var instruction_reset_cam_follower = create_cam_and_v_follower(world, ground, 100, -280, acc_reset_timing, {'bumpheight': 1.5, 'left': true, 'label': "Instruction reset"});
     var instruction_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 10, -330, instruction_holdoff_timing, {'bumpheight': 1.5, 'label': "Instruction holdoff"});
+    connect(world, discarder_cam, part_index['discarder']);
     connect(world, decoder_holdoff_cam_follower, part_index['decoder_holdoff_bar']);
     connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
     connect(world, all_inject_cam_follower, part_index['all_inject']);
