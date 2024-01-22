@@ -1,4 +1,4 @@
-function create_router_block(world, ground, offsetx, offsety, part_index, reverse) {
+function create_router_block(world, ground, offsetx, offsety, part_index, reverse, base_name) {
     var diverter = world.createBody({type: "dynamic", position: new Vec2(offsetx,offsety)});
     var fixed_out = world.createBody({type: "static", position: new Vec2(offsetx,offsety)});
     var y_pitch = 4;
@@ -26,7 +26,7 @@ function create_router_block(world, ground, offsetx, offsety, part_index, revers
     }, ground, diverter, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
     diverter.attach_points = [];
     diverter.attach_points[0] = Vec2(offsetx+(reverse?7*narrow_pitch:0), offsety);
-    part_index["router0"] = diverter;
+    part_index[base_name] = diverter;
 
     // Create a motion amplification lever
     var x = offsetx+(reverse?-1:1)*-16*narrow_pitch;
@@ -39,8 +39,8 @@ function create_router_block(world, ground, offsetx, offsety, part_index, revers
 	enableMotor: false,
     }, ground, amp_lever, Vec2(x+0.5,y)));
     amp_lever.attach_points = [];
-    amp_lever.attach_points[0] = Vec2(x,y+30);
-    amp_lever.attach_points[1] = Vec2(x,y-5);
+    amp_lever.attach_points[0] = Vec2(x+0.5,y+30);
+    amp_lever.attach_points[1] = Vec2(x+0.5,y+5);
     connect(world, diverter, amp_lever, 0, 0);
-
+    part_index[base_name+"_lever"] = amp_lever;
 }

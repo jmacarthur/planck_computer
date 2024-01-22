@@ -2,6 +2,7 @@
 
 
 var decoder_timing = [ [0, 0.1, 1, 0.1 ] ];
+var pc_read_timing = [ [0, 0.1, 1, 0.1 ] ];
 var regen_timing = [ [1, 0.1, 0.1, 0 ] ];
 var acc_reset_timing = [ [0.3, 0.1, 0, 0 ] ];
 var instruction_holdoff_timing = [ [0.2, 0.1, 1, 0], [1.3,0.1,1,0], [2.6, 0.1,1,0] ];
@@ -467,13 +468,15 @@ function createWorld(world) {
     create_subtractor_block(world, ground, 70, -200, part_index, 'pc_read', true);
     create_subtractor_block(world, ground, 140, -200, part_index, 'pc_write', false);
     create_pitch_reducer(world, ground, 0, -32);
-    create_router_block(world, ground, -4, -77, part_index, false);
-    create_router_block(world, ground, -4+narrow_pitch*17, -77, part_index, true);
+    create_router_block(world, ground, -4, -77, part_index, false, "acc_write_diverter");
+    create_router_block(world, ground, -4+narrow_pitch*17, -77, part_index, true, "pc_write_diverter");
 
     create_narrow_channel(world, ground, 0, -53);
-    create_router_block(world, ground, -4, -120, part_index, false);
-    create_router_block(world, ground, -4+narrow_pitch*17, -120, part_index, true);
+    create_router_block(world, ground, -4, -120, part_index, false, "acc_read_diverter");
+    create_router_block(world, ground, -4+narrow_pitch*17, -120, part_index, true, "pc_read_diverter");
 
+    var pc_read_cam_follower = create_cam_and_v_follower(world, ground, 180, -120, pc_read_timing, {'bumpheight':1.5, 'label': "PC Read", 'left': true});
+    connect(world, pc_read_cam_follower, part_index['pc_read_diverter_lever'], 0, 1);
     create_instruction_decoder(world, ground, 0, -300, part_index);
 
     create_fake_data(world, ground, -11, -250, 1);
