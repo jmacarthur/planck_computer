@@ -439,8 +439,6 @@ function connect(world, body1, body2, attachpoint1, attachpoint2) {
     if(attachpoint2 === undefined) {
 	attachpoint2 = 0;
     }
-    attachpoint1 = 0;
-    attachpoint2 = 0;
     // Make a distance joint between two Body objects, both of which should have 'attach_points' defined.
     var distanceJoint = world.createJoint(pl.DistanceJoint({
     }, body1, body1.attach_points[attachpoint1], body2, body2.attach_points[attachpoint2]));
