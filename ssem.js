@@ -458,10 +458,6 @@ function createWorld(world) {
     create_discarder(world, ground, 0, -50, part_index);
 
     create_regen(world, ground, 0, -60, part_index, 'regen1');
-    create_fake_data(world, ground, 2, -60+5, 8);
-    create_fake_data(world, ground, -0.1+channel_pitch*6, -80, 1);
-    create_fake_data(world, ground, -0.1+channel_pitch*3, -35, 1);
-    create_fake_data(world, ground, -0.1+channel_pitch*7, -35, 1);
     create_subtractor_block(world, ground, -70, -200, part_index, 'accumulator_read', true);
     create_subtractor_block(world, ground, -140, -200, part_index, 'accumulator_write', false);
     create_subtractor_block(world, ground, 70, -200, part_index, 'pc_read', true);
@@ -477,8 +473,6 @@ function createWorld(world) {
     var pc_read_cam_follower = create_cam_and_v_follower(world, ground, 180, -120, pc_read_timing, {'bumpheight':1.5, 'label': "PC Read", 'left': true});
     connect(world, pc_read_cam_follower, part_index['pc_read_diverter_lever'], 0, 1);
     create_instruction_decoder(world, ground, 0, -300, part_index);
-
-    create_fake_data(world, ground, -11, -250, 1);
 
     var discarder_cam = create_cam_and_v_follower(world, ground, -80, -40, decoder_timing, {'label': "Discard"});
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing, {'label': "Decoder holdoff"});
