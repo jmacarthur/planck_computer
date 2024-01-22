@@ -91,8 +91,16 @@ function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing, para
 function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing, params) {
     if (params && 'left' in params) {
 	var left = true;
+	// Need to also adjust timing by 180 degrees
+	var offset_timing = [];
+	for(var i=0;i<timing.length;i++) {
+	    var segment = [timing[i][0], timing[i][1], timing[i][2], timing[i][3]];
+	    segment[0] += Math.PI;
+	    offset_timing.push(segment);
+	}
     } else {
 	var left = false;
+	var offset_timing = timing;
     }
     var follower_offset = 17;
     if(left) {
@@ -103,7 +111,7 @@ function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing, para
     if(params && 'leverlen' in params) {
 	lever_length = params['leverlen'];
     }
-    var cam = create_cam(world, ground, xoffset, yoffset, timing, params);
+    var cam = create_cam(world, ground, xoffset, yoffset, offset_timing, params);
     // Follower assembly
     var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset+follower_offset, yoffset+follower_axis_y)});
     var follower_arm = box(0,-lever_length+1,1,lever_length);
