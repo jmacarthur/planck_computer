@@ -228,12 +228,12 @@ function create_memory(world, ground, part_index) {
 	var eject_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row)});
 	var block_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row - 1.5)});
 	var line_shapes = [];
-	for(var col=0; col<8; col++) {
+	for(var col=0; col<9; col++) {
 	    line_shapes.push(box(col*channel_pitch+2.0, 0, 5.0, 1.0));
 	    addFixture(eject_line, box(col*channel_pitch+2.0, 0, 5.0, 1.0), mass_normal, collisions_toplayer);
 	}
 
-	var blocker = new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,2.5), Vec2(0,2.5)], col*7+7.0, 0));
+	var blocker = new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,2.5), Vec2(0,2.5)], col*channel_pitch-1, 0));
 	for(var col=0;col<4;col++) {
 	    line_shapes.push(box(8*channel_pitch+10+10*col+1.1, -0.1, 1.0, 1.0));
 	}
@@ -245,13 +245,13 @@ function create_memory(world, ground, part_index) {
 	block_line.shapeOverride = [];
 	for(var i=0;i<line_shapes.length;i++) {
 	    addFixture(block_line, line_shapes[i], mass_normal, collisions_toplayer);
-	    if(i!=7) {
+	    if(i!=8) {
 		block_line.shapeOverride.push(line_shapes[i]);
 	    }
 	}
 	addFixture(block_line, blocker, mass_normal, collisions_toplayer);
 
-	compound_shape.m_vertices = union([line_shapes[7], blocker]);
+	compound_shape.m_vertices = union([line_shapes[8], blocker]);
 	// Add another ghost fixture to hold the line together
 	var joining_bar = box(0,0,8*channel_pitch+10+10*2+2, 1);
 	addFixture(block_line, joining_bar, mass_none, collisions_none);
