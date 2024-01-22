@@ -20,8 +20,8 @@ function create_router_block(world, ground, offsetx, offsety, part_index, revers
 	addFixture(fixed_out, box(0,-col*y_pitch-1.1,8*narrow_pitch,0.5), mass_none, collisions_toplayer);
     }
     var prismaticJoint = world.createJoint(pl.PrismaticJoint({
-	lowerTranslation : 0.0,
-	upperTranslation : 8*narrow_pitch+1,
+	lowerTranslation : reverse?-8*narrow_pitch-1:0,
+	upperTranslation : reverse?0:8*narrow_pitch+1,
 	enableLimit : true
     }, ground, diverter, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
     diverter.attach_points = [];
