@@ -2,6 +2,7 @@
 
 
 var decoder_timing = [ [0, 0.1, 1, 0.1 ] ];
+var discard_timing = [ [1, 0.1, 1, 0.1 ] ];
 var pc_read_timing = [ [0, 0.1, 1, 0.1 ] ];
 var all_inject_timing = [ [0.2, 0.1, 0.1, 0.1 ] ];
 var regen_timing = [ [1, 0.1, 0.1, 0 ] ];
@@ -346,27 +347,21 @@ function create_discarder(world, ground, origin_x, origin_y, part_index) {
     var block_width = channel_pitch - 2.2;
     var vertical_pitch = 1;
     var initial_rotation = 0.15;
-    var discard_flaps = [];
-    for(var i=0;i<8;i++) {
-	var discard_flap = world.createBody({type: "dynamic", position: new Vec2(origin_x+i*channel_pitch, origin_y+i*vertical_pitch+2)});
-	addFixture(discard_flap, new Polygon([Vec2(0,0), Vec2(channel_pitch,0), Vec2(channel_pitch+1,1), Vec2(1,1)]), mass_normal, collisions_toplayer);
-	addFixture(discard_flap, new Polygon([Vec2(0,-4), Vec2(1,-4), Vec2(1,0), Vec2(0,0)]), mass_normal, collisions_toplayer);
-	discard_flap.setAngle(initial_rotation);
-	var revoluteJoint = world.createJoint(pl.RevoluteJoint({
-	}, ground, discard_flap, Vec2(origin_x+i*channel_pitch+0.1, origin_y+i*1+2.1)));
-	var local_pos = Rot.mul(Rot(initial_rotation),Vec2(0.5, -3));
-	discard_flap.attach_points = [];
-	discard_flap.attach_points[0] = Vec2(origin_x+i*channel_pitch,origin_y+i*vertical_pitch+2).add(local_pos);
-	if(i>0) {
-	    var distanceJoint = world.createJoint(pl.DistanceJoint({
-	    }, discard_flaps[i-1], Vec2(origin_x+(i-1)*channel_pitch,origin_y+(i-1)*vertical_pitch+2).add(local_pos), discard_flap, discard_flap.attach_points[0]));
-	}
-	discard_flaps.push(discard_flap);
+    var discard_static = world.createBody({type: "static", position: new Vec2(origin_x, origin_y)});
+    var discard_sliding = world.createBody({type: "dynamic", position: new Vec2(origin_x, origin_y)});
+
+    for(var i=0;i<9;i++) {
+	var static_poly = new Polygon(translate_points([Vec2(0,0), Vec2(channel_pitch/2,0), Vec2(channel_pitch/2,1), Vec2(0,1)], i*channel_pitch, 0));
+	addFixture(discard_static, static_poly, mass_normal, collisions_toplayer);
+	var sliding_poly = new Polygon(translate_points([Vec2(0,0), Vec2(channel_pitch/2,0), Vec2(channel_pitch/2,0), Vec2(0,0.5)], i*channel_pitch, 1));
+	addFixture(discard_sliding, sliding_poly, mass_normal, collisions_toplayer);
     }
-    // One final rest
-    var discarder_block = world.createBody({type: "static", position: new Vec2(origin_x+8*channel_pitch-1, origin_y+9)});
-    addFixture(discarder_block, box(0,0,1,1), mass_none, collisions_toplayer);
-    part_index['discarder'] = discard_flaps[0];
+
+    discard_static.setAngle(initial_rotation);
+    discard_sliding.setAngle(initial_rotation);
+    discard_sliding.attach_points = []
+    discard_sliding.attach_points[0] = Vec2(origin_x, origin_y+2);
+    part_index['discarder'] = discard_sliding;
 }
 
 function horizontal_prismatic(world, ground, object) {
@@ -474,7 +469,7 @@ function createWorld(world) {
     connect(world, pc_read_cam_follower, part_index['pc_read_diverter_lever'], 0, 1);
     create_instruction_decoder(world, ground, 0, -300, part_index);
 
-    var discarder_cam = create_cam_and_v_follower(world, ground, -80, -40, decoder_timing, {'label': "Discard"});
+    var discarder_cam = create_cam_and_v_follower(world, ground, -80, -40, discard_timing, {'label': "Discard", 'bumpheight': 1.5, 'leverlen': 30});
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing, {'label': "Decoder holdoff"});
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing, {'label': "Memory holdoff"});
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, all_inject_timing, {'label': "All inject"});
