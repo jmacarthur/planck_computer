@@ -454,20 +454,20 @@ function createWorld(world) {
     create_injectors(world, ground, part_index);
     create_memory(world, ground, part_index);
     create_memory_decoder(world, ground, channel_pitch*8+10, -29.5, part_index);
-    create_discarder(world, ground, 0, -50, part_index);
+    create_discarder(world, ground, 0, -45, part_index);
 
-    create_regen(world, ground, 0, -60, part_index, 'regen1');
+    create_regen(world, ground, 2.5, -50, part_index, 'regen1');
     create_subtractor_block(world, ground, -70, -200, part_index, 'accumulator_read', true);
     create_subtractor_block(world, ground, -140, -200, part_index, 'accumulator_write', false);
     create_subtractor_block(world, ground, 70, -200, part_index, 'pc_read', true);
     create_subtractor_block(world, ground, 140, -200, part_index, 'pc_write', false);
-    create_pitch_reducer(world, ground, 0, -32);
-    create_router_block(world, ground, -4, -77, part_index, false, "acc_write_diverter");
-    create_router_block(world, ground, -4+narrow_pitch*17, -77, part_index, true, "pc_write_diverter");
+    create_pitch_reducer(world, ground, 3, -26);
+    create_router_block(world, ground, 0, -68, part_index, false, "acc_write_diverter");
+    create_router_block(world, ground, 0+narrow_pitch*17, -68, part_index, true, "pc_write_diverter");
 
-    create_narrow_channel(world, ground, 0, -53);
-    create_router_block(world, ground, -4, -120, part_index, false, "acc_read_diverter");
-    create_router_block(world, ground, -4+narrow_pitch*17, -120, part_index, true, "pc_read_diverter");
+    create_narrow_channel(world, ground, 3, -48);
+    create_router_block(world, ground, 0, -110, part_index, false, "acc_read_diverter");
+    create_router_block(world, ground, 0+narrow_pitch*17, -110, part_index, true, "pc_read_diverter");
 
     var pc_read_cam_follower = create_cam_and_v_follower(world, ground, 180, -120, pc_read_timing, {'bumpheight':1.5, 'label': "PC Read", 'left': true});
     connect(world, pc_read_cam_follower, part_index['pc_read_diverter_lever'], 0, 1);
