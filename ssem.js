@@ -491,6 +491,7 @@ function createWorld(world) {
     for(var col=0;col<8;col++) {
 	connect(world, part_index['regen1lever'+col], part_index['injector'+col]);
 	connect(world, part_index['accumulator_write'+col], part_index['accumulator_read'+col]);
+	connect(world, part_index['pc_write'+col], part_index['pc_read'+col]);
     }
     connect(world, instruction_reader_cam_follower, part_index['instruction_reader']);
     connect(world, instruction_reset_cam_follower, part_index['instruction_resetter']);
