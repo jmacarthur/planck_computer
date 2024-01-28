@@ -469,7 +469,7 @@ function createWorld(world) {
     create_router_block(world, ground, 0, -110, part_index, false, "acc_read_diverter");
     create_router_block(world, ground, 0+narrow_pitch*17, -110, part_index, true, "pc_read_diverter");
 
-    var pc_read_cam_follower = create_cam_and_v_follower(world, ground, 180, -115, pc_read_timing, {'bumpheight':1.5, 'label': "PC Read", 'left': true});
+    var pc_read_cam_follower = create_cam_and_v_follower(world, ground, 180, -115, pc_read_timing, {'bumpheight':1.5, 'label': "PC Read", 'left': true, 'bias': 10.0});
 
     //connect(world, pc_read_cam_follower, part_index['pc_read_diverter_lever'], 0, 1);
     world.createJoint(pl.PulleyJoint({}, pc_read_cam_follower, part_index['pc_read_diverter'], Vec2(100,-68), Vec2(105,-68),
