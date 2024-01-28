@@ -90,6 +90,20 @@ class Renderer {
 	    window.requestAnimationFrame(this.loop.bind(this));
 	}
     }
+    renderPulley(joint) {
+	this.ctx.strokeStyle = '#ff0000';
+	var pos = joint.getAnchorA();
+	var pos2 = joint.getGroundAnchorA();
+	var pos3 = joint.getAnchorB();
+	var pos4 = joint.getGroundAnchorB();
+	console.log("Render joint"+pos+","+pos2+","+pos3+","+pos4)
+	this.ctx.beginPath();
+	this.ctx.moveTo((pos.x)*this.scale, (pos.y)*this.scale, 5);
+	this.ctx.lineTo((pos2.x)*this.scale, (pos2.y)*this.scale, 5);
+	this.ctx.moveTo((pos3.x)*this.scale, (pos3.y)*this.scale, 5);
+	this.ctx.lineTo((pos4.x)*this.scale, (pos4.y)*this.scale, 5);	
+	this.ctx.stroke();
+    }
     renderJoint(joint) {
 	var type = joint.getType()
 	if(type == "distance-joint") {
@@ -119,6 +133,8 @@ class Renderer {
 	    this.ctx.beginPath();
 	    this.ctx.arc((pos.x + pos2.x)*this.scale, (pos.y + pos2.y)*this.scale, 5, 0, Math.PI*2);
 	    this.ctx.stroke();
+	} else if(type == "pulley-joint") {
+	    this.renderPulley(joint);
 	} else {
 	    //console.log("Rendering unknown joint type "+type);
 	}
