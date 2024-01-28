@@ -122,12 +122,17 @@ function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing, para
     }
     if(left) {
 	var follower_bias = box(-lever_length/2,0,lever_length/2, 1);
+	var follower_weight = box(-lever_length/2-5, -3, 10, 7);
     } else {
 	var follower_bias = box(0,0,lever_length/2, 1);
+	var follower_weight = box(lever_length/2-5, -3, 10, 7);
     }
     addUnionFixture(follower, follower_arm, mass_normal, collisions_toplayer);
     addUnionFixture(follower, follower_point, mass_normal, collisions_toplayer);
     addUnionFixture(follower, follower_bias, mass_normal, collisions_toplayer);
+    if (params && 'bias' in params) {
+	addUnionFixture(follower, follower_weight, mass_normal, collisions_toplayer);
+    }
 
     completeUnion(follower);
 
