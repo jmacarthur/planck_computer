@@ -25,6 +25,6 @@ function create_router_block(world, ground, offsetx, offsety, part_index, revers
 	enableLimit : true
     }, ground, diverter, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
     diverter.attach_points = [];
-    diverter.attach_points[0] = Vec2(offsetx+(reverse?7*narrow_pitch+2:0), offsety);
+    diverter.attach_points[0] = Vec2(offsetx+(reverse?7*narrow_pitch+2:0), offsety-y_pitch*3);
     part_index[base_name] = diverter;
 }
