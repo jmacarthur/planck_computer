@@ -27,20 +27,4 @@ function create_router_block(world, ground, offsetx, offsety, part_index, revers
     diverter.attach_points = [];
     diverter.attach_points[0] = Vec2(offsetx+(reverse?7*narrow_pitch+2:0), offsety);
     part_index[base_name] = diverter;
-
-    // Create a motion amplification lever
-    var x = offsetx+(reverse?-2.0:2)*-16*narrow_pitch;
-    var y = offsety-8*y_pitch+10;
-    var amp_lever = world.createBody({type: "dynamic", position: new Vec2(x,y)});
-    addFixture(amp_lever, box(0,0,1,30), mass_normal, collisions_toplayer);
-    var revoluteJoint = world.createJoint(pl.RevoluteJoint({
-	maxMotorTorque: 10000,
-	motorSpeed: -0.1,
-	enableMotor: false,
-    }, ground, amp_lever, Vec2(x+0.5,y)));
-    amp_lever.attach_points = [];
-    amp_lever.attach_points[0] = Vec2(x+0.5,y+30);
-    amp_lever.attach_points[1] = Vec2(x+0.5,y+5);
-    connect(world, diverter, amp_lever, 0, 0);
-    part_index[base_name+"_lever"] = amp_lever;
 }
