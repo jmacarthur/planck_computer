@@ -14,6 +14,7 @@ class Renderer {
     spinner = 0;
     simulating = false;
     stoprunloop = false;
+    cam_position = 0.0;
     start(world, canvas) {
 	this.world = world;
 	this.canvas = canvas;
@@ -62,6 +63,16 @@ class Renderer {
 	//console.log("Loop iteration at "+dt+"ms");
 	if(this.simulating) {
 	    this.world.step(1 / 60);
+
+	    // Adjust cam positions
+	    this.cam_position -= 0.001;
+	    var angleTarget = this.cam_position;
+	    for(var i=0;i<cam_joint_list.length;i++) {
+		var joint = cam_joint_list[i];
+		let angleError = joint.getJointAngle() - angleTarget;
+		let gain = 0.1;
+		joint.setMotorSpeed(-gain * angleError);
+	    }
 	}
 	this.ctx.clearRect(-this.view_offset_x, -this.view_offset_y-this.canvas.height, this.canvas.width, this.canvas.height);
 	for (let body = this.world.getBodyList(); body; body = body.getNext()) {

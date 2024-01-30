@@ -1,3 +1,5 @@
+var cam_joint_list = [];
+
 function create_cam(world, ground, xoffset, yoffset, timing, params) {
     var base_radius = 15;
     var tab_height = 1;
@@ -48,6 +50,8 @@ function create_cam(world, ground, xoffset, yoffset, timing, params) {
 	motorSpeed: -0.1,
 	enableMotor: true,
     }, ground, cam, Vec2(xoffset,yoffset)));
+
+    cam_joint_list.push(revoluteJoint);
 
     completeUnion(cam);
     if (params && 'label' in params) {
