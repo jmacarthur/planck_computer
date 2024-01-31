@@ -459,8 +459,8 @@ function createWorld(world) {
     create_regen(world, ground, 2.5, -50, part_index, 'regen1');
     create_subtractor_block(world, ground, -70, -200, part_index, 'accumulator_read', true);
     create_subtractor_block(world, ground, -140, -200, part_index, 'accumulator_write', false);
-    create_subtractor_block(world, ground, 70, -200, part_index, 'pc_read', true);
-    create_subtractor_block(world, ground, 140, -200, part_index, 'pc_write', false);
+    create_subtractor_block(world, ground, 69, -184, part_index, 'pc_read', true);
+    create_subtractor_block(world, ground, 140, -184, part_index, 'pc_write', false);
     create_pitch_reducer(world, ground, 3, -27);
     create_router_block(world, ground, 0, -68, part_index, false, "acc_write_diverter");
     create_router_block(world, ground, 0+narrow_pitch*17, -68, part_index, true, "pc_write_diverter");
