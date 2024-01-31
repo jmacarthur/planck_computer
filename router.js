@@ -27,7 +27,7 @@ function create_router_block(world, ground, offsetx, offsety, part_index, revers
 		var slope_polygon = [Vec2(0,0), Vec2(0,0.5), Vec2(-10-8*channel_pitch, -10+0.5), Vec2(-10-8*channel_pitch, -10)];
 	    }
 	    addFixture(fixed_out, new Polygon(translate_points(slope_polygon, reverse?(9-col)*channel_pitch:((col-7)*channel_pitch),-col*y_pitch-1.2)), mass_none, collisions_toplayer);
-	    addFixture(fixed_out, box(reverse?(19-col)*channel_pitch:((col-17)*channel_pitch),-col*y_pitch-10,0.5,3.0), mass_none, collisions_toplayer);
+	    addFixture(fixed_out, box(reverse?(19-col)*channel_pitch-2:((col-17)*channel_pitch+2),-col*y_pitch-12,0.5,5.0), mass_none, collisions_toplayer);
 	}
     }
     var prismaticJoint = world.createJoint(pl.PrismaticJoint({
