@@ -18,6 +18,7 @@ function create_router_block(world, ground, offsetx, offsety, part_index, revers
 	var outtake_poly = new Polygon(translate_points(outtake_polygon, (reverse?7*narrow_pitch+2:0), -col*y_pitch-0.5));
 	addFixture(diverter, outtake_poly, mass_normal, collisions_toplayer);
 	addFixture(fixed_out, box(reverse?0:((col-7)*channel_pitch),-col*y_pitch-1.1,(9-col)*channel_pitch,0.5), mass_none, collisions_toplayer);
+	addFixture(fixed_out, box(reverse?(10-col)*channel_pitch-5:((col-8)*channel_pitch),-col*y_pitch+0.2,0.5,3.0), mass_none, collisions_toplayer);
     }
     var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	lowerTranslation : reverse?-8*narrow_pitch:0,
