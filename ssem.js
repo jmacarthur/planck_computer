@@ -3,7 +3,7 @@
 
 var decoder_timing = [ [0, 0.1, 1, 0.1 ] ];
 var discard_timing = [ [1, 0.1, 1, 0.1 ] ];
-var pc_read_timing = [ [0, 0.1, 1, 0.1 ] ];
+var pc_read_timing = [ [0.4, 0.1, 0.2, 0.1 ] ];
 var all_inject_timing = [ [0.03, 0.08, 0.0, 0.0 ] ];
 var regen_timing = [ [0.3, 0.1, 0.1, 0 ] ];
 var acc_reset_timing = [ [0.3, 0.1, 0, 0 ] ];
@@ -469,7 +469,7 @@ function createWorld(world) {
     create_router_block(world, ground, 0, -110, part_index, false, "acc_read_diverter");
     create_router_block(world, ground, 0+narrow_pitch*17, -110, part_index, true, "pc_read_diverter");
 
-    var pc_read_cam_follower = create_cam_and_v_follower(world, ground, 180, -110, pc_read_timing, {'bumpheight':1.5, 'label': "PC Read", 'left': true, 'bias': 10.0});
+    var pc_read_cam_follower = create_cam_and_v_follower(world, ground, 180, -110, pc_read_timing, {'bumpheight':1.6, 'label': "PC Read", 'left': true, 'bias': 10.0});
 
     //connect(world, pc_read_cam_follower, part_index['pc_read_diverter_lever'], 0, 1);
     world.createJoint(pl.PulleyJoint({}, pc_read_cam_follower, part_index['pc_read_diverter'],
