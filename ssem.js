@@ -462,12 +462,12 @@ function createWorld(world) {
     create_subtractor_block(world, ground, 69, -184, part_index, 'pc_read', true);
     create_subtractor_block(world, ground, 140, -184, part_index, 'pc_write', false);
     create_pitch_reducer(world, ground, 3, -27);
-    create_router_block(world, ground, 0, -68, part_index, false, "acc_write_diverter");
-    create_router_block(world, ground, 0+narrow_pitch*17, -68, part_index, true, "pc_write_diverter");
+    create_router_block(world, ground, 0, -68, part_index, false, false, "acc_write_diverter");
+    create_router_block(world, ground, 0+narrow_pitch*17, -68, part_index, true, false, "pc_write_diverter");
 
     create_narrow_channel(world, ground, 3, -48);
-    create_router_block(world, ground, 0, -110, part_index, false, "acc_read_diverter");
-    create_router_block(world, ground, 0+narrow_pitch*17, -110, part_index, true, "pc_read_diverter");
+    create_router_block(world, ground, 0, -110, part_index, false, true, "acc_read_diverter");
+    create_router_block(world, ground, 0+narrow_pitch*17, -110, part_index, true, true, "pc_read_diverter");
 
     var pc_read_cam_follower = create_cam_and_v_follower(world, ground, 180, -110, pc_read_timing, {'bumpheight':1.6, 'label': "PC Read", 'left': true, 'bias': 10.0});
 
