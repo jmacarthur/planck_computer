@@ -75,6 +75,10 @@ function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing, para
 	offset_timing.push(segment);
     }
 
+    if(params && 'leverlen' in params) {
+	lever_length = params['leverlen'];
+    }
+
     var cam = create_cam(world, ground, xoffset, yoffset, offset_timing, params);
     // Follower assembly
     var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset+follower_axis_x-0.5, yoffset+follower_height)});
