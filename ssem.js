@@ -5,7 +5,7 @@ var decoder_timing = [ [0, 0.1, 1, 0.1 ] ];
 var discard_timing = [ [1, 0.1, 1, 0.1 ] ];
 var pc_read_timing = [ [0, 0.1, 1, 0.1 ] ];
 var all_inject_timing = [ [0.03, 0.08, 0.0, 0.0 ] ];
-var regen_timing = [ [1, 0.1, 0.1, 0 ] ];
+var regen_timing = [ [0.3, 0.1, 0.1, 0 ] ];
 var acc_reset_timing = [ [0.3, 0.1, 0, 0 ] ];
 var instruction_holdoff_timing = [ [0.2, 0.1, 1, 0], [1.3,0.1,1,0], [2.6, 0.1,1,0] ];
 var null_timing = [ [0, 0.1, 0.1, 0.1 ]];
@@ -385,8 +385,8 @@ function create_regen(world, ground, origin_x, origin_y, part_index, base_name) 
     var regen_bar = world.createBody({type: "dynamic", position: new Vec2(origin_x, origin_y)});
     var blocking_bar = world.createBody({type: "static", position: new Vec2(origin_x, origin_y)});
     for(var col=0; col<8; col++) {
-	addFixture(regen_bar, box(col*channel_pitch+0.5, 0, 1, 3), mass_normal, collisions_toplayer)
-	addFixture(blocking_bar, box(col*channel_pitch, -1, channel_pitch-3.5, 0.8), mass_normal, collisions_toplayer)
+	addFixture(regen_bar, box(col*channel_pitch+0.5, 0, 1, 2.5), mass_normal, collisions_toplayer)
+	addFixture(blocking_bar, box(col*channel_pitch, -1, channel_pitch-4, 0.8), mass_normal, collisions_toplayer)
     }
 
     var joining_bar = box(0,0,8*channel_pitch, 2);
@@ -461,7 +461,7 @@ function createWorld(world) {
     create_subtractor_block(world, ground, -140, -200, part_index, 'accumulator_write', false);
     create_subtractor_block(world, ground, 70, -200, part_index, 'pc_read', true);
     create_subtractor_block(world, ground, 140, -200, part_index, 'pc_write', false);
-    create_pitch_reducer(world, ground, 3, -26);
+    create_pitch_reducer(world, ground, 3, -27);
     create_router_block(world, ground, 0, -68, part_index, false, "acc_write_diverter");
     create_router_block(world, ground, 0+narrow_pitch*17, -68, part_index, true, "pc_write_diverter");
 
