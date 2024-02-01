@@ -68,8 +68,11 @@ class Renderer {
 	    this.world.step(1 / 60);
 
 	    // Adjust cam positions
-	    this.cam_position -= 0.001;
-	    var angleTarget = this.cam_position;
+	    this.cam_position += 0.001;
+	    if(this.cam_position > Math.PI*2) {
+		this.cam_position -= Math.PI*2;
+	    }
+	    var angleTarget = -this.cam_position;
 	    for(var i=0;i<cam_joint_list.length;i++) {
 		var joint = cam_joint_list[i];
 		let angleError = joint.getJointAngle() - angleTarget;
@@ -110,7 +113,7 @@ class Renderer {
 	this.ctx.font = fontsize+"px Arial";
 	this.ctx.textAlign = "left";
 	this.ctx.scale(1,-1);
-	this.ctx.fillText((50*-this.cam_position/Math.PI).toFixed(1), 40, 20);
+	this.ctx.fillText((50*this.cam_position/Math.PI).toFixed(1), 40, 20);
 	this.ctx.restore();
 
 	this.ctx.drawText
