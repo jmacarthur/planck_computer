@@ -69,9 +69,6 @@ class Renderer {
 
 	    // Adjust cam positions
 	    this.cam_position += 0.001;
-	    if(this.cam_position > Math.PI*2) {
-		this.cam_position -= Math.PI*2;
-	    }
 	    var angleTarget = -this.cam_position;
 	    for(var i=0;i<cam_joint_list.length;i++) {
 		var joint = cam_joint_list[i];
