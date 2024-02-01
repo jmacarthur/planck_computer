@@ -98,9 +98,22 @@ class Renderer {
 	this.ctx.stroke();
 
 	// Add spinner
+	this.ctx.save();
+	this.ctx.translate(-this.view_offset_x, -this.view_offset_y);
 	this.ctx.beginPath();
-	this.ctx.arc(16-this.view_offset_x, 16-this.view_offset_y-32, 16, (this.spinner/100)*Math.PI*2, (this.spinner/100)*Math.PI*2+Math.PI);
+	this.ctx.arc(16, 16-32, 16, (this.spinner/100)*Math.PI*2, (this.spinner/100)*Math.PI*2+Math.PI);
 	this.ctx.fill();
+
+	// Draw info at top of window
+	this.ctx.fillStyle = "#000000";
+	var fontsize = 20;
+	this.ctx.font = fontsize+"px Arial";
+	this.ctx.textAlign = "left";
+	this.ctx.scale(1,-1);
+	this.ctx.fillText((50*-this.cam_position/Math.PI).toFixed(1), 40, 20);
+	this.ctx.restore();
+
+	this.ctx.drawText
 	this.spinner = (this.spinner+1)%100;
 
 	if(!this.stoprunloop) {
