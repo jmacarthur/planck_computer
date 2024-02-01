@@ -25,6 +25,7 @@ class Renderer {
 	canvas.addEventListener('mousemove', this.mousemove.bind(this));
 	canvas.addEventListener('mousedown', this.mousedown.bind(this));
 	canvas.addEventListener('mouseup', this.mouseup.bind(this));
+	canvas.addEventListener('mouseout', this.mouseout.bind(this));
 	document.addEventListener('keydown', this.keydown.bind(this));
     }
     keydown(e) {
@@ -58,7 +59,9 @@ class Renderer {
     mouseup(e) {
 	this.dragging = false;
     }
-
+    mouseout(e) {
+	this.dragging = false;
+    }
     loop(dt) {
 	//console.log("Loop iteration at "+dt+"ms");
 	if(this.simulating) {
