@@ -73,6 +73,9 @@ class Renderer {
 	    for(var i=0;i<cam_joint_list.length;i++) {
 		var joint = cam_joint_list[i];
 		let angleError = joint.getJointAngle() - angleTarget;
+		if(Math.abs(angleError)>0.1) {
+		    console.log("Cam stalled!")
+		}
 		let gain = 0.1;
 		joint.setMotorSpeed(-gain * angleError);
 	    }
