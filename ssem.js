@@ -509,5 +509,5 @@ function createWorld(world) {
     connect(world, instruction_reader_cam_follower, part_index['instruction_reader']);
     connect(world, instruction_reset_cam_follower, part_index['instruction_resetter']);
     connect(world, instruction_holdoff_cam_follower, part_index['instruction_holdoff']);
-
+    world.part_index = part_index;
 }

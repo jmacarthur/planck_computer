@@ -62,6 +62,20 @@ class Renderer {
     mouseout(e) {
 	this.dragging = false;
     }
+    getAccumulatorString() {
+	var string = "";
+	for(var i=7;i>=0;i--) {
+	    var angle = this.world.part_index["accumulator_read"+i].getAngle();
+	    if(angle>0.25) {
+		string += "1";
+	    } else if (angle<-0.25) {
+		string += "0";
+	    } else {
+		string += "X";
+	    }
+	}
+	return string;
+    }
     loop(dt) {
 	//console.log("Loop iteration at "+dt+"ms");
 	if(this.simulating) {
@@ -110,7 +124,10 @@ class Renderer {
 	this.ctx.font = fontsize+"px Arial";
 	this.ctx.textAlign = "left";
 	this.ctx.scale(1,-1);
-	this.ctx.fillText((50*this.cam_position/Math.PI).toFixed(1), 40, 20);
+
+	var accumulator_string = this.getAccumulatorString()
+
+	this.ctx.fillText((50*this.cam_position/Math.PI).toFixed(1)+"% " + accumulator_string, 40, 20);
 	this.ctx.restore();
 
 	this.ctx.drawText
