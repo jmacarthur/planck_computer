@@ -492,7 +492,7 @@ function createWorld(world) {
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, all_inject_timing, {'label': "All inject", "bumpheight": 1.2, 'leverlen': 30});
     var regen1_cam_follower = create_cam_and_v_follower(world, ground, 120, -45, regen_timing, {'bumpheight':1.5, 'label': "Regenerator 1"});
     var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, -200, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Accumulator reset"});
-    var pc_reset_cam_follower = create_cam_and_v_follower(world, ground, 220, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Accumulator reset"});
+    var pc_reset_cam_follower = create_cam_and_v_follower(world, ground, 220, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "PC reset"});
     var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -265, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Instruction read"});
     var instruction_reset_cam_follower = create_cam_and_v_follower(world, ground, 100, -280, acc_reset_timing, {'bumpheight': 1.5, 'left': true, 'label': "Instruction reset"});
     var instruction_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 10, -330, instruction_holdoff_timing, {'bumpheight': 1.5, 'label': "Instruction holdoff"});
