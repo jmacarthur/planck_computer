@@ -3,7 +3,7 @@
 
 var decoder_timing = [ [0, 0.1, 1, 0.1 ] ];
 var discard_timing = [ [1, 0.1, 1, 0.1 ] ];
-var pc_read_timing = [ [0.4, 0.1, 0.2, 0.1 ] ];
+var pc_read_timing = [ [0.35, 0.1, 0.2, 0.1 ] ];
 var all_inject_timing = [ [0.03, 0.08, 0.0, 0.0 ] ];
 var regen_timing = [ [0.3, 0.1, 0.1, 0 ] ];
 var acc_reset_timing = [ [0.3, 0.1, 0, 0 ] ];
@@ -478,11 +478,10 @@ function createWorld(world) {
 				     Vec2(130,part_index['pc_read_diverter'].attach_points[0].y),
 				     pc_read_cam_follower.attach_points[0], part_index['pc_read_diverter'].attach_points[0], 0.1));
 
-    //connect(world, pc_read_cam_follower, part_index['pc_read_diverter_lever'], 0, 1);
-    world.createJoint(pl.PulleyJoint({}, pc_write_cam_follower, part_index['pc_write_diverter'],
+    /*world.createJoint(pl.PulleyJoint({}, pc_write_cam_follower, part_index['pc_write_diverter'],
 				     Vec2(210,part_index['pc_write_diverter'].attach_points[0].y+3),
 				     Vec2(210,part_index['pc_write_diverter'].attach_points[0].y),
-				     pc_write_cam_follower.attach_points[0], part_index['pc_write_diverter'].attach_points[0], 0.1));
+				     pc_write_cam_follower.attach_points[0], part_index['pc_write_diverter'].attach_points[0], 0.1));*/
 
     create_instruction_decoder(world, ground, 0, -300, part_index);
 
