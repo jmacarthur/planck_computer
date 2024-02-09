@@ -62,6 +62,20 @@ class Renderer {
     mouseout(e) {
 	this.dragging = false;
     }
+    getAccumulatorString() {
+	var string = "";
+	for(var i=7;i>=0;i--) {
+	    var angle = this.world.part_index["accumulator_read"+i].getAngle();
+	    if(angle>0.25) {
+		string += "1";
+	    } else if (angle<-0.25) {
+		string += "0";
+	    } else {
+		string += "X";
+	    }
+	}
+	return string;
+    }
     loop(dt) {
 	//console.log("Loop iteration at "+dt+"ms");
 	if(this.simulating) {
@@ -110,7 +124,10 @@ class Renderer {
 	this.ctx.font = fontsize+"px Arial";
 	this.ctx.textAlign = "left";
 	this.ctx.scale(1,-1);
-	this.ctx.fillText((50*this.cam_position/Math.PI).toFixed(1), 40, 20);
+
+	var accumulator_string = this.getAccumulatorString()
+
+	this.ctx.fillText((50*this.cam_position/Math.PI).toFixed(1)+"% " + accumulator_string, 40, 20);
 	this.ctx.restore();
 
 	this.ctx.drawText
@@ -122,16 +139,34 @@ class Renderer {
     }
     renderPulley(joint) {
 	this.ctx.strokeStyle = '#ff0000';
-	var pos = joint.getAnchorA();
-	var pos2 = joint.getGroundAnchorA();
-	var pos3 = joint.getAnchorB();
-	var pos4 = joint.getGroundAnchorB();
+	var pos2 = joint.getAnchorA();
+	var small = joint.getGroundAnchorA();
+	var pos = joint.getAnchorB();
+	var large = joint.getGroundAnchorB();
+	var large_to_small_x = small.x-large.x;
+	var large_to_small_y = small.y-large.y;
+	var cx = small.x + large_to_small_x * joint.getRatio();
+	var cy = small.y + large_to_small_y * joint.getRatio();
+	var dx = cx-large.x;
+	var dy = cy-large.y;
+	var large_radius = Math.sqrt(dx*dx+dy*dy);
+	var dx2 = cx-small.x;
+	var dy2 = cy-small.y;
+	var small_radius = Math.sqrt(dx2*dx2+dy2*dy2);
+	// NB all the above could be precalculated!
 	this.ctx.beginPath();
 	this.ctx.moveTo((pos.x)*this.scale, (pos.y)*this.scale, 5);
+	this.ctx.lineTo((large.x)*this.scale, (large.y)*this.scale, 5);
+	this.ctx.moveTo((small.x)*this.scale, (small.y)*this.scale, 5);
 	this.ctx.lineTo((pos2.x)*this.scale, (pos2.y)*this.scale, 5);
-	this.ctx.moveTo((pos3.x)*this.scale, (pos3.y)*this.scale, 5);
-	this.ctx.lineTo((pos4.x)*this.scale, (pos4.y)*this.scale, 5);
 	this.ctx.stroke();
+	this.ctx.beginPath();
+	this.ctx.arc(cx*this.scale, cy*this.scale, small_radius*this.scale, 0, Math.PI*2);
+	this.ctx.stroke();
+	this.ctx.beginPath();
+	this.ctx.arc(cx*this.scale, cy*this.scale, large_radius*this.scale, 0, Math.PI*2);	
+	this.ctx.stroke();
+
     }
     renderJoint(joint) {
 	var type = joint.getType()

@@ -480,8 +480,8 @@ function createWorld(world) {
 
     //connect(world, pc_read_cam_follower, part_index['pc_read_diverter_lever'], 0, 1);
     world.createJoint(pl.PulleyJoint({}, pc_write_cam_follower, part_index['pc_write_diverter'],
-				     Vec2(130,part_index['pc_write_diverter'].attach_points[0].y+3),
-				     Vec2(130,part_index['pc_write_diverter'].attach_points[0].y),
+				     Vec2(210,part_index['pc_write_diverter'].attach_points[0].y+3),
+				     Vec2(210,part_index['pc_write_diverter'].attach_points[0].y),
 				     pc_write_cam_follower.attach_points[0], part_index['pc_write_diverter'].attach_points[0], 0.1));
 
     create_instruction_decoder(world, ground, 0, -300, part_index);
@@ -511,5 +511,5 @@ function createWorld(world) {
     connect(world, instruction_reader_cam_follower, part_index['instruction_reader']);
     connect(world, instruction_reset_cam_follower, part_index['instruction_resetter']);
     connect(world, instruction_holdoff_cam_follower, part_index['instruction_holdoff']);
-
+    world.part_index = part_index;
 }
