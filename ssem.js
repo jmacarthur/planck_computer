@@ -10,6 +10,10 @@ var acc_reset_timing = [ [0.3, 0.1, 0, 0 ] ];
 var instruction_holdoff_timing = [ [0.2, 0.1, 1, 0], [1.3,0.1,1,0], [2.6, 0.1,1,0] ];
 var null_timing = [ [0, 0.1, 0.1, 0.1 ]];
 
+var channel_pitch = 8.0;
+var narrow_pitch = 3; // For compressed channels
+var row_separation = 4.0;
+var decoder_x_pitch = 10;
 
 function merge(original_hash, added_hash) {
     Object.keys(added_hash).forEach(function(key) {
@@ -139,9 +143,6 @@ function create_transparent_lever(world, ground, x, y) {
     return injector_lever;
 }
 
-var channel_pitch = 8.0;
-var narrow_pitch = 3; // For compressed channels
-var row_separation = 4.0;
 function create_injectors(world, ground, part_index) {
     // Create the hopper and injector
     // Injector consists of an active rectangle and an intangible rectangle
@@ -239,7 +240,7 @@ function create_memory(world, ground, part_index) {
 
 	var blocker = new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,2.5), Vec2(0,2.5)], col*channel_pitch-1, 0));
 	for(var col=0;col<4;col++) {
-	    line_shapes.push(box(8*channel_pitch+10+10*col+1.1, -0.1, 1.0, 1.0));
+	    line_shapes.push(box(8*channel_pitch+10+decoder_x_pitch*col+1.1, -0.1, 1.0, 1.0));
 	}
 
 	// Turn everything in 'line_shapes' into real fixtures and combine the
@@ -312,7 +313,7 @@ function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
     var sensor_drop = -200;
     var cols = 3;
     for(var col=0; col<cols; col++) {
-	var decoder_line = world.createBody({type: "dynamic", position: new Vec2(-3.0+xoffset+col*10.0, yoffset)});
+	var decoder_line = world.createBody({type: "dynamic", position: new Vec2(-3.0+xoffset+col*decoder_x_pitch, yoffset)});
 	// Add an intangible box to hold the columns together
 	addFixture(decoder_line, box(0, sensor_drop, 1.0, row_separation*8+1-sensor_drop), mass_none, collisions_none);
 	for(var row=0; row<8; row++) {
