@@ -1,6 +1,5 @@
 'use strict';
 
-
 var decoder_timing = [ [0, 0.1, 1, 0.1 ] ];
 var discard_timing = [ [1, 0.1, 1, 0.1 ] ];
 var pc_read_timing = [ [0.35, 0.1, 0.2, 0.1 ] ];
@@ -329,7 +328,7 @@ function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
 	    enableLimit : true
 	}, ground, decoder_line, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
 
-	// Add the 'sensor'
+	// Add the 'sensor' way below the main decoder
 	addFixture(decoder_line, box(0, sensor_drop, 1.0, 1.0), mass_normal, collisions_toplayer);
 
 	decoder_lines.push(decoder_line);
