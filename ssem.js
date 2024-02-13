@@ -468,6 +468,7 @@ function createWorld(world) {
     create_narrow_channel(world, ground, 3, -48);
     create_router_block(world, ground, 0, -110, part_index, false, true, "acc_read_diverter");
     create_router_block(world, ground, 0+narrow_pitch*17, -110, part_index, true, true, "pc_read_diverter");
+    var address_sender = create_address_sender(world, ground, 69, -232, part_index);
 
     var pc_read_cam_follower = create_cam_and_v_follower(world, ground, 250, -110, pc_read_timing, {'bumpheight':1.6, 'label': "PC Read", 'left': true, 'bias': 10.0});
     var pc_write_cam_follower = create_cam_and_v_follower(world, ground, 250, -70, pc_read_timing, {'bumpheight':1.6, 'label': "PC Update", 'left': true, 'bias': 10.0});
@@ -495,6 +496,11 @@ function createWorld(world) {
     var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -265, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Instruction read"});
     var instruction_reset_cam_follower = create_cam_and_v_follower(world, ground, 100, -280, acc_reset_timing, {'bumpheight': 1.5, 'left': true, 'label': "Instruction reset"});
     var instruction_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 10, -330, instruction_holdoff_timing, {'bumpheight': 1.5, 'label': "Instruction holdoff"});
+    var address_sender_cam = create_cam_and_v_follower(world, ground, 120, -230, null_timing, {'bumpheight': 1.5, 'label': "Address send release"});
+
+
+    connect(world, address_sender_cam, part_index['address-sender-release']);
+
     connect(world, discarder_cam, part_index['discarder']);
     connect(world, decoder_holdoff_cam_follower, part_index['decoder_holdoff_bar']);
     connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
@@ -511,6 +517,5 @@ function createWorld(world) {
     connect(world, instruction_reset_cam_follower, part_index['instruction_resetter']);
     connect(world, instruction_holdoff_cam_follower, part_index['instruction_holdoff']);
 
-    var address_sender = create_address_sender(world, ground, 69, -235);
     world.part_index = part_index;
 }
