@@ -298,7 +298,7 @@ function create_memory(world, ground, part_index) {
 
     // Memory line limiting block(s)
     var memory_limit = world.createBody({type: "static", position: new Vec2(memory_right_x-8, -32.0)});
-    addFixture(memory_limit, box(0, 0, 1.0,1.0), mass_none, collisions_toplayer);
+    addFixture(memory_limit, box(0, 0, 1.0,2.0), mass_none, collisions_toplayer);
     // Memory holdoff crank
     var holdoff_crank = create_crank(world, ground, memory_right_x+10, -16, Math.PI);
     var distanceJoint = world.createJoint(pl.DistanceJoint({}, holdoff_crank, holdoff_crank.attach_points[1], memory_holdoff, new Vec2(memory_right_x-3.5,-16.0)));
