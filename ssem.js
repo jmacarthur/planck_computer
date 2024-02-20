@@ -432,6 +432,18 @@ function create_narrow_channel(world, ground, offsetx, offsety) {
     }
 }
 
+function create_diagonal_channels(world, ground, offsetx, offsety, delta_x, delta_y, channel_count) {
+    var channels = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
+    for(var col=0;col < (channel_count+1);col++) {
+	addFixture(channels, new Polygon([Vec2(channel_pitch*col, 0),
+					  Vec2(channel_pitch*col+1, 0),
+					  Vec2(channel_pitch*col+delta_x+1, delta_y),
+					  Vec2(channel_pitch*col+delta_x, delta_y)]
+					), mass_normal, collisions_toplayer);
+	console.log("Creating diagonal channel");
+    }
+}
+
 function connect(world, body1, body2, attachpoint1, attachpoint2) {
     if(attachpoint1 === undefined) {
 	attachpoint1 = 0;
@@ -498,6 +510,7 @@ function createWorld(world) {
     var instruction_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 10, -330, instruction_holdoff_timing, {'bumpheight': 1.5, 'label': "Instruction holdoff"});
     var address_sender_cam = create_cam_and_v_follower(world, ground, 120, -230, null_timing, {'bumpheight': 1.5, 'label': "Address send release"});
 
+    create_diagonal_channels(world, ground, 60, -190, -35, -30, 8);
 
     connect(world, address_sender_cam, part_index['address-sender-release']);
 
