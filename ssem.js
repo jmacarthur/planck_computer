@@ -188,6 +188,7 @@ function create_injectors(world, ground, part_index) {
 	    position: new Vec2(2.0+4*i, 8.0)
 	});
 	addFixture(ball1, new Circle(1.0), mass_normal, collisions_toplayer);
+	world.active_ball_list.push(ball1);
     }
     part_index['injector_levers'] = injector_levers;
 
@@ -465,7 +466,7 @@ function createWorld(world) {
 
     // Add drain zones (places where ball bearings vanish)
     world.drain_holes = [];
-
+    world.active_ball_list = [];
     addFixture(ground, box(-5.0, 0, 1, 1), mass_none, collisions_none);
     create_injectors(world, ground, part_index);
     create_memory(world, ground, part_index);

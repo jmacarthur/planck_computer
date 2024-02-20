@@ -54,7 +54,7 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	}
 	if(reader) {
 	    // Add drain holes.
-	    world.drain_holes.push([offsetx+col*channel_pitch-4, offsety-5, 4, 6]);
+	    world.drain_holes.push([offsetx+col*channel_pitch-4, offsety-4.5, 4, 5.5]);
 	}
     }
     var labelbody = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});

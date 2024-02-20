@@ -15,6 +15,7 @@ class Renderer {
     simulating = false;
     stoprunloop = false;
     cam_position = 0.0;
+    cycle = 0;
     start(world, canvas) {
 	this.world = world;
 	this.canvas = canvas;
@@ -80,7 +81,7 @@ class Renderer {
 	//console.log("Loop iteration at "+dt+"ms");
 	if(this.simulating) {
 	    this.world.step(1 / 60);
-
+	    this.cycle += 1;
 	    // Adjust cam positions
 	    this.cam_position += 0.001;
 	    var angleTarget = -this.cam_position;
@@ -94,6 +95,14 @@ class Renderer {
 		joint.setMotorSpeed(-gain * angleError);
 	    }
 	}
+
+	if(this.cycle==1) {
+	    for(var hole=0;hole < this.world.drain_holes.length; hole++) {
+		var holespec = this.world.drain_holes[hole];
+		console.log("Recording hole "+holespec[0]+","+holespec[1]+" +"+holespec[2]+ " +" +holespec[3]);
+	    }
+	}
+
 	this.ctx.clearRect(-this.view_offset_x, -this.view_offset_y-this.canvas.height, this.canvas.width, this.canvas.height);
 
 	// Draw drain holes (at back)
@@ -137,6 +146,28 @@ class Renderer {
 	this.ctx.restore();
 
 	this.spinner = (this.spinner+1)%100;
+
+	// Occasionally remove balls which are in the drain areas
+	var new_balls = [];
+	for (let bodyindex = 0; bodyindex < this.world.active_ball_list.length; bodyindex++) {
+	    var body = this.world.active_ball_list[bodyindex];
+	    var pos = body.getPosition();
+	    var ball_deleted = false;
+
+	    for(var hole=this.cycle%10;hole < this.world.drain_holes.length && !ball_deleted; hole+=10) {
+		var holespec = this.world.drain_holes[hole];
+		if(pos.x >= holespec[0] && pos.x <= holespec[0]+holespec[2] &&
+				   pos.y >= holespec[1] && pos.y <= holespec[1]+holespec[3]) {
+		    console.log("Deleting ball: "+pos.x+","+pos.y+" vs hole "+holespec[0]+","+holespec[1]+" +"+holespec[2]+ " +" +holespec[3]);
+		    this.world.destroyBody(body);
+		    ball_deleted = true;
+		}
+	    }
+	    if(!ball_deleted) {
+		new_balls.push(body);
+	    }
+	}
+	this.world.active_ball_list = new_balls;
 
 	if(!this.stoprunloop) {
 	    window.requestAnimationFrame(this.loop.bind(this));
