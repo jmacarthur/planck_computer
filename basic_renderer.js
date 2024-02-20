@@ -136,7 +136,6 @@ class Renderer {
 	this.ctx.fillText((50*this.cam_position/Math.PI).toFixed(1)+"% " + accumulator_string, 40, 20);
 	this.ctx.restore();
 
-	this.ctx.drawText
 	this.spinner = (this.spinner+1)%100;
 
 	if(!this.stoprunloop) {
