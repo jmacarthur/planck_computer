@@ -95,6 +95,12 @@ class Renderer {
 	    }
 	}
 	this.ctx.clearRect(-this.view_offset_x, -this.view_offset_y-this.canvas.height, this.canvas.width, this.canvas.height);
+
+	// Draw drain holes (at back)
+	for(var hole=0;hole < this.world.drain_holes.length; hole++) {
+	    this.renderHole(this.world.drain_holes[hole]);
+	}
+
 	for (let body = this.world.getBodyList(); body; body = body.getNext()) {
 	    this.renderBody(body);
 	}
@@ -273,5 +279,14 @@ class Renderer {
 	} else {
 	    console.log("Unrenderable shape type "+shapetype);
 	}
+    }
+    renderHole(hole_spec) {
+	this.ctx.strokeStyle = "#0000ff";
+	this.ctx.fillStyle = "#7f7fff";
+	this.ctx.beginPath();
+	this.ctx.rect(hole_spec[0]*this.scale, hole_spec[1]*this.scale,
+		      hole_spec[2]*this.scale, hole_spec[3]*this.scale);
+	this.ctx.fill();
+	this.ctx.stroke();
     }
 }

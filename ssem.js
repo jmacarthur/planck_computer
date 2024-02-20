@@ -462,6 +462,10 @@ function createWorld(world) {
     var part_index = [];
     // Create the ground object, just in case we need it
     var ground = world.createBody();
+
+    // Add drain zones (places where ball bearings vanish)
+    world.drain_holes = [];
+
     addFixture(ground, box(-5.0, 0, 1, 1), mass_none, collisions_none);
     create_injectors(world, ground, part_index);
     create_memory(world, ground, part_index);

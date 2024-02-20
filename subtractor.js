@@ -50,6 +50,11 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	    addFixture(outtakechannelcent, box(-1, -5, 2, col*pitch_y+3), mass_none, collisions_topstatic);
 	    var outtakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
 	    addFixture(outtakechannelleft, box(-channel_pitch/2-0.5, -5, 1, col*pitch_y+7), mass_none, collisions_topstatic);
+	    addFixture(outtakechannelleft, box(-channel_pitch/2, -5, 4, 1), mass_none, collisions_topstatic);
+	}
+	if(reader) {
+	    // Add drain holes.
+	    world.drain_holes.push([offsetx+col*channel_pitch-4, offsety-5, 4, 6]);
 	}
     }
     var labelbody = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
