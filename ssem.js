@@ -458,6 +458,22 @@ function connect(world, body1, body2, attachpoint1, attachpoint2) {
     return distanceJoint;
 }
 
+function create_mixer(world, ground, offsetx, offsety) {
+    var mixer = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
+
+    for(var i=0;i<4;i++) {
+	for(var j=0;j<4;j++) {
+	    var tx = i*8-j*8;
+	    var ty = -i*8-j*8;
+	    addFixture(mixer, new Polygon([Vec2(tx, ty-5),
+					   Vec2(tx+5,ty+0),
+					   Vec2(tx,ty+2),
+					   Vec2(tx-5,ty)]),
+		       mass_normal, collisions_toplayer);
+	}
+    }
+}
+
 function createWorld(world) {
 
     var part_index = [];
@@ -502,6 +518,13 @@ function createWorld(world) {
 				     pc_write_cam_follower.attach_points[0], part_index['pc_write_diverter'].attach_points[0], 0.1));*/
 
     create_instruction_decoder(world, ground, 0, -300, part_index);
+
+    create_mixer(world, ground, 150, -300);
+
+    for(var i=0;i<3;i++) {
+	create_fake_data(world, ground, 150-7-8*i,-300+10, 1);
+	create_fake_data(world, ground, 150+7+8*i,-250+10, 1);
+    }
 
     var discarder_cam = create_cam_and_v_follower(world, ground, -80, -40, discard_timing, {'label': "Discard", 'bumpheight': 1.5, 'leverlen': 30});
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing, {'label': "Decoder holdoff"});
