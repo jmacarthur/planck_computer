@@ -279,7 +279,7 @@ class Renderer {
 	    this.ctx.textAlign = "center";
 	    this.ctx.save();
 	    this.ctx.scale(1,-1);
-	    this.ctx.fillText(body.label, body.labelx, -body.labely);
+	    this.ctx.fillText(body.label, body.labelx*this.scale, -body.labely*this.scale);
 	    this.ctx.restore();
 	}
 	this.ctx.restore();
