@@ -9,8 +9,8 @@ class Renderer {
     dragging = false;
     drag_start_x = 0;
     drag_stary_y = 0;
-    view_offset_x = 100;
-    view_offset_y = -300;
+    view_offset_x = -30;
+    view_offset_y = 20;
     spinner = 0;
     simulating = false;
     stoprunloop = false;
@@ -103,7 +103,7 @@ class Renderer {
 
 	this.ctx.clearRect(0, -this.canvas.height, this.canvas.width, this.canvas.height);
 	this.ctx.save();
-	this.ctx.translate(this.view_offset_x, this.view_offset_y);
+	this.ctx.translate(this.view_offset_x*this.scale+this.canvas.width/2, this.view_offset_y*this.scale-this.canvas.height/2);
 
 	// Draw drain holes (at back)
 	for(var hole=0;hole < this.world.drain_holes.length; hole++) {
@@ -125,25 +125,6 @@ class Renderer {
 	this.ctx.moveTo(10, 0);
 	this.ctx.lineTo(-10, 0);
 	this.ctx.stroke();
-
-	// Add spinner
-	this.ctx.save();
-	this.ctx.translate(-this.view_offset_x, -this.view_offset_y);
-	this.ctx.beginPath();
-	this.ctx.arc(16, 16-32, 16, (this.spinner/100)*Math.PI*2, (this.spinner/100)*Math.PI*2+Math.PI);
-	this.ctx.fill();
-
-	// Draw info at top of window
-	this.ctx.fillStyle = "#000000";
-	var fontsize = 20;
-	this.ctx.font = fontsize+"px Arial";
-	this.ctx.textAlign = "left";
-	this.ctx.scale(1,-1);
-
-	var accumulator_string = this.getAccumulatorString()
-
-	this.ctx.fillText((50*this.cam_position/Math.PI).toFixed(1)+"% " + accumulator_string, 40, 20);
-	this.ctx.restore();
 
 	this.spinner = (this.spinner+1)%100;
 
@@ -169,6 +150,24 @@ class Renderer {
 	}
 	this.ctx.restore()
 
+	// Add spinner
+	this.ctx.save();
+	this.ctx.fillStyle = '#ff0000';
+	this.ctx.beginPath();
+	this.ctx.arc(16, 16-32, 16, (this.spinner/100)*Math.PI*2, (this.spinner/100)*Math.PI*2+Math.PI);
+	this.ctx.fill();
+
+	// Draw info at top of window
+	this.ctx.fillStyle = "#000000";
+	var fontsize = 20;
+	this.ctx.font = fontsize+"px Arial";
+	this.ctx.textAlign = "left";
+	this.ctx.scale(1,-1);
+
+	var accumulator_string = this.getAccumulatorString()
+
+	this.ctx.fillText((50*this.cam_position/Math.PI).toFixed(1)+"% " + accumulator_string, 40, 20);
+	this.ctx.restore();
 	this.world.active_ball_list = new_balls;
 
 	if(!this.stoprunloop) {
