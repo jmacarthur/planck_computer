@@ -16,6 +16,7 @@ class Renderer {
     stoprunloop = false;
     cam_position = 0.0;
     cycle = 0;
+    panspeed = 100;
     start(world, canvas) {
 	this.world = world;
 	this.canvas = canvas;
@@ -38,6 +39,16 @@ class Renderer {
 	    this.scale += 1;
 	} else if (e.key == "-" && this.scale > 1.0){
 	    this.scale -= 1;
+	} else if (e.keyCode == 37) {
+	    this.view_offset_x += this.panspeed / this.scale;
+	} else if (e.keyCode == 39) {
+	    this.view_offset_x -= this.panspeed / this.scale;
+	} else if (e.keyCode == 38) {
+	    this.view_offset_y -= this.panspeed / this.scale;
+	} else if (e.keyCode == 40) {
+	    this.view_offset_y += this.panspeed / this.scale;
+	} else {
+	    console.log("Unknown key "+e.keyCode);
 	}
     }
     mousedown(e) {
