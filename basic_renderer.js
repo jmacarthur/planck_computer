@@ -21,7 +21,6 @@ class Renderer {
 	this.canvas = canvas;
 	this.ctx = canvas.getContext("2d");
 	this.ctx.scale(1,-1);
-	this.ctx.translate(this.view_offset_x, this.view_offset_y);
 	this.loop(window, 0);
 	canvas.addEventListener('mousemove', this.mousemove.bind(this));
 	canvas.addEventListener('mousedown', this.mousedown.bind(this));
@@ -50,7 +49,6 @@ class Renderer {
 	if(this.dragging) {
 	    var dx = e.x-this.drag_start_x;
 	    var dy = -e.y-this.drag_start_y;
-	    this.ctx.translate(dx, dy);
 	    this.view_offset_x += dx;
 	    this.view_offset_y += dy;
 	    this.drag_start_x = e.x;
@@ -103,7 +101,9 @@ class Renderer {
 	    }
 	}
 
-	this.ctx.clearRect(-this.view_offset_x, -this.view_offset_y-this.canvas.height, this.canvas.width, this.canvas.height);
+	this.ctx.clearRect(0, -this.canvas.height, this.canvas.width, this.canvas.height);
+	this.ctx.save();
+	this.ctx.translate(this.view_offset_x, this.view_offset_y);
 
 	// Draw drain holes (at back)
 	for(var hole=0;hole < this.world.drain_holes.length; hole++) {
@@ -167,6 +167,8 @@ class Renderer {
 		new_balls.push(body);
 	    }
 	}
+	this.ctx.restore()
+
 	this.world.active_ball_list = new_balls;
 
 	if(!this.stoprunloop) {
