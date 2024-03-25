@@ -49,8 +49,8 @@ class Renderer {
 	if(this.dragging) {
 	    var dx = e.x-this.drag_start_x;
 	    var dy = -e.y-this.drag_start_y;
-	    this.view_offset_x += dx;
-	    this.view_offset_y += dy;
+	    this.view_offset_x += dx/this.scale;
+	    this.view_offset_y += dy/this.scale;
 	    this.drag_start_x = e.x;
 	    this.drag_start_y = -e.y;
 	}
