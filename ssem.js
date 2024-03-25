@@ -460,17 +460,27 @@ function connect(world, body1, body2, attachpoint1, attachpoint2) {
 
 function create_mixer(world, ground, offsetx, offsety) {
     var mixer = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
-
+    var pitch_x = channel_pitch/2;
+    var pitch_y = channel_pitch/2;
     for(var i=0;i<4;i++) {
 	for(var j=0;j<4;j++) {
-	    var tx = i*8-j*8;
-	    var ty = -i*8-j*8;
-	    addFixture(mixer, new Polygon([Vec2(tx, ty-5),
-					   Vec2(tx+5,ty+0),
-					   Vec2(tx,ty+2),
-					   Vec2(tx-5,ty)]),
-		       mass_normal, collisions_toplayer);
+	    var tx = i*pitch_x-j*pitch_y;
+	    var ty = -i*pitch_x-j*pitch_y;
+	    if(ty>-4*4) {
+		addFixture(mixer, new Polygon([Vec2(tx, ty-2),
+					       Vec2(tx+2,ty+0),
+					       Vec2(tx,ty+1),
+					       Vec2(tx-2,ty)]),
+			   mass_normal, collisions_toplayer);
+	    }
 	}
+	var tx = (i-2)*channel_pitch+channel_pitch/2;
+	var ty = -14;
+	addFixture(mixer, new Polygon([Vec2(tx-0.5, ty),
+				       Vec2(tx+0.5, ty),
+				       Vec2(tx+0.5, ty-10),
+				       Vec2(tx-0.5, ty-10)]),
+		   mass_normal, collisions_toplayer);
     }
 }
 
@@ -522,8 +532,8 @@ function createWorld(world) {
     create_mixer(world, ground, 150, -300);
 
     for(var i=0;i<3;i++) {
-	create_fake_data(world, ground, 150-7-8*i,-300+10, 1);
-	create_fake_data(world, ground, 150+7+8*i,-250+10, 1);
+	create_fake_data(world, ground, 150-3-channel_pitch*i/2,-300+10, 1);
+	create_fake_data(world, ground, 150+3+channel_pitch*i/2,-200+10, 1);
     }
 
     var discarder_cam = create_cam_and_v_follower(world, ground, -80, -40, discard_timing, {'label': "Discard", 'bumpheight': 1.5, 'leverlen': 30});
