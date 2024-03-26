@@ -421,13 +421,13 @@ function create_pitch_reducer(world, ground, offsetx, offsety) {
     }
 }
 
-function create_narrow_channel(world, ground, offsetx, offsety) {
+function create_narrow_channel(world, ground, offsetx, offsety, drop) {
     var reducer = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
     var centre_x = offsetx+channel_pitch*4;
     for(var col=0;col<9;col++) {
 	var pos = col-4;
-	addFixture(reducer, new Polygon([Vec2(centre_x+narrow_pitch*pos, offsety-10),
-				     Vec2(centre_x+narrow_pitch*pos+0.5, offsety-10),
+	addFixture(reducer, new Polygon([Vec2(centre_x+narrow_pitch*pos, offsety+drop),
+				     Vec2(centre_x+narrow_pitch*pos+0.5, offsety+drop),
 					 Vec2(centre_x+narrow_pitch*pos+0.5, offsety-1),
 					 Vec2(centre_x+narrow_pitch*pos, offsety-1)]), mass_normal, collisions_toplayer)
     }
@@ -508,9 +508,12 @@ function createWorld(world) {
     create_router_block(world, ground, 0, -68, part_index, false, false, "acc_write_diverter");
     create_router_block(world, ground, 0+narrow_pitch*17, -68, part_index, true, false, "pc_write_diverter");
 
-    create_narrow_channel(world, ground, 3, -48);
+    create_narrow_channel(world, ground, 3, -48, -10);
     create_router_block(world, ground, 0, -110, part_index, false, true, "acc_read_diverter");
     create_router_block(world, ground, 0+narrow_pitch*17, -110, part_index, true, true, "pc_read_diverter");
+
+    create_narrow_channel(world, ground, 3, -70, -50);
+
     var address_sender = create_address_sender(world, ground, 69, -232, part_index);
 
     var pc_read_cam_follower = create_cam_and_v_follower(world, ground, 250, -110, pc_read_timing, {'bumpheight':1.6, 'label': "PC Read", 'left': true, 'bias': 10.0});
