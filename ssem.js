@@ -549,8 +549,8 @@ function createWorld(world) {
     var address_sender_cam = create_cam_and_v_follower(world, ground, 120, -230, null_timing, {'bumpheight': 1.5, 'label': "Address send release"});
 
     // Channels leading out of the PC reader
-    create_diagonal_channels(world, ground, 108, -190, -44, -25, 3, 4, 3.95);
-    create_mixer(world, ground, 80, -200);
+    create_diagonal_channels(world, ground, 108, -190, -46.5, -28, 3, 4, 3.95);
+    create_mixer(world, ground, 77.5, -203);
 
     connect(world, address_sender_cam, part_index['address-sender-release']);
 
