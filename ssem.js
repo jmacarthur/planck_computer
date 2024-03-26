@@ -529,13 +529,6 @@ function createWorld(world) {
 
     create_instruction_decoder(world, ground, 0, -300, part_index);
 
-    create_mixer(world, ground, 150, -300);
-
-    for(var i=0;i<3;i++) {
-	create_fake_data(world, ground, 150-3-channel_pitch*i/2,-300+10, 1);
-	create_fake_data(world, ground, 150+3+channel_pitch*i/2,-200+10, 1);
-    }
-
     var discarder_cam = create_cam_and_v_follower(world, ground, -80, -40, discard_timing, {'label': "Discard", 'bumpheight': 1.5, 'leverlen': 30});
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing, {'label': "Decoder holdoff"});
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing, {'label': "Memory holdoff"});
