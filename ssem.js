@@ -478,8 +478,8 @@ function create_mixer(world, ground, offsetx, offsety) {
 	var ty = -14;
 	addFixture(mixer, new Polygon([Vec2(tx-0.5, ty),
 				       Vec2(tx+0.5, ty),
-				       Vec2(tx+0.5, ty-10),
-				       Vec2(tx-0.5, ty-10)]),
+				       Vec2(tx+2.5, ty-10),
+				       Vec2(tx-2.5, ty-10)]),
 		   mass_normal, collisions_toplayer);
     }
 }
