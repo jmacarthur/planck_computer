@@ -436,8 +436,8 @@ function create_narrow_channel(world, ground, offsetx, offsety, drop) {
 function create_diagonal_channels(world, ground, offsetx, offsety, delta_x, delta_y, top_delta_x, top_delta_y, channel_count, mitre_delta_x, mitre_delta_y) {
     var channels = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
     for(var col=0;col < (channel_count+1);col++) {
-	addFixture(channels, new Polygon([Vec2(top_delta_x*col, 0),
-					  Vec2(top_delta_x*col+1, 0),
+	addFixture(channels, new Polygon([Vec2(top_delta_x*col, top_delta_y*col),
+					  Vec2(top_delta_x*col+1, top_delta_y*col),
 					  Vec2(top_delta_x*col+delta_x+1+ mitre_delta_x*(channel_count+1-col), delta_y + mitre_delta_y*(channel_count+1-col)),
 					  Vec2(top_delta_x*col+delta_x+ mitre_delta_x*(channel_count+1-col), delta_y + mitre_delta_y*(channel_count+1-col))]
 					), mass_normal, collisions_toplayer);
@@ -548,7 +548,7 @@ function createWorld(world) {
     create_diagonal_channels(world, ground, 108, -190, -46.5, -28, channel_pitch, 0, 3, 4, 3.95);
     create_mixer(world, ground, 77.5, -203);
 
-    create_diagonal_channels(world, ground, 40.5, -190, 28, -8, narrow_pitch, 0, 3, -1, -3.95);
+    create_diagonal_channels(world, ground, 40.5, -198, 28, 0, narrow_pitch, 2, 3, -1, -3.95);
 
     connect(world, address_sender_cam, part_index['address-sender-release']);
 
