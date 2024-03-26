@@ -12,7 +12,7 @@ var null_timing = [ [0, 0.1, 0.1, 0.1 ]];
 var channel_pitch = 8.0;
 var narrow_pitch = 3; // For compressed channels
 var row_separation = 4.0;
-var decoder_x_pitch = 10;
+var decoder_x_pitch = 8;
 
 function merge(original_hash, added_hash) {
     Object.keys(added_hash).forEach(function(key) {
@@ -288,7 +288,7 @@ function create_memory(world, ground, part_index) {
 	}
     }
     // Memory line holdoff bar
-    var memory_right_x = 8*channel_pitch+10*4;
+    var memory_right_x = 8*channel_pitch+4*decoder_x_pitch;
     var memory_holdoff = world.createBody({type: "dynamic", position: new Vec2(memory_right_x-3.9, -32.0)});
     addFixture(memory_holdoff, box(0, 0, 2.0, 8*row_separation), mass_none, collisions_toplayer);
     var prismaticJoint = world.createJoint(pl.PrismaticJoint({
@@ -298,7 +298,7 @@ function create_memory(world, ground, part_index) {
     }, ground, memory_holdoff, Vec2(0.0, 0.0), Vec2(1.0,0)));
 
     // Memory line limiting block(s)
-    var memory_limit = world.createBody({type: "static", position: new Vec2(memory_right_x-8, -32.0)});
+    var memory_limit = world.createBody({type: "static", position: new Vec2(memory_right_x-6, -32.0)});
     addFixture(memory_limit, box(0, 0, 1.0,2.0), mass_none, collisions_toplayer);
     // Memory holdoff crank
     var holdoff_crank = create_crank(world, ground, memory_right_x+10, -16, Math.PI);
@@ -336,7 +336,7 @@ function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
     }
 
     // Add the holdoff bar
-    var decoder_holdoff_bar = world.createBody({type: "dynamic", position: new Vec2(-3.0+xoffset, yoffset+row_separation*8-1)});
+    var decoder_holdoff_bar = world.createBody({type: "dynamic", position: new Vec2(-3+xoffset, yoffset+row_separation*8-1)});
     addFixture(decoder_holdoff_bar, box(0,0,21,1), mass_normal, collisions_toplayer);
     var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	lowerTranslation : 0.0,
