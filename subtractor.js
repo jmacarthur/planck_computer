@@ -1,6 +1,7 @@
 function create_subtractor_block(world, ground, offsetx, offsety, part_index, base_name, reader) {
     var pitch_y = 5;
     var max_height = pitch_y * 8;
+    var channels = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
     for(var col=0;col<8;col++) {
 	var x = offsetx + col*channel_pitch;
 	var y = offsety + col*pitch_y;
@@ -29,33 +30,29 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 
 	// Create the intake funnel
 	var channel_width = 2.1;
-	var channels = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	addUnionFixture(channels, box(-channel_pitch/2, 4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
-	addUnionFixture(channels, box(-channel_pitch/2, 3, (channel_pitch-channel_width-1)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	addUnionFixture(channels, box(col*channel_pitch-channel_pitch/2, col*pitch_y+4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	addUnionFixture(channels, box(col*channel_pitch-channel_pitch/2, col*pitch_y+3, (channel_pitch-channel_width-1)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	if(reader) {
-	    addUnionFixture(channels, box(channel_width/2, 4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
-	    addUnionFixture(channels, box(channel_width/2+1, 3, (channel_pitch-channel_width)/2-1, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addUnionFixture(channels, box(col*channel_pitch+channel_width/2, col*pitch_y+4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addUnionFixture(channels, box(col*channel_pitch+channel_width/2+1, col*pitch_y+3, (channel_pitch-channel_width)/2-1, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	} else {
-	    addUnionFixture(channels, box(channel_width/2, 7, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addUnionFixture(channels, box(col*channel_pitch+channel_width/2, col*pitch_y+7, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	}
 	if(!reader) {
-	    var outtakechannel = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	    var adderPoly1 = new Polygon([Vec2(-6,-2), Vec2(-6+2.7,-2), Vec2(-6+1.7,-1), Vec2(-6,-1)]);
-	    addFixture(outtakechannel, adderPoly1, mass_none, collisions_topstatic);
+	    var adderPoly1 = new Polygon(translate_points([Vec2(-6,-2), Vec2(-6+2.7,-2), Vec2(-6+1.7,-1), Vec2(-6,-1)], col*channel_pitch, col*pitch_y));
+	    addFixture(channels, adderPoly1, mass_none, collisions_topstatic);
 	}
 	if(reader) {
-	    var outtakechannel = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
-	    addUnionFixture(outtakechannel, box(-1, -5, 2, col*pitch_y+3), mass_none, collisions_topstatic);
-	    var outtakechannel = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
-	    addUnionFixture(outtakechannel, box(-channel_pitch/2-0.5, -5, 1, col*pitch_y+7), mass_none, collisions_topstatic);
-	    addUnionFixture(outtakechannel, box(-channel_pitch/2, -5, 4, 1), mass_none, collisions_topstatic);
+	    addUnionFixture(channels, box(col*channel_pitch-1, -5, 2, col*pitch_y+3), mass_none, collisions_topstatic);
+	    addUnionFixture(channels, box(col*channel_pitch-channel_pitch/2-0.5, -5, 1, col*pitch_y+7), mass_none, collisions_topstatic);
+	    addUnionFixture(channels, box(col*channel_pitch-channel_pitch/2, -5, 4, 1), mass_none, collisions_topstatic);
 	}
 	if(reader) {
 	    // Add drain holes.
 	    world.drain_holes.push([offsetx+col*channel_pitch-4, offsety-4.5, 4, 5.5]);
 	}
-	completeUnion(channels);
     }
+    completeUnion(channels);
 
     var labelbody = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
     labelbody.label = base_name;
