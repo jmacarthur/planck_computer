@@ -104,15 +104,18 @@ function hMirror(polygon) {
     return newpoints;
 }
 
-function create_crank(world, ground, x, y, initial_rotation) {
+function create_crank(world, ground, x, y, initial_rotation, output_length) {
+    if(output_length === undefined) {
+	output_length = 4.5;
+    }
     // Rotation in radians. Zero rotation is an 'L' shape going up and left from the origin.
     var crank = world.createBody({type: "dynamic", position: new Vec2(x, y)});
-    addFixture(crank, box(-0.5, -0.5, 1.0, 5.0), mass_normal, collisions_toplayer);
+    addFixture(crank, box(-0.5, -0.5, 1.0, output_length+0.5), mass_normal, collisions_toplayer);
     addFixture(crank, box(-4.5, -0.5, 5.0, 1.0), mass_normal, collisions_toplayer);
     var revoluteJoint = world.createJoint(pl.RevoluteJoint({}, ground, crank, Vec2(x,y)));
     crank.setAngle(initial_rotation);
     crank.attach1 = Vec2(x,y).add(Rot.mul(Rot(initial_rotation),Vec2(-4.5, 0)));
-    crank.attach2 = Vec2(x,y).add(Rot.mul(Rot(initial_rotation),Vec2(0, 4.5)));
+    crank.attach2 = Vec2(x,y).add(Rot.mul(Rot(initial_rotation),Vec2(0, output_length)));
     crank.attach_points = [];
     crank.attach_points[0] = crank.attach1;
     crank.attach_points[1] = crank.attach2;
