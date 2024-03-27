@@ -29,34 +29,34 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 
 	// Create the intake funnel
 	var channel_width = 2.1;
-	var intakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	addFixture(intakechannelleft, box(-channel_pitch/2, 4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
-	addFixture(intakechannelleft, box(-channel_pitch/2, 3, (channel_pitch-channel_width-1)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	var intakechannel = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
+	addUnionFixture(intakechannel, box(-channel_pitch/2, 4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	addUnionFixture(intakechannel, box(-channel_pitch/2, 3, (channel_pitch-channel_width-1)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	if(reader) {
-	    var intakechannelright = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	    addFixture(intakechannelright, box(channel_width/2, 4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
-	    addFixture(intakechannelright, box(channel_width/2+1, 3, (channel_pitch-channel_width)/2-1, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addUnionFixture(intakechannel, box(channel_width/2, 4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addUnionFixture(intakechannel, box(channel_width/2+1, 3, (channel_pitch-channel_width)/2-1, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	} else {
-	    var intakechannelright = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	    addFixture(intakechannelright, box(channel_width/2, 7, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addUnionFixture(intakechannel, box(channel_width/2, 7, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	}
+	completeUnion(intakechannel);
 	if(!reader) {
-	    var outtakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
+	    var outtakechannel = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
 	    var adderPoly1 = new Polygon([Vec2(-6,-2), Vec2(-6+2.7,-2), Vec2(-6+1.7,-1), Vec2(-6,-1)]);
-	    addFixture(outtakechannelleft, adderPoly1, mass_none, collisions_topstatic);
+	    addFixture(outtakechannel, adderPoly1, mass_none, collisions_topstatic);
 	}
 	if(reader) {
-	    var outtakechannelcent = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
-	    addFixture(outtakechannelcent, box(-1, -5, 2, col*pitch_y+3), mass_none, collisions_topstatic);
-	    var outtakechannelleft = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
-	    addFixture(outtakechannelleft, box(-channel_pitch/2-0.5, -5, 1, col*pitch_y+7), mass_none, collisions_topstatic);
-	    addFixture(outtakechannelleft, box(-channel_pitch/2, -5, 4, 1), mass_none, collisions_topstatic);
+	    var outtakechannel = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
+	    addUnionFixture(outtakechannel, box(-1, -5, 2, col*pitch_y+3), mass_none, collisions_topstatic);
+	    var outtakechannel = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety)});
+	    addUnionFixture(outtakechannel, box(-channel_pitch/2-0.5, -5, 1, col*pitch_y+7), mass_none, collisions_topstatic);
+	    addUnionFixture(outtakechannel, box(-channel_pitch/2, -5, 4, 1), mass_none, collisions_topstatic);
 	}
 	if(reader) {
 	    // Add drain holes.
 	    world.drain_holes.push([offsetx+col*channel_pitch-4, offsety-4.5, 4, 5.5]);
 	}
     }
+
     var labelbody = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
     labelbody.label = base_name;
     labelbody.labelx = 4*channel_pitch;

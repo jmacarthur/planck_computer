@@ -64,11 +64,16 @@ function union(polygonlist) {
     ClipperLib.JS.ScaleDownPaths(path1, scale);
 
     // Convert back to planck.js polygons
-    var result = [];
-    for(let i=0;i<path1[0].length;i++) {
-	var v = path1[0][i];
-	result.push(Vec2(v.X, v.Y));
+    var resultarray = new Array();
+
+    for(let j=0;j<path1.length;j++) {
+	var result = new Array();
+	for(let i=0;i<path1[j].length;i++) {
+	    var v = path1[j][i];
+	    result.push(Vec2(v.X, v.Y));
+	}
+	resultarray.push(result);
     }
-    return result;
+    return resultarray;
 
 }

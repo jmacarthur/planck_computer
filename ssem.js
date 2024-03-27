@@ -44,9 +44,14 @@ function addUnionFixture(body, shape, physics, collisions) {
 }
 
 function completeUnion(body) {
-    var union_shape = new Polygon();
-    union_shape.m_vertices = union(body.union_shapes);
-    body.shapeOverride = [union_shape];
+    var vertices_array = union(body.union_shapes);
+
+    body.shapeOverride = new Array();
+    for(var i=0;i<vertices_array.length;i++) {
+	var union_shape = new Polygon();
+	union_shape.m_vertices = vertices_array[i];
+	body.shapeOverride.push(union_shape);
+    }
 }
 
 function box(x, y, width, height) {
