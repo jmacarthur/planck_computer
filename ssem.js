@@ -7,7 +7,8 @@ var all_inject_timing = [ [0.03, 0.08, 0.0, 0.0 ] ];
 var regen_timing = [ [0.3, 0.1, 0.1, 0 ] ];
 var acc_reset_timing = [ [0.3, 0.1, 0, 0 ] ];
 var instruction_holdoff_timing = [ [0.2, 0.1, 1, 0], [1.3,0.1,1,0], [2.6, 0.1,1,0] ];
-var mem_holdoff_timing = [ [0.5, 0.1, 1.0, 0.1], [1.0,0, 1.0,0.1], [2.0, 0, 1.0,0.1] ];
+var mem_holdoff_timing = [ [0.0, 0.1, 1.0, 0.1], [1.0,0, 1.0,0.1], [2.0, 0, 1.0,0.1] ];
+var mem_reset_timing = [ [0.0, 0.1, 1.0, 0.1] ];
 var null_timing = [ [0, 0.1, 0.1, 0.1 ]];
 
 var channel_pitch = 8.0;
@@ -313,12 +314,16 @@ function create_memory(world, ground, part_index) {
 
     // Memory reset bar
     var memory_reset = world.createBody({type: "dynamic", position: new Vec2(memory_left_x-5, -32.0)});
-    addFixture(memory_reset, box(0, 0, 1.0, 8*row_separation), mass_none, collisions_toplayer);
+    addFixture(memory_reset, box(0, -1.0, 1.0, 8*row_separation), mass_none, collisions_toplayer);
     var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	lowerTranslation : 0.0,
 	upperTranslation : row_separation,
 	enableLimit : false
     }, ground, memory_reset, Vec2(0.0, 0.0), Vec2(1.0,0)));
+
+    part_index['memory_reset_bar'] = memory_reset;
+    memory_reset.attach_points = [];
+    memory_reset.attach_points[0] = new Vec2(memory_left_x-5+0.5, -32.0+4*row_separation);
 
     // Limits for memory reset bar
     var memory_reset_limits = world.createBody({type: "static", position: new Vec2(memory_left_x-6, -32.0)});
@@ -555,6 +560,7 @@ function createWorld(world) {
     var discarder_cam = create_cam_and_v_follower(world, ground, -80, -40, discard_timing, {'label': "Discard", 'bumpheight': 1.5, 'leverlen': 30});
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing, {'label': "Decoder holdoff"});
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, mem_holdoff_timing, {'label': "Memory holdoff"});
+    var memory_reset_cam_follower = create_cam_and_v_follower(world, ground, -80, -5, mem_reset_timing, {'bumpheight': 1.5, 'label': "Memory reset", 'leverlen': 30});
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, all_inject_timing, {'label': "All inject", "bumpheight": 1.2, 'leverlen': 30});
     var regen1_cam_follower = create_cam_and_v_follower(world, ground, 120, -45, regen_timing, {'bumpheight':1.5, 'label': "Regenerator 1"});
     var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, -200, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Accumulator reset"});
@@ -575,6 +581,7 @@ function createWorld(world) {
     connect(world, discarder_cam, part_index['discarder']);
     connect(world, decoder_holdoff_cam_follower, part_index['decoder_holdoff_bar']);
     connect(world, memory_holdoff_cam_follower, part_index['memory_holdoff_crank']);
+    connect(world, memory_reset_cam_follower, part_index['memory_reset_bar']);
     connect(world, all_inject_cam_follower, part_index['all_inject']);
     connect(world, regen1_cam_follower, part_index['regen1']);
     connect(world, acc_reset_cam_follower, part_index['accumulator_read_reset']);
