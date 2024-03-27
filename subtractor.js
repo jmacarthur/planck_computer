@@ -29,16 +29,15 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 
 	// Create the intake funnel
 	var channel_width = 2.1;
-	var intakechannel = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
-	addUnionFixture(intakechannel, box(-channel_pitch/2, 4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
-	addUnionFixture(intakechannel, box(-channel_pitch/2, 3, (channel_pitch-channel_width-1)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	var channels = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
+	addUnionFixture(channels, box(-channel_pitch/2, 4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	addUnionFixture(channels, box(-channel_pitch/2, 3, (channel_pitch-channel_width-1)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	if(reader) {
-	    addUnionFixture(intakechannel, box(channel_width/2, 4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
-	    addUnionFixture(intakechannel, box(channel_width/2+1, 3, (channel_pitch-channel_width)/2-1, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addUnionFixture(channels, box(channel_width/2, 4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addUnionFixture(channels, box(channel_width/2+1, 3, (channel_pitch-channel_width)/2-1, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	} else {
-	    addUnionFixture(intakechannel, box(channel_width/2, 7, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addUnionFixture(channels, box(channel_width/2, 7, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	}
-	completeUnion(intakechannel);
 	if(!reader) {
 	    var outtakechannel = world.createBody({type: "static", position: new Vec2(offsetx+col*channel_pitch, offsety+col*pitch_y)});
 	    var adderPoly1 = new Polygon([Vec2(-6,-2), Vec2(-6+2.7,-2), Vec2(-6+1.7,-1), Vec2(-6,-1)]);
@@ -55,6 +54,7 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	    // Add drain holes.
 	    world.drain_holes.push([offsetx+col*channel_pitch-4, offsety-4.5, 4, 5.5]);
 	}
+	completeUnion(channels);
     }
 
     var labelbody = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
