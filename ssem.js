@@ -292,6 +292,7 @@ function create_memory(world, ground, part_index) {
 	}
     }
     // Memory line holdoff bar
+    var memory_left_x = 0;
     var memory_right_x = 8*channel_pitch+4*decoder_x_pitch;
     var memory_holdoff = world.createBody({type: "dynamic", position: new Vec2(memory_right_x-3.9, -32.0)});
     addFixture(memory_holdoff, box(0, 0, 1.0, 8*row_separation), mass_none, collisions_toplayer);
@@ -309,6 +310,21 @@ function create_memory(world, ground, part_index) {
     var distanceJoint = world.createJoint(pl.DistanceJoint({}, holdoff_crank, holdoff_crank.attach_points[1], memory_holdoff, new Vec2(memory_right_x-3.5,-16.0)));
     part_index['memory_block_lines'] = memory_lines;
     part_index['memory_holdoff_crank'] = holdoff_crank;
+
+    // Memory reset bar
+    var memory_reset = world.createBody({type: "dynamic", position: new Vec2(memory_left_x-5, -32.0)});
+    addFixture(memory_reset, box(0, 0, 1.0, 8*row_separation), mass_none, collisions_toplayer);
+    var prismaticJoint = world.createJoint(pl.PrismaticJoint({
+	lowerTranslation : 0.0,
+	upperTranslation : row_separation,
+	enableLimit : false
+    }, ground, memory_reset, Vec2(0.0, 0.0), Vec2(1.0,0)));
+
+    // Limits for memory reset bar
+    var memory_reset_limits = world.createBody({type: "static", position: new Vec2(memory_left_x-6, -32.0)});
+    addFixture(memory_reset_limits, box(0, 0, 1.0, 1.0), mass_none, collisions_toplayer);
+    addFixture(memory_reset_limits, box(0, row_separation*8-1, 1.0, 1.0), mass_none, collisions_toplayer);
+
 }
 
 function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
