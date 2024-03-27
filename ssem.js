@@ -7,6 +7,7 @@ var all_inject_timing = [ [0.03, 0.08, 0.0, 0.0 ] ];
 var regen_timing = [ [0.3, 0.1, 0.1, 0 ] ];
 var acc_reset_timing = [ [0.3, 0.1, 0, 0 ] ];
 var instruction_holdoff_timing = [ [0.2, 0.1, 1, 0], [1.3,0.1,1,0], [2.6, 0.1,1,0] ];
+var mem_holdoff_timing = [ [0.5, 0.1, 1.0, 0.1], [1.0,0, 1.0,0.1], [2.0, 0, 1.0,0.1] ];
 var null_timing = [ [0, 0.1, 0.1, 0.1 ]];
 
 var channel_pitch = 8.0;
@@ -293,7 +294,7 @@ function create_memory(world, ground, part_index) {
     // Memory line holdoff bar
     var memory_right_x = 8*channel_pitch+4*decoder_x_pitch;
     var memory_holdoff = world.createBody({type: "dynamic", position: new Vec2(memory_right_x-3.9, -32.0)});
-    addFixture(memory_holdoff, box(0, 0, 2.0, 8*row_separation), mass_none, collisions_toplayer);
+    addFixture(memory_holdoff, box(0, 0, 1.0, 8*row_separation), mass_none, collisions_toplayer);
     var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	lowerTranslation : 0.0,
 	upperTranslation : row_separation,
@@ -304,7 +305,7 @@ function create_memory(world, ground, part_index) {
     var memory_limit = world.createBody({type: "static", position: new Vec2(memory_right_x-6, -32.0)});
     addFixture(memory_limit, box(0, 0, 1.0,2.0), mass_none, collisions_toplayer);
     // Memory holdoff crank
-    var holdoff_crank = create_crank(world, ground, memory_right_x+10, -16, Math.PI);
+    var holdoff_crank = create_crank(world, ground, memory_right_x+10, -7, Math.PI, 10);
     var distanceJoint = world.createJoint(pl.DistanceJoint({}, holdoff_crank, holdoff_crank.attach_points[1], memory_holdoff, new Vec2(memory_right_x-3.5,-16.0)));
     part_index['memory_block_lines'] = memory_lines;
     part_index['memory_holdoff_crank'] = holdoff_crank;
@@ -537,7 +538,7 @@ function createWorld(world) {
 
     var discarder_cam = create_cam_and_v_follower(world, ground, -80, -40, discard_timing, {'label': "Discard", 'bumpheight': 1.5, 'leverlen': 30});
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing, {'label': "Decoder holdoff"});
-    var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, null_timing, {'label': "Memory holdoff"});
+    var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, mem_holdoff_timing, {'label': "Memory holdoff"});
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, all_inject_timing, {'label': "All inject", "bumpheight": 1.2, 'leverlen': 30});
     var regen1_cam_follower = create_cam_and_v_follower(world, ground, 120, -45, regen_timing, {'bumpheight':1.5, 'label': "Regenerator 1"});
     var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, -200, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Accumulator reset"});
