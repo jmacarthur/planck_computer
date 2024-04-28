@@ -52,6 +52,12 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	    world.drain_holes.push([offsetx+col*channel_pitch-4, offsety-4.5, 4, 5.5]);
 	}
     }
+
+    // Add final channel on right hand side
+    if(reader) {
+	addUnionFixture(channels, box(8*channel_pitch-channel_pitch/2-0.5, -5, 0.5, 8*pitch_y+5), mass_none, collisions_topstatic);
+    }
+
     completeUnion(channels);
 
     var labelbody = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
