@@ -39,7 +39,6 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
     }
 
     var driver = world.createBody({type: "dynamic", position: new Vec2(offsetx-10-5-block_width,offsety)});
-    addUnionFixture(driver, box(0,0,1,profile_separation*3), mass_normal, collisions_toplayer);
     for(var row=0;row<3;row++) {
 	var driver_tine = [Vec2(0,0), Vec2(5.5,0), Vec2(6,1), Vec2(0,1)];
 	addUnionFixture(driver, new Polygon(translate_points(driver_tine, 0, profile_separation*row+1.1)), mass_normal, collisions_toplayer);
@@ -50,6 +49,10 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
 	enableLimit : true
     }, ground, driver, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
     completeUnion(driver);
+    var driver_bar_shape = box(0,0,1,profile_separation*3);
+    addFixture(driver, driver_bar_shape, mass_normal, collisions_none);
+    driver_bar_shape.colour = "#c0c0c0";
+    driver.shapeOverride.push(driver_bar_shape);
 
     driver.attach_points = [Vec2(offsetx-10-5-block_width+0.5, offsety+1.5*profile_separation)];
     part_index['instruction_reader'] = driver;
