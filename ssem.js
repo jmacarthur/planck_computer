@@ -463,6 +463,18 @@ function create_narrow_channel(world, ground, offsetx, offsety, drop) {
     }
 }
 
+function create_narrow_channels(world, ground, offsetx, offsety, drop, num_channels) {
+    var reducer = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
+    var centre_x = offsetx+channel_pitch*4;
+    for(var col=0;col<num_channels;col++) {
+	var pos = col-4;
+	addFixture(reducer, new Polygon([Vec2(centre_x+narrow_pitch*pos, offsety+drop),
+				     Vec2(centre_x+narrow_pitch*pos+0.5, offsety+drop),
+					 Vec2(centre_x+narrow_pitch*pos+0.5, offsety-1),
+					 Vec2(centre_x+narrow_pitch*pos, offsety-1)]), mass_normal, collisions_toplayer)
+    }
+}
+
 function create_diagonal_channels(world, ground, offsetx, offsety, delta_x, delta_y, top_delta_x, top_delta_y, channel_count, mitre_delta_x, mitre_delta_y) {
     var channels = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
     for(var col=0;col < (channel_count+1);col++) {
@@ -560,8 +572,8 @@ function createWorld(world) {
 				     Vec2(210,part_index['pc_write_diverter'].attach_points[0].y),
 				     pc_write_cam_follower.attach_points[0], part_index['pc_write_diverter'].attach_points[0], 0.1));*/
 
-    create_instruction_decoder(world, ground, 0, -300, part_index);
-
+    create_instruction_decoder(world, ground, 50, -270, part_index);
+    create_narrow_channels(world, ground, 3, -70, -100, 4);
     var discarder_cam = create_cam_and_v_follower(world, ground, -80, -40, discard_timing, {'label': "Discard", 'bumpheight': 1.5, 'leverlen': 30});
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing, {'label': "Decoder holdoff"});
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, mem_holdoff_timing, {'label': "Memory holdoff"});
@@ -570,9 +582,9 @@ function createWorld(world) {
     var regen1_cam_follower = create_cam_and_v_follower(world, ground, 120, -45, regen_timing, {'bumpheight':1.5, 'label': "Regenerator 1"});
     var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, -200, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Accumulator reset"});
     var pc_reset_cam_follower = create_cam_and_v_follower(world, ground, 220, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "PC reset"});
-    var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -265, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Instruction read"});
-    var instruction_reset_cam_follower = create_cam_and_v_follower(world, ground, 100, -280, acc_reset_timing, {'bumpheight': 1.5, 'left': true, 'label': "Instruction reset"});
-    var instruction_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 10, -330, instruction_holdoff_timing, {'bumpheight': 1.5, 'label': "Instruction holdoff"});
+    var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -235, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Instruction read"});
+    var instruction_reset_cam_follower = create_cam_and_v_follower(world, ground, 180, -250, acc_reset_timing, {'bumpheight': 1.5, 'left': true, 'label': "Instruction reset"});
+    var instruction_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 60, -300, instruction_holdoff_timing, {'bumpheight': 1.5, 'label': "Instruction holdoff"});
     var address_sender_cam = create_cam_and_v_follower(world, ground, 120, -230, null_timing, {'bumpheight': 1.5, 'label': "Address send release"});
 
     // Channels leading out of the PC reader
