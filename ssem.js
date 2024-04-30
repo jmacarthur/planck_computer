@@ -526,6 +526,21 @@ function create_mixer(world, ground, offsetx, offsety) {
     }
 }
 
+function make_l_diverter(world, ground, offsetx, offsety, x_pitch, y_pitch, num_channels, delta_x, delta_y) {
+    var diverter = world.createBody({type: "static", position: new Vec2(offsetx, offsety)});
+    for(var i=0;i<num_channels+1;i++) {
+	var j = num_channels +1 - i;
+	addUnionFixture(diverter, box(i*x_pitch, i*y_pitch, 0.5, delta_y-i*y_pitch), mass_normal, collisions_toplayer);
+	addUnionFixture(diverter, new Polygon([Vec2(i*x_pitch+0.5,i*y_pitch+0.5),
+					  Vec2(i*x_pitch+0.5+x_pitch, i*y_pitch-y_pitch),
+					  Vec2(i*x_pitch+x_pitch, i*y_pitch-0.5-y_pitch),
+					  Vec2(i*x_pitch,i*y_pitch)]), mass_normal, collisions_toplayer);
+	addUnionFixture(diverter, box((i+1)*x_pitch, (i-1)*y_pitch-0.5, delta_x-i*x_pitch, 0.5), mass_normal, collisions_toplayer);
+    }
+    completeUnion(diverter);
+    return diverter;
+}
+
 function createWorld(world) {
 
     var part_index = [];
@@ -572,8 +587,8 @@ function createWorld(world) {
 				     Vec2(210,part_index['pc_write_diverter'].attach_points[0].y),
 				     pc_write_cam_follower.attach_points[0], part_index['pc_write_diverter'].attach_points[0], 0.1));*/
 
-    create_instruction_decoder(world, ground, 50, -270, part_index);
-    create_narrow_channels(world, ground, 3, -70, -100, 4);
+    create_instruction_decoder(world, ground, 51, -270, part_index);
+    make_l_diverter(world, ground, 26, -259, 3, 8, 3, 10, 68);
     var discarder_cam = create_cam_and_v_follower(world, ground, -80, -40, discard_timing, {'label': "Discard", 'bumpheight': 1.5, 'leverlen': 30});
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing, {'label': "Decoder holdoff"});
     var memory_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 115, 40, mem_holdoff_timing, {'label': "Memory holdoff"});
