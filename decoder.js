@@ -57,9 +57,11 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
     driver.attach_points = [Vec2(offsetx-10-5-block_width+0.5, offsety+1.5*profile_separation)];
     part_index['instruction_reader'] = driver;
 
+    // Generate stops for data being read and incoming data
     var blockbox = world.createBody({type: "static", position: new Vec2(offsetx-10-block_width,offsety-1.1)});
     for(var row=0;row<3;row++) {
 	addFixture(blockbox, box(0,profile_separation*row,3.8,1), mass_normal, collisions_toplayer);
+	addFixture(blockbox, box(3.3,profile_separation*row+3.3,1,3.8), mass_normal, collisions_toplayer);
     }
 
     // Resetting option

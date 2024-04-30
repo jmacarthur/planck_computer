@@ -2,7 +2,7 @@
 
 var decoder_timing = [ [0, 0.1, 1, 0.1 ] ];
 var discard_timing = [ [1, 0.1, 1, 0.1 ] ];
-var pc_read_timing = [ [0.35, 0.1, 0.2, 0.1 ] ];
+var pc_read_timing = [ [0.85, 0.1, 0.2, 0.1 ] ];
 var all_inject_timing = [ [0.03, 0.08, 0.0, 0.0 ] ];
 var regen_timing = [ [0.3, 0.1, 0.1, 0 ] ];
 var acc_reset_timing = [ [0.3, 0.1, 0, 0 ] ];
@@ -10,7 +10,7 @@ var instruction_holdoff_timing = [ [0.2, 0.1, 1, 0], [1.3,0.1,1,0], [2.6, 0.1,1,
 var mem_holdoff_timing = [ [0.0, 0.1, 1.0, 0.1], [1.0,0, 1.0,0.1], [2.0, 0, 1.0,0.1] ];
 var mem_reset_timing = [ [0.0, 0.1, 1.0, 0.1] ];
 var null_timing = [ [0, 0.1, 0.1, 0.1 ]];
-
+var instruction_read_timing = [ [1.1,0.1,0.1,0.1] ];
 var channel_pitch = 8.0;
 var narrow_pitch = 3; // For compressed channels
 var row_separation = 4.0;
@@ -597,7 +597,7 @@ function createWorld(world) {
     var regen1_cam_follower = create_cam_and_v_follower(world, ground, 120, -45, regen_timing, {'bumpheight':1.5, 'label': "Regenerator 1"});
     var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, -200, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Accumulator reset"});
     var pc_reset_cam_follower = create_cam_and_v_follower(world, ground, 220, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "PC reset"});
-    var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -235, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Instruction read"});
+    var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -235, instruction_read_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Instruction read"});
     var instruction_reset_cam_follower = create_cam_and_v_follower(world, ground, 180, -250, acc_reset_timing, {'bumpheight': 1.5, 'left': true, 'label': "Instruction reset"});
     var instruction_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 60, -300, instruction_holdoff_timing, {'bumpheight': 1.5, 'label': "Instruction holdoff"});
     var address_sender_cam = create_cam_and_v_follower(world, ground, 120, -230, null_timing, {'bumpheight': 1.5, 'label': "Address send release"});
