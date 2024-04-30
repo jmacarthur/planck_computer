@@ -6,7 +6,7 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
     // Generate the decoder rods
     for(var rod=0;rod<3;rod++) {
 	var decoder_rod = world.createBody({type: "dynamic", position: new Vec2(offsetx,offsety+profile_separation*rod)});
-	var base_rod = box(-10,0, block_width*16+10+10, 1);
+	var base_rod = box(-10,0, block_width*16+10+3, 1);
 	addUnionFixture(decoder_rod, base_rod, mass_normal, collisions_toplayer);
 	for(var gap=0; gap<8;gap++) {
 	    var offset = (gap >> rod) % 2 ==1 ? block_width:0;
@@ -65,14 +65,14 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
     }
 
     // Resetting option
-    var resetter = world.createBody({type: "dynamic", position: new Vec2(offsetx+16*block_width+10+block_width,offsety)});
+    var resetter = world.createBody({type: "dynamic", position: new Vec2(offsetx+16*block_width+3+block_width,offsety)});
     addUnionFixture(resetter, box(0,0,1,profile_separation*3), mass_normal, collisions_toplayer);
     var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	lowerTranslation : -block_width,
 	upperTranslation : 0,
 	enableLimit : true
     }, ground, resetter, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
-    resetter.attach_points = [Vec2(offsetx+16*block_width+10+block_width+0.5, offsety+1.5*profile_separation)];
+    resetter.attach_points = [Vec2(offsetx+16*block_width+3+block_width+0.5, offsety+1.5*profile_separation)];
     part_index['instruction_resetter'] = resetter;
 
     // Follower holdoff bar

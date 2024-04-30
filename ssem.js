@@ -588,6 +588,11 @@ function createWorld(world) {
 				     pc_write_cam_follower.attach_points[0], part_index['pc_write_diverter'].attach_points[0], 0.1));*/
 
     create_instruction_decoder(world, ground, 51, -270, part_index);
+
+    // Shield for top of decoder
+    var decoder_shield = world.createBody({type: "static", position: new Vec2(38,-240)});
+    addFixture(decoder_shield, new Polygon([Vec2(0,0), Vec2(67,-3), Vec2(67,-4), Vec2(0,-1)]), mass_normal, collisions_toplayer);
+
     make_l_diverter(world, ground, 26, -259, 3, 8, 3, 10, 68);
     var discarder_cam = create_cam_and_v_follower(world, ground, -80, -40, discard_timing, {'label': "Discard", 'bumpheight': 1.5, 'leverlen': 30});
     var decoder_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 80, 40, decoder_timing, {'label': "Decoder holdoff"});
