@@ -1,16 +1,17 @@
 'use strict';
 
-var decoder_timing = [ [0, 0.1, 1, 0.1 ], [1, 0, 0.5, 0.1] ];
-var discard_timing = [ [1, 0.1, 1, 0.1 ] ];
-var pc_read_timing = [ [0.25, 0.1, 0.3, 0.1 ] ];
-var all_inject_timing = [ [0.03, 0.08, 0.0, 0.0 ] ];
-var regen_timing = [ [0.3, 0.1, 0.1, 0 ] ];
-var acc_reset_timing = [ [0.3, 0.1, 0, 0 ] ];
-var instruction_holdoff_timing = [ [0.2, 0.1, 1, 0], [1.3,0.1,1,0], [2.6, 0.1,1,0] ];
-var mem_holdoff_timing = [ [0.0, 0.1, 1.0, 0.1], [1.0,0, 1.0,0.1], [2.0, 0, 1.0,0.1] ];
-var mem_reset_timing = [ [0.0, 0.1, 1.0, 0.1] ];
+var decoder_timing = [ [0, 0.1, 0.1, 0.1 ], [0.1, 0, 0.1, 0.1] ];
+var discard_timing = [ [0.15, 0.1, 0.15, 0.1 ] ];
+var pc_read_timing = [ [0.5, 0.01, 0.05, 0.01 ] ];
+var all_inject_timing = [ [0.01, 0.02, 0.0, 0.0 ] ];
+var regen_timing = [ [0.05, 0.1, 0.02, 0 ] ];
+var acc_reset_timing = [ [0.05, 0.1, 0, 0 ] ];
+var instruction_holdoff_timing = [ [0.03, 0.1, 0.2, 0], [0.2, 0.1, 0.2, 0], [0.5, 0.1, 0.2, 0] ];
+var mem_holdoff_timing = [ [0.0, 0.1, 0.2, 0.1], [0.2, 0, 0.2, 0.1], [0.4, 0, 0.2, 0.1] ];
+var mem_reset_timing = [ [0.0, 0.1, 0.2, 0.1] ];
 var null_timing = [ [0, 0.1, 0.1, 0.1 ]];
-var instruction_read_timing = [ [1.1,0.1,0.1,0.1] ];
+var instruction_read_timing = [ [0.15, 0.1, 0.1, 0.1] ];
+
 var channel_pitch = 8.0;
 var narrow_pitch = 3; // For compressed channels
 var row_separation = 4.0;

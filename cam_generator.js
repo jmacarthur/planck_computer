@@ -29,12 +29,12 @@ function create_cam(world, ground, xoffset, yoffset, timing, params) {
     // Cam profile
     for(var t=0;t<timing.length;t++) {
 	var max_segments = 9;
-	var profile_length = timing[t][2]; // Radians!
-	var start_angle = timing[t][0];
+	var profile_length = timing[t][2]*Math.PI*2; // Radians!
+	var start_angle = timing[t][0]*Math.PI*2;
 	var low_height = base_radius;
 	var high_height = base_radius+tab_height;
-	var rise_angle = timing[t][1];
-	var fall_angle = timing[t][3];
+	var rise_angle = timing[t][1]*Math.PI*2;
+	var fall_angle = timing[t][3]*Math.PI*2;
 	var point_array = [new Vec2(Math.cos(start_angle)*low_height, Math.sin(start_angle)*low_height)];
 	for(var i=0;i<max_segments;i++) {
 	    point_array.push(new Vec2(Math.cos(start_angle+rise_angle+i*profile_length/(max_segments-1)) * high_height,
@@ -67,11 +67,11 @@ function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing, para
     var follower_axis_x = -15+0.5;
     var lever_length = 25;
 
-    // For this follower, advance all the timings by pi/2
+    // For this follower, advance all the timings by 1/4 rev
     var offset_timing = [];
     for(var i=0;i<timing.length;i++) {
 	var segment = [timing[i][0], timing[i][1], timing[i][2], timing[i][3]];
-	segment[0] += Math.PI/2;
+	segment[0] += 0.25;
 	offset_timing.push(segment);
     }
 
@@ -99,11 +99,11 @@ function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing, para
 function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing, params) {
     if (params && 'left' in params) {
 	var left = true;
-	// Need to also adjust timing by 180 degrees
+	// Need to also adjust timing by 1/2 revolution degrees
 	var offset_timing = [];
 	for(var i=0;i<timing.length;i++) {
 	    var segment = [timing[i][0], timing[i][1], timing[i][2], timing[i][3]];
-	    segment[0] += Math.PI;
+	    segment[0] += 0.5;
 	    offset_timing.push(segment);
 	}
     } else {
