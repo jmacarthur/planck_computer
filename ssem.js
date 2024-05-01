@@ -1,8 +1,8 @@
 'use strict';
 
-var decoder_timing = [ [0, 0.1, 1, 0.1 ] ];
+var decoder_timing = [ [0, 0.1, 1, 0.1 ], [1, 0, 0.5, 0.1] ];
 var discard_timing = [ [1, 0.1, 1, 0.1 ] ];
-var pc_read_timing = [ [0.85, 0.1, 0.2, 0.1 ] ];
+var pc_read_timing = [ [0.25, 0.1, 0.3, 0.1 ] ];
 var all_inject_timing = [ [0.03, 0.08, 0.0, 0.0 ] ];
 var regen_timing = [ [0.3, 0.1, 0.1, 0 ] ];
 var acc_reset_timing = [ [0.3, 0.1, 0, 0 ] ];
