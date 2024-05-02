@@ -17,6 +17,7 @@ class Renderer {
     cam_position = 0.0;
     cycle = 0;
     panspeed = 100;
+    angleTarget = 0;
     start(world, canvas) {
 	this.world = world;
 	this.canvas = canvas;
@@ -93,14 +94,14 @@ class Renderer {
 	    this.cycle += 1;
 	    // Adjust cam positions
 	    this.cam_position += 0.001;
-	    var angleTarget = -this.cam_position;
+	    this.angleTarget = - this.cam_position;
 	    for(var i=0;i<cam_joint_list.length;i++) {
 		var joint = cam_joint_list[i];
-		let angleError = joint.getJointAngle() - angleTarget;
+		let angleError = joint.getJointAngle() - this.angleTarget;
 		if(Math.abs(angleError)>0.1) {
 		    console.log("Cam stalled!")
 		}
-		let gain = 0.1;
+		let gain = 10;
 		joint.setMotorSpeed(-gain * angleError);
 	    }
 	}
@@ -128,6 +129,12 @@ class Renderer {
 	for (let joint = this.world.getJointList(); joint; joint = joint.getNext()) {
 	    this.renderJoint(joint);
 	}
+
+	// Render angle lines on cam joints
+	for(var i=0;i<cam_joint_list.length;i++) {
+	    this.renderCamAxis(cam_joint_list[i], this.angleTarget);
+	}
+	
 	// Add origin mark
 	this.ctx.strokeStyle = '#ff0000';
 	this.ctx.beginPath();
@@ -177,7 +184,7 @@ class Renderer {
 
 	var accumulator_string = this.getAccumulatorString()
 
-	this.ctx.fillText((50*this.cam_position/Math.PI).toFixed(1)+"% " + accumulator_string, 40, 20);
+	this.ctx.fillText((this.cam_position/(Math.PI*2)*100).toFixed(1)+"% " + accumulator_string+ " target angle: "+ this.angleTarget, 40, 20);
 	this.ctx.restore();
 	this.world.active_ball_list = new_balls;
 
@@ -329,6 +336,24 @@ class Renderer {
 	this.ctx.rect(hole_spec[0]*this.scale, hole_spec[1]*this.scale,
 		      hole_spec[2]*this.scale, hole_spec[3]*this.scale);
 	this.ctx.fill();
+	this.ctx.stroke();
+    }
+    renderAngleMarker(x, y, ang) {
+	this.ctx.moveTo((x + Math.cos(ang)*10)*this.scale, (y+Math.sin(ang)*10)*this.scale);
+	this.ctx.lineTo((x + Math.cos(ang)*13)*this.scale, (y+Math.sin(ang)*13)*this.scale);
+    }
+
+    renderCamAxis(revoluteJoint, angleTarget) {
+	var pos = revoluteJoint.getLocalAnchorA();
+	var pos2 = revoluteJoint.getBodyA().getPosition();
+	var ang = revoluteJoint.getJointAngle();
+	this.ctx.beginPath();
+	this.ctx.strokeStyle = '#ff0000';
+	this.renderAngleMarker(pos.x+pos2.x, pos.y+pos2.y, ang);
+	this.ctx.stroke();
+	this.ctx.beginPath();
+	this.ctx.strokeStyle = '#0000ff';
+	this.renderAngleMarker(pos.x+pos2.x, pos.y+pos2.y, angleTarget);
 	this.ctx.stroke();
     }
 }
