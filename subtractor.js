@@ -32,12 +32,15 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	var channel_width = 2.1;
 	addUnionFixture(channels, box(col*channel_pitch-channel_pitch/2, col*pitch_y+4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	addUnionFixture(channels, box(col*channel_pitch-channel_pitch/2, col*pitch_y+3, (channel_pitch-channel_width-1)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	var xstart = col*channel_pitch+channel_width/2;
 	if(reader) {
-	    addUnionFixture(channels, box(col*channel_pitch+channel_width/2, col*pitch_y+4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
-	    addUnionFixture(channels, box(col*channel_pitch+channel_width/2+1, col*pitch_y+3, (channel_pitch-channel_width)/2-1, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addUnionFixture(channels, box(xstart, col*pitch_y+4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addUnionFixture(channels, box(xstart+1, col*pitch_y+3, (channel_pitch-channel_width)/2-1, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	} else {
-	    addUnionFixture(channels, box(col*channel_pitch+channel_width/2, col*pitch_y+7, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	    addUnionFixture(channels, box(col*channel_pitch+channel_width/2, col*pitch_y+7, (channel_pitch-channel_width)/2, max_height-pitch_y*col-3), mass_none, collisions_topstatic);
 	}
+	addUnionFixture(channels, new Polygon([Vec2(xstart,max_height+4), Vec2(xstart+channel_pitch/2-channel_width/4,max_height+5), Vec2(xstart+channel_pitch-channel_width,max_height+4)]),
+			mass_none, collisions_topstatic);
 	if(!reader) {
 	    var adderPoly1 = new Polygon(translate_points([Vec2(-6,-2), Vec2(-6+2.7,-2), Vec2(-6+1.7,-1), Vec2(-6,-1)], col*channel_pitch, col*pitch_y));
 	    addFixture(channels, adderPoly1, mass_none, collisions_topstatic);
