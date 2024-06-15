@@ -612,7 +612,7 @@ function createWorld(world) {
     var opcode_cams=[];
     for(var i=0;i<8;i++) {
 	var drop = i%4;
-	opcode_cams[i] = create_cam_and_h_follower(world, ground, 46+12*i, -300-40*drop, instruction_holdoff_timing, {'bumpheight': 1.5, 'label': "Instruction holdoff", 'left': i>3});
+	opcode_cams[i] = create_cam_and_h_follower(world, ground, 46+7*i+(i>3?15:0), -300-40*drop, instruction_holdoff_timing, {'bumpheight': 1.5, 'label': "Instruction holdoff", 'left': i>3});
     }
 
     var address_sender_cam = create_cam_and_v_follower(world, ground, 120, -230, null_timing, {'bumpheight': 1.5, 'label': "Address send release"});
