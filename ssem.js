@@ -416,10 +416,11 @@ function create_regen(world, ground, origin_x, origin_y, part_index, base_name) 
     // Create pusher line
     var regen_bar = world.createBody({type: "dynamic", position: new Vec2(origin_x, origin_y)});
     var blocking_bar = world.createBody({type: "static", position: new Vec2(origin_x, origin_y)});
+    var blockbar_width = channel_pitch-4;
     for(var col=0; col<8; col++) {
 	var x = col*channel_pitch;
 	addFixture(regen_bar, box(x+0.5, 0, 1, 2), mass_normal, collisions_toplayer)
-	addFixture(blocking_bar, new Polygon([Vec2(x+2,-2), Vec2(x+channel_pitch, -2), Vec2(x+channel_pitch, -0.8), Vec2(x+2, -1)]), mass_normal, collisions_toplayer)
+	addFixture(blocking_bar, new Polygon([Vec2(x+2,-2), Vec2(x+blockbar_width, -2), Vec2(x+blockbar_width, -0.8), Vec2(x+2, -1)]), mass_normal, collisions_toplayer)
     }
 
     var joining_bar = box(0,0,8*channel_pitch, 2);
