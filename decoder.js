@@ -24,7 +24,7 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
     var follower_trapezium = [Vec2(1,0), Vec2(block_width-1,0), Vec2(block_width,profile_height+1), Vec2(0,profile_height+1)];
     // Generate rod followers
     for(var follower=0;follower<8;follower++) {
-	var follower_block = world.createBody({type: "dynamic", position: new Vec2(offsetx,offsety+profile_separation/2)});
+	var follower_block = world.createBody({type: "dynamic", position: new Vec2(offsetx,offsety+profile_separation/2-3)});
 	for(var row=-1;row<3;row++) {
 	    addFixture(follower_block, new Polygon(translate_points(follower_trapezium, follower*block_width*2+block_width, row*profile_separation)), mass_normal, collisions_toplayer);
 	}
@@ -36,6 +36,11 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
 	    upperTranslation : 10.0,
 	    enableLimit : false
 	}, ground, follower_block, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
+	follower_block.attach_points = [Vec2(offsetx+follower*block_width*2+block_width-1+(block_width+2)/2,offsety-4)];
+	follower_attach_name = 'opcode'+follower+'_holdoff';
+	part_index[follower_attach_name] = follower_block;
+	
+	console.log("Generated "+follower_attach_name);
     }
 
     var driver = world.createBody({type: "dynamic", position: new Vec2(offsetx-10-5-block_width,offsety)});
@@ -75,14 +80,4 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
     resetter.attach_points = [Vec2(offsetx+16*block_width+3+block_width+0.5, offsety+1.5*profile_separation)];
     part_index['instruction_resetter'] = resetter;
 
-    // Follower holdoff bar
-    var holdoff = world.createBody({type: "dynamic", position: new Vec2(offsetx,offsety-profile_separation*0.5-4)});
-    addUnionFixture(holdoff, box(0,0,16*block_width,1), mass_normal, collisions_toplayer);
-    var prismaticJoint = world.createJoint(pl.PrismaticJoint({
-	lowerTranslation : 0,
-	upperTranslation : profile_separation*0.5,
-	enableLimit : true
-    }, ground, holdoff, Vec2(0.0, 0.0), Vec2(0.0,1.0)));
-    holdoff.attach_points = [Vec2(offsetx+6*block_width, offsety-profile_separation*0.5-3.5)];
-    part_index['instruction_holdoff'] = holdoff;
 }

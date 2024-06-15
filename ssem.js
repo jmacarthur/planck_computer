@@ -607,7 +607,14 @@ function createWorld(world) {
     var pc_reset_cam_follower = create_cam_and_v_follower(world, ground, 220, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "PC reset"});
     var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -235, instruction_read_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Instruction read"});
     var instruction_reset_cam_follower = create_cam_and_v_follower(world, ground, 180, -250, acc_reset_timing, {'bumpheight': 1.5, 'left': true, 'label': "Instruction reset"});
-    var instruction_holdoff_cam_follower = create_cam_and_h_follower(world, ground, 60, -300, instruction_holdoff_timing, {'bumpheight': 1.5, 'label': "Instruction holdoff"});
+
+    // Instruction cams
+    var opcode_cams=[];
+    for(var i=0;i<8;i++) {
+	var drop = i%4;
+	opcode_cams[i] = create_cam_and_h_follower(world, ground, 46+12*i, -300-40*drop, instruction_holdoff_timing, {'bumpheight': 1.5, 'label': "Instruction holdoff", 'left': i>3});
+    }
+
     var address_sender_cam = create_cam_and_v_follower(world, ground, 120, -230, null_timing, {'bumpheight': 1.5, 'label': "Address send release"});
 
     // Channels leading out of the PC reader
@@ -633,7 +640,9 @@ function createWorld(world) {
     }
     connect(world, instruction_reader_cam_follower, part_index['instruction_reader']);
     connect(world, instruction_reset_cam_follower, part_index['instruction_resetter']);
-    connect(world, instruction_holdoff_cam_follower, part_index['instruction_holdoff']);
+    for(var i=0;i<8;i++) {
+	connect(world, opcode_cams[i], part_index['opcode'+i+'_holdoff']);
+    }
 
     world.part_index = part_index;
 }

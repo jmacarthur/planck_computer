@@ -64,8 +64,17 @@ function create_cam(world, ground, xoffset, yoffset, timing, params) {
 
 function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing, params) {
     var follower_height = 17;
-    var follower_axis_x = -15+0.5;
     var lever_length = 25;
+
+    if (params && 'left' in params) {
+	var left = params['left'];
+    }
+
+    if(left) {
+	var follower_axis_x = -10+0.5;
+    } else {
+	var follower_axis_x = -15+0.5;
+    }
 
     // For this follower, advance all the timings by 1/4 rev
     var offset_timing = [];
@@ -81,18 +90,28 @@ function create_cam_and_h_follower(world, ground, xoffset, yoffset, timing, para
 
     var cam = create_cam(world, ground, xoffset, yoffset, offset_timing, params);
     // Follower assembly
+    if(left) {
+	var follower_point = new Polygon([Vec2(lever_length-15-3,1), Vec2(lever_length-15, -2), Vec2(lever_length-15+3,1)]);
+    } else {
+	var follower_point = new Polygon([Vec2(15-3,1), Vec2(15, -2), Vec2(15+3,1)]);
+    }
     var follower = world.createBody({type: "dynamic", position: new Vec2(xoffset+follower_axis_x-0.5, yoffset+follower_height)});
     var follower_arm = box(0,0,lever_length,1);
-    var follower_point = new Polygon([Vec2(15-3,1), Vec2(15, -2), Vec2(15+3,1)]);
     addUnionFixture(follower, follower_arm, mass_normal, collisions_toplayer);
     addUnionFixture(follower, follower_point, mass_normal, collisions_toplayer);
 
     completeUnion(follower);
-
-    var revoluteJoint = world.createJoint(pl.RevoluteJoint({
-    }, ground, follower, Vec2(xoffset+follower_axis_x,yoffset+follower_height+0.5)));
     follower.attach_points = [];
-    follower.attach_points[0] = Vec2(xoffset+follower_axis_x+lever_length-1, yoffset+follower_height+0.5);
+
+    if(left) {
+	var follower_pivot = new Vec2(xoffset+follower_axis_x+lever_length-1, yoffset+follower_height+0.5);
+	follower.attach_points[0] = Vec2(xoffset+follower_axis_x, yoffset+follower_height+0.5);
+    } else {
+	var follower_pivot = new Vec2(xoffset+follower_axis_x, yoffset+follower_height+0.5);
+	follower.attach_points[0] = Vec2(xoffset+follower_axis_x+lever_length-1, yoffset+follower_height+0.5);
+    }
+    var revoluteJoint = world.createJoint(pl.RevoluteJoint({
+    }, ground, follower, follower_pivot));
     return follower;
 }
 
