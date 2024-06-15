@@ -645,4 +645,10 @@ function createWorld(world) {
     }
 
     world.part_index = part_index;
+
+    // Fake data for the instruction decoder
+    for(var i=0;i<3;i++) {
+	create_fake_data(world, ground, 28+3*i, -190, 1);
+    }
+
 }

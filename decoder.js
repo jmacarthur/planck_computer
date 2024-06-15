@@ -6,8 +6,11 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
     // Generate the decoder rods
     for(var rod=0;rod<3;rod++) {
 	var decoder_rod = world.createBody({type: "dynamic", position: new Vec2(offsetx,offsety+profile_separation*rod)});
-	var base_rod = box(-10,0, block_width*16+10+3, 1);
+	var base_rod = box(0,0, block_width*16+3, 1);
+	var pusher_rod = box(-10,0, 5, 1);
+	var joiner_rod = box(-10,0, 12, 1);
 	addUnionFixture(decoder_rod, base_rod, mass_normal, collisions_toplayer);
+	addUnionFixture(decoder_rod, pusher_rod, mass_normal, collisions_toplayer);
 	for(var gap=0; gap<8;gap++) {
 	    var offset = (gap >> rod) % 2 ==1 ? block_width:0;
 	    var blocker_poly = new Polygon(translate_points(profile_trapezium, gap*2*block_width+offset, 0));
@@ -19,6 +22,7 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
 	    enableLimit : true
 	}, ground, decoder_rod, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
 	completeUnion(decoder_rod);
+	addFixture(decoder_rod, joiner_rod, mass_none, collisions_none);
     }
 
     var follower_trapezium = [Vec2(1,0), Vec2(block_width-1,0), Vec2(block_width,profile_height+1), Vec2(0,profile_height+1)];
