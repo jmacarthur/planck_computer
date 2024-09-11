@@ -620,8 +620,10 @@ function createWorld(world) {
     // Channels leading out of the PC reader
     create_diagonal_channels(world, ground, 108, -190, -46.5, -28, channel_pitch, 0, 3, 4, 3.95);
     create_mixer(world, ground, 77.5, -203);
-
     create_diagonal_channels(world, ground, 40.5, -198, 28, 0, narrow_pitch, 2, 3, -1, -3.95);
+
+    // Stops PC writes getting into cams
+    create_diagonal_channels(world, ground, 130, -188, 50, -10, narrow_pitch, 2, 0, -1, -3.95);
 
     connect(world, address_sender_cam, part_index['address-sender-release']);
 
@@ -650,5 +652,6 @@ function createWorld(world) {
     for(var i=0;i<3;i++) {
 	create_fake_data(world, ground, 28+3*i, -190, 1);
     }
+    create_fake_data(world, ground, 195, -130, 1);
 
 }
