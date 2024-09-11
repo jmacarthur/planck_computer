@@ -9,7 +9,7 @@ var acc_reset_timing = [ [0.01, 0.01, 0, 0 ] ];
 var pc_reset_timing = acc_reset_timing;
 var instruction_holdoff_timing = [ [0.03, 0.01, 0.2, 0], [0.2, 0, 0.2, 0], [0.5, 0, 0.2, 0] ];
 var mem_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.1, 0], [0.35,0.01,0.1,0] ];
-var mem_reset_timing = [ [0.01, 0.02, 0.2, 0] ];
+var mem_reset_timing = [ [0.0, 0.02, 0.2, 0], [0.3, 0.02, 0.2,0] ];
 var null_timing = [ [0, 0.01, 0.1, 0 ]];
 var instruction_read_timing = [ [0.15, 0.01, 0.1, 0] ];
 
