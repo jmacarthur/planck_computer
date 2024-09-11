@@ -90,7 +90,7 @@ class Renderer {
     loop(dt) {
 	//console.log("Loop iteration at "+dt+"ms");
 	if(this.simulating) {
-	    this.world.step(1 / 60);
+	    this.world.step(1 / 30);
 	    this.cycle += 1;
 	    // Adjust cam positions
 	    this.cam_position += 0.001;
