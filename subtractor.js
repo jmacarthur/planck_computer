@@ -42,7 +42,7 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	addUnionFixture(channels, new Polygon([Vec2(xstart,max_height+4), Vec2(xstart+channel_pitch/2-channel_width/4,max_height+5), Vec2(xstart+channel_pitch-channel_width,max_height+4)]),
 			mass_none, collisions_topstatic);
 	if(!reader) {
-	    var adderPoly1 = new Polygon(translate_points([Vec2(-6,-2), Vec2(-6+2.7,-2), Vec2(-6+1.7,-1), Vec2(-6,-1)], col*channel_pitch, col*pitch_y));
+	    var adderPoly1 = new Polygon(translate_points([Vec2(-6,-2), Vec2(-6+2.7,-2), Vec2(-6+1,-1.2), Vec2(-6,-1.2)], col*channel_pitch, col*pitch_y));
 	    addUnionFixture(channels, adderPoly1, mass_none, collisions_topstatic);
 	}
 	if(reader) {
