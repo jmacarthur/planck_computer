@@ -655,4 +655,8 @@ function createWorld(world) {
     }
     create_fake_data(world, ground, 193, -120, 1);
 
+    // Populate the memory
+    for(var i=0;i<8;i++) {
+	create_fake_data(world, ground, channel_pitch*i, -1, 1);
+    }
 }
