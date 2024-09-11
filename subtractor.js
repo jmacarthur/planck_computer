@@ -7,7 +7,7 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 	var y = offsety + col*pitch_y;
 	var toggle = world.createBody({type: "dynamic", position: new Vec2(x,y)});
 	if(reader) {
-	    var toggle_poly = new Polygon([Vec2(-0.5,-1), Vec2(0.5, -1), Vec2(0,3.5)]);
+	    var toggle_poly = new Polygon([Vec2(-0.7,-1), Vec2(0.7, -1), Vec2(0.1,3.5), Vec2(-0.1,3.5)]);
 	    addUnionFixture(toggle, toggle_poly, mass_normal, collisions_toplayer);
 	} else {
 	    var toggle_poly1 = new Polygon([Vec2(-1,-1), Vec2(1, -1), Vec2(0,4)]);
@@ -30,7 +30,7 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 
 	// Create the intake funnel
 	var channel_width = 2.1;
-	addUnionFixture(channels, box(col*channel_pitch-channel_pitch/2, col*pitch_y+4, (channel_pitch-channel_width)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
+	addUnionFixture(channels, box(col*channel_pitch-channel_pitch/2, col*pitch_y+4.5, (channel_pitch-channel_width)/2, max_height-pitch_y*col-0.5), mass_none, collisions_topstatic);
 	addUnionFixture(channels, box(col*channel_pitch-channel_pitch/2, col*pitch_y+3, (channel_pitch-channel_width-1)/2, max_height-pitch_y*col), mass_none, collisions_topstatic);
 	var xstart = col*channel_pitch+channel_width/2;
 	if(reader) {
@@ -43,7 +43,7 @@ function create_subtractor_block(world, ground, offsetx, offsety, part_index, ba
 			mass_none, collisions_topstatic);
 	if(!reader) {
 	    var adderPoly1 = new Polygon(translate_points([Vec2(-6,-2), Vec2(-6+2.7,-2), Vec2(-6+1.7,-1), Vec2(-6,-1)], col*channel_pitch, col*pitch_y));
-	    addFixture(channels, adderPoly1, mass_none, collisions_topstatic);
+	    addUnionFixture(channels, adderPoly1, mass_none, collisions_topstatic);
 	}
 	if(reader) {
 	    addUnionFixture(channels, box(col*channel_pitch-1, -5, 2, col*pitch_y+3), mass_none, collisions_topstatic);
