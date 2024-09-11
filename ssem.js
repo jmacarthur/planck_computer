@@ -1,11 +1,12 @@
 'use strict';
 
-var decoder_timing = [ [0, 0.02, 0.2, 0 ], [0.2, 0, 0.1, 0] ];
+var decoder_timing = [ [0, 0.02, 0.2, 0 ], [0.2, 0, 0.05, 0] ];
 var discard_timing = [ [0.15, 0.01, 0.15, 0 ] ];
-var pc_read_timing = [ [0.09, 0.02, 0.05, 0 ] ];
+var pc_read_timing = [ [0.00, 0.02, 0.08, 0 ] ];
 var all_inject_timing = [ [0.01, 0.015, 0.0, 0.0 ] ];
 var regen_timing = [ [0.07, 0.01, 0.02, 0 ] ];
-var acc_reset_timing = [ [0.05, 0.01, 0, 0 ] ];
+var acc_reset_timing = [ [0.01, 0.01, 0, 0 ] ];
+var pc_reset_timing = acc_reset_timing;
 var instruction_holdoff_timing = [ [0.03, 0.01, 0.2, 0], [0.2, 0, 0.2, 0], [0.5, 0, 0.2, 0] ];
 var mem_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.2, 0], [0.4, 0, 0.2, 0] ];
 var mem_reset_timing = [ [0.01, 0.02, 0.2, 0] ];
@@ -604,7 +605,7 @@ function createWorld(world) {
     var all_inject_cam_follower = create_cam_and_h_follower(world, ground, 22, 40, all_inject_timing, {'label': "All inject", "bumpheight": 1.3, 'leverlen': 30});
     var regen1_cam_follower = create_cam_and_v_follower(world, ground, 120, -45, regen_timing, {'bumpheight':1.5, 'label': "Regenerator 1"});
     var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, -200, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Accumulator reset"});
-    var pc_reset_cam_follower = create_cam_and_v_follower(world, ground, 220, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "PC reset"});
+    var pc_reset_cam_follower = create_cam_and_v_follower(world, ground, 220, -155, pc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "PC reset"});
     var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -235, instruction_read_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Instruction read"});
     var instruction_reset_cam_follower = create_cam_and_v_follower(world, ground, 180, -250, acc_reset_timing, {'bumpheight': 1.5, 'left': true, 'label': "Instruction reset"});
 
@@ -652,6 +653,6 @@ function createWorld(world) {
     for(var i=0;i<3;i++) {
 	create_fake_data(world, ground, 28+3*i, -190, 1);
     }
-    create_fake_data(world, ground, 195, -130, 1);
+    create_fake_data(world, ground, 193, -120, 1);
 
 }
