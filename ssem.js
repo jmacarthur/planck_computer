@@ -1,6 +1,6 @@
 'use strict';
 
-var decoder_timing = [ [0, 0.02, 0.2, 0 ], [0.2, 0, 0.05, 0] ];
+var decoder_timing = [ [0.02, 0.02, 0.2, 0 ], [0.2, 0, 0.05, 0] ];
 var discard_timing = [ [0.15, 0.01, 0.15, 0 ] ];
 var pc_read_timing = [ [0.00, 0.02, 0.08, 0 ] ];
 var all_inject_timing = [ [0.01, 0.015, 0.0, 0.0 ] ];
@@ -8,7 +8,7 @@ var regen_timing = [ [0.07, 0.01, 0.02, 0 ] ];
 var acc_reset_timing = [ [0.01, 0.01, 0, 0 ] ];
 var pc_reset_timing = acc_reset_timing;
 var instruction_holdoff_timing = [ [0.03, 0.01, 0.2, 0], [0.2, 0, 0.2, 0], [0.5, 0, 0.2, 0] ];
-var mem_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.2, 0], [0.4, 0, 0.2, 0] ];
+var mem_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.1, 0], [0.35,0.01,0.1,0] ];
 var mem_reset_timing = [ [0.01, 0.02, 0.2, 0] ];
 var null_timing = [ [0, 0.01, 0.1, 0 ]];
 var instruction_read_timing = [ [0.15, 0.01, 0.1, 0] ];
@@ -246,8 +246,8 @@ function create_memory(world, ground, part_index) {
 	var block_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row - 1.5)});
 	var line_shapes = [];
 	for(var col=0; col<9; col++) {
-	    line_shapes.push(box(col*channel_pitch+2.0, 0, 5.0, 1.0));
-	    addFixture(eject_line, box(col*channel_pitch+2.0, 0, 5.0, 1.0), mass_normal, collisions_toplayer);
+	    line_shapes.push(new Polygon(translate_points([Vec2(0,0), Vec2(5.0,0), Vec2(5.0,1.0), Vec2(0,1.2)], col*channel_pitch+2.0, 0)));
+	    addFixture(eject_line, box(col*channel_pitch+4.5, 0, 2.5, 1.0), mass_normal, collisions_toplayer);
 	}
 
 	var blocker = new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,2.5), Vec2(0,2.5)], col*channel_pitch-1, 0));
@@ -350,7 +350,7 @@ function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
 	addFixture(decoder_line, box(0, sensor_drop, 1.0, row_separation*8+1-sensor_drop), mass_none, collisions_none);
 	for(var row=0; row<8; row++) {
 	    var offset = ((row>>(cols-1-col))%2==1)?0:1;
-	    addFixture(decoder_line, box(0, row_separation*row-offset-1.0, 1.0, 1.0), mass_normal, collisions_toplayer);
+	    addFixture(decoder_line, box(0, row_separation*row-offset-2.2, 1.0, 1.0), mass_normal, collisions_toplayer);
 	}
 
 	// Add the decoder holdoff bar pin
@@ -515,7 +515,7 @@ function create_mixer(world, ground, offsetx, offsety) {
 	    if(ty>-4*4) {
 		addFixture(mixer, new Polygon([Vec2(tx, ty-2),
 					       Vec2(tx+2,ty+0),
-					       Vec2(tx,ty+1),
+					       Vec2(tx,ty+1.5),
 					       Vec2(tx-2,ty)]),
 			   mass_normal, collisions_toplayer);
 	    }
