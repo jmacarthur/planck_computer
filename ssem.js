@@ -4,7 +4,7 @@ var decoder_timing = [ [0.02, 0.02, 0.2, 0 ], [0.2, 0, 0.05, 0] ];
 var discard_timing = [ [0.15, 0.01, 0.15, 0 ] ];
 var pc_read_timing = [ [0.00, 0.02, 0.08, 0 ] ];
 var all_inject_timing = [ [0.01, 0.015, 0.0, 0.0 ] ];
-var regen_timing = [ [0.0, 0.01, 0.2, 0, 0.5 ]  ];
+var regen_timing = [ [0.0, 0.01, 0.08, 0, 0.5 ], [1.13, 0.01, 0.2, 0, 0.5], [1.3, 0.01, 0.02, 0, 1.5] ];
 var acc_reset_timing = [ [0.01, 0.01, 0, 0 ] ];
 var pc_reset_timing = acc_reset_timing;
 var instruction_holdoff_timing = [ [0.03, 0.01, 0.2, 0], [0.2, 0, 0.2, 0], [0.5, 0, 0.2, 0] ];
@@ -426,12 +426,14 @@ function create_regen(world, ground, origin_x, origin_y, part_index, base_name) 
     }
     // Create pusher line
     var regen_bar = world.createBody({type: "dynamic", position: new Vec2(origin_x, origin_y)});
+
+    // Blocking bar is the base
     var blocking_bar = world.createBody({type: "static", position: new Vec2(origin_x, origin_y)});
-    var blockbar_width = channel_pitch-4;
+    var blockbar_width = channel_pitch;
     for(var col=0; col<8; col++) {
 	var x = col*channel_pitch;
 	addFixture(regen_bar, box(x+0.5, 0, 1, 2), mass_normal, collisions_toplayer)
-	addFixture(blocking_bar, new Polygon([Vec2(x+2,-2), Vec2(x+blockbar_width, -2), Vec2(x+blockbar_width, -0.8), Vec2(x+2, -1)]), mass_normal, collisions_toplayer)
+	addFixture(blocking_bar, new Polygon([Vec2(x+3,-2), Vec2(x+blockbar_width, -2), Vec2(x+blockbar_width, -0.8), Vec2(x+3, -1)]), mass_normal, collisions_toplayer)
     }
 
     var joining_bar = box(0,0,8*channel_pitch, 2);
