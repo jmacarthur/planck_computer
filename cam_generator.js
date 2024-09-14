@@ -1,8 +1,9 @@
 var cam_joint_list = [];
 
+var tab_height = 1;
+
 function create_cam(world, ground, xoffset, yoffset, timing, params) {
     var base_radius = 15;
-    var tab_height = 1;
 
     if(params && 'bumpheight' in params) {
 	tab_height = params['bumpheight'];
@@ -133,6 +134,9 @@ function create_cam_and_v_follower(world, ground, xoffset, yoffset, timing, para
 	var offset_timing = timing;
     }
     var follower_offset = 17;
+    if(timing[0][4] > 0) {
+	follower_offset += tab_height*timing[0][4];
+    }
     if(left) {
 	follower_offset = -follower_offset-1;
     }
