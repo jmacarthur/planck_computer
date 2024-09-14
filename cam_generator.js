@@ -33,6 +33,9 @@ function create_cam(world, ground, xoffset, yoffset, timing, params) {
 	var start_angle = timing[t][0]*Math.PI*2;
 	var low_height = base_radius;
 	var high_height = base_radius+tab_height;
+	if (timing[t][4] > 0) {
+	    high_height = base_radius+timing[t][4]*tab_height;
+	}
 	var rise_angle = timing[t][1]*Math.PI*2;
 	var fall_angle = timing[t][3]*Math.PI*2;
 	var point_array = [new Vec2(Math.cos(start_angle)*low_height, Math.sin(start_angle)*low_height)];
