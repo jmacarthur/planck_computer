@@ -239,21 +239,21 @@ function create_fake_data(world, ground, x, y, n) {
 
 }
 
-function create_memory(world, ground, part_index) {
+function create_memory(world, ground, xoffset, yoffset, part_index) {
     var memory_lines = [];
     for(var row=0; row<8; row++) {
 	var eject_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row)});
 	var block_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row - 1.5)});
 	var line_shapes = [];
 
-	addFixture(eject_line, box(2.0, 0, 5.0, 1.0), mass_normal, collisions_toplayer);
+	addFixture(eject_line, box(2.0+xoffset, yoffset, 5.0, 1.0), mass_normal, collisions_toplayer);
 	for(var col=1; col<=8; col++) {
-	    line_shapes.push(new Polygon(translate_points([Vec2(0,0), Vec2(5.1,0), Vec2(5.0,1.0), Vec2(0,1.2)], col*channel_pitch+2.0, 0)));
-	    addFixture(eject_line, box(col*channel_pitch+4.5, 0, 2.5, 1.0), mass_normal, collisions_toplayer);
+	    line_shapes.push(new Polygon(translate_points([Vec2(0,0), Vec2(5.1,0), Vec2(5.0,1.0), Vec2(0,1.2)], col*channel_pitch+2.0+xoffset, yoffset)));
+	    addFixture(eject_line, box(col*channel_pitch+4.5+xoffset, yoffset, 2.5, 1.0), mass_normal, collisions_toplayer);
 	}
 
 	for(var col=0;col<4;col++) {
-	    line_shapes.push(box(8*channel_pitch+10+decoder_x_pitch*col+1.1, -0.1, 1.0, 1.0));
+	    line_shapes.push(box(8*channel_pitch+10+decoder_x_pitch*col+1.1+xoffset, -0.1+yoffset, 1.0, 1.0));
 	}
 
 	// Turn everything in 'line_shapes' into real fixtures and combine the
@@ -268,12 +268,12 @@ function create_memory(world, ground, part_index) {
 	}
 
 	// Blocker connects the block line to the eject line
-	var blocker = new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,2.5), Vec2(0,2.5)], 9*channel_pitch-1, 0));
+	var blocker = new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,2.5), Vec2(0,2.5)], 9*channel_pitch-1+xoffset, yoffset));
 	addFixture(block_line, blocker, mass_normal, collisions_toplayer);
 
 	compound_shape.m_vertices = union([line_shapes[7], blocker]);
 	// Add another ghost fixture to hold the line together
-	var joining_bar = box(0,0,8*channel_pitch+10+10*2+2, 1);
+	var joining_bar = box(0,0,8*channel_pitch+10+10*2+2+xoffset, 1+yoffset);
 	addFixture(block_line, joining_bar, mass_none, collisions_none);
 	joining_bar.colour = "#c0c0c0";
 
@@ -303,16 +303,16 @@ function create_memory(world, ground, part_index) {
 
 	// Create the crank which biases the block line
 	if(row<8) {
-	    var crank_x = -10 - 5.0*row;
-	    var crank_y = -35.5 + row_separation*row;
+	    var crank_x = -10 - 5.0*row+xoffset;
+	    var crank_y = -35.5 + row_separation*row+yoffset;
 	    var bias_crank = create_crank(world, ground, crank_x, crank_y, 0);
 	    var distanceJoint = world.createJoint(pl.DistanceJoint({}, bias_crank, new Vec2(crank_x, crank_y+4.5), block_line, new Vec2(-3.0,crank_y+4.5)));
 	}
     }
     // Memory line holdoff bar
-    var memory_left_x = 0;
-    var memory_right_x = 8*channel_pitch+4*decoder_x_pitch;
-    var memory_holdoff = world.createBody({type: "dynamic", position: new Vec2(memory_right_x-3.9, -32.0)});
+    var memory_left_x = xoffset;
+    var memory_right_x = 8*channel_pitch+4*decoder_x_pitch+memory_left_x;
+    var memory_holdoff = world.createBody({type: "dynamic", position: new Vec2(memory_right_x-3.9, -32.0+yoffset)});
     addFixture(memory_holdoff, box(0, 0, 1.0, 8*row_separation), mass_none, collisions_toplayer);
     var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	lowerTranslation : 0.0,
@@ -321,16 +321,16 @@ function create_memory(world, ground, part_index) {
     }, ground, memory_holdoff, Vec2(0.0, 0.0), Vec2(1.0,0)));
 
     // Memory line limiting block(s)
-    var memory_limit = world.createBody({type: "static", position: new Vec2(memory_right_x-6, -32.0)});
+    var memory_limit = world.createBody({type: "static", position: new Vec2(memory_right_x-6, -32.0+yoffset)});
     addFixture(memory_limit, box(0, 0, 1.0,2.0), mass_none, collisions_toplayer);
     // Memory holdoff crank
-    var holdoff_crank = create_crank(world, ground, memory_right_x+10, -7, Math.PI, 10);
-    var distanceJoint = world.createJoint(pl.DistanceJoint({}, holdoff_crank, holdoff_crank.attach_points[1], memory_holdoff, new Vec2(memory_right_x-3.5,-16.0)));
+    var holdoff_crank = create_crank(world, ground, memory_right_x+10, -7+yoffset, Math.PI, 10);
+    var distanceJoint = world.createJoint(pl.DistanceJoint({}, holdoff_crank, holdoff_crank.attach_points[1], memory_holdoff, new Vec2(memory_right_x-3.5,-16.0+yoffset)));
     part_index['memory_block_lines'] = memory_lines;
     part_index['memory_holdoff_crank'] = holdoff_crank;
 
     // Memory reset bar
-    var memory_reset = world.createBody({type: "dynamic", position: new Vec2(memory_left_x-5, -32.0)});
+    var memory_reset = world.createBody({type: "dynamic", position: new Vec2(memory_left_x-5, -32.0+yoffset)});
     addFixture(memory_reset, box(0, -1.0, 1.0, 8*row_separation), mass_none, collisions_toplayer);
     var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	lowerTranslation : 0.0,
@@ -343,7 +343,7 @@ function create_memory(world, ground, part_index) {
     memory_reset.attach_points[0] = new Vec2(memory_left_x-5+0.5, -32.0+4*row_separation);
 
     // Limits for memory reset bar
-    var memory_reset_limits = world.createBody({type: "static", position: new Vec2(memory_left_x-6, -32.0)});
+    var memory_reset_limits = world.createBody({type: "static", position: new Vec2(memory_left_x-6, -32.0+yoffset)});
     addFixture(memory_reset_limits, box(0, 0, 1.0, 1.0), mass_none, collisions_toplayer);
     addFixture(memory_reset_limits, box(0, row_separation*8-1, 1.0, 1.0), mass_none, collisions_toplayer);
 
@@ -568,11 +568,11 @@ function createWorld(world) {
     world.active_ball_list = [];
     addFixture(ground, box(-5.0, 0, 1, 1), mass_none, collisions_none);
     create_injectors(world, ground, part_index);
-    create_memory(world, ground, part_index);
-    create_memory_decoder(world, ground, channel_pitch*8+10, -29.5, part_index);
-    create_discarder(world, ground, 0, -45, part_index);
+    create_memory(world, ground, 5.5, 0, part_index);
+    create_memory_decoder(world, ground, channel_pitch*8+15.5, -29.5, part_index);
+    create_discarder(world, ground, 5.5, -45, part_index);
 
-    create_regen(world, ground, 2.5, -50, part_index, 'regen1');
+    create_regen(world, ground, 8, -50, part_index, 'regen1');
     create_subtractor_block(world, ground, -70, -200, part_index, 'accumulator_read', true);
     create_subtractor_block(world, ground, -140, -200, part_index, 'accumulator_write', false);
     create_subtractor_block(world, ground, 69, -184, part_index, 'pc_read', true);
@@ -669,6 +669,6 @@ function createWorld(world) {
 
     // Populate the memory
     for(var i=1;i<=8;i++) {
-	create_fake_data(world, ground, channel_pitch*i, -1, 1);
+	create_fake_data(world, ground, channel_pitch*i+5.5, -1, 1);
     }
 }
