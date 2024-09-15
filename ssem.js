@@ -675,8 +675,14 @@ function createWorld(world) {
     }
     create_fake_data(world, ground, 193, -120, 1);
 
+    var memory_lines = [ [ 1,1,1,0, 0,1,0,1]] ;
+
     // Populate the memory
-    for(var i=1;i<=8;i++) {
-	create_fake_data(world, ground, channel_pitch*i+5.5, -1, 1);
+    for(var address=0;address < memory_lines.length; address++) {
+	for(var i=1;i<=8;i++) {
+	    if (memory_lines[address][i-1]==1) {
+		create_fake_data(world, ground, channel_pitch*i+5.5, address*-5-1, 1);
+	    }
+	}
     }
 }
