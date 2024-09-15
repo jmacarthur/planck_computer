@@ -1,6 +1,6 @@
 'use strict';
 
-var decoder_timing = [ [0.02, 0.02, 0.2, 0 ], [0.2, 0, 0.05, 0] ];
+var decoder_timing = [ [0.0, 0.02, 0.18, 0 ]  ];
 var discard_timing = [ [0.15, 0.01, 0.15, 0 ] ];
 var pc_read_timing = [ [0.00, 0.02, 0.08, 0 ] ];
 var all_inject_timing = [ [0.01, 0.015, 0.0, 0.0 ] ];
@@ -8,7 +8,7 @@ var regen_timing = [ [0.0, 0.01, 0.06, 0, 0.5 ], [1.13, 0.01, 0.2, 0, 0.5], [1.3
 var acc_reset_timing = [ [0.01, 0.01, 0, 0 ] ];
 var pc_reset_timing = acc_reset_timing;
 var instruction_holdoff_timing = [ [0.03, 0.01, 0.2, 0], [0.2, 0, 0.2, 0], [0.5, 0, 0.2, 0] ];
-var mem_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.1, 0], [0.35,0.01,0.1,0] ];
+var mem_holdoff_timing = [ [0.0, 0.01, 0.21, 0], [0.28,0.01,0.1,0] ];
 var mem_reset_timing = [ [0.0, 0.02, 0.2, 0], [0.3, 0.02, 0.2,0] ];
 var null_timing = [ [0, 0.01, 0.1, 0 ]];
 var instruction_read_timing = [ [0.15, 0.01, 0.1, 0] ];
