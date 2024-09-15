@@ -351,7 +351,7 @@ function create_memory(world, ground, xoffset, yoffset, part_index) {
     memory_reset.attach_points[0] = new Vec2(memory_left_x-5+0.5, -32.0+4*row_separation);
 
     // Limits for memory reset bar
-    var memory_reset_limits = world.createBody({type: "static", position: new Vec2(memory_left_x-6, -32.0+yoffset)});
+    var memory_reset_limits = world.createBody({type: "static", position: new Vec2(memory_left_x-6, -33.0+yoffset)});
     addFixture(memory_reset_limits, box(0, 0, 1.0, 1.0), mass_none, collisions_toplayer);
     addFixture(memory_reset_limits, box(0, row_separation*8-1, 1.0, 1.0), mass_none, collisions_toplayer);
 
