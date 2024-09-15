@@ -184,7 +184,9 @@ class Renderer {
 
 	var accumulator_string = this.getAccumulatorString()
 
-	this.ctx.fillText((this.cam_position/(Math.PI*2)*100).toFixed(1)+"% " + accumulator_string+ " target angle: "+ (this.angleTarget*360/Math.PI/2).toFixed(3)+ "°", 40, 20);
+	this.ctx.fillText((this.cam_position/(Math.PI*2)*100).toFixed(1)+"% " + accumulator_string +
+			  " target angle: "+ (this.angleTarget*360/Math.PI/2).toFixed(3)+ "° " +
+			  (this.angleTarget.toFixed(3))+"rad" , 40, 20);
 	this.ctx.restore();
 	this.world.active_ball_list = new_balls;
 
