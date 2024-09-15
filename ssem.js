@@ -4,7 +4,7 @@ var decoder_timing = [ [0.02, 0.02, 0.2, 0 ], [0.2, 0, 0.05, 0] ];
 var discard_timing = [ [0.15, 0.01, 0.15, 0 ] ];
 var pc_read_timing = [ [0.00, 0.02, 0.08, 0 ] ];
 var all_inject_timing = [ [0.01, 0.015, 0.0, 0.0 ] ];
-var regen_timing = [ [0.0, 0.01, 0.08, 0, 0.5 ], [1.13, 0.01, 0.2, 0, 0.5], [1.3, 0.01, 0.02, 0, 1.5] ];
+var regen_timing = [ [0.0, 0.01, 0.06, 0, 0.5 ], [1.13, 0.01, 0.2, 0, 0.5], [1.3, 0.01, 0.02, 0, 1.5] ];
 var acc_reset_timing = [ [0.01, 0.01, 0, 0 ] ];
 var pc_reset_timing = acc_reset_timing;
 var instruction_holdoff_timing = [ [0.03, 0.01, 0.2, 0], [0.2, 0, 0.2, 0], [0.5, 0, 0.2, 0] ];
@@ -587,7 +587,7 @@ function createWorld(world) {
 
     create_narrow_channel(world, ground, 3, -70, -50);
 
-    var address_sender = create_address_sender(world, ground, 69, -232, part_index);
+    var address_sender = create_address_sender(world, ground, 69+5.5, -232, part_index);
 
     var pc_read_cam_follower = create_cam_and_v_follower(world, ground, 250, -110, pc_read_timing, {'bumpheight':1.6, 'label': "PC Read", 'left': true, 'bias': 10.0});
     var pc_write_cam_follower = create_cam_and_v_follower(world, ground, 250, -70, pc_read_timing, {'bumpheight':1.6, 'label': "PC Update", 'left': true, 'bias': 10.0});
@@ -631,9 +631,9 @@ function createWorld(world) {
     var address_sender_cam = create_cam_and_v_follower(world, ground, 120, -230, null_timing, {'bumpheight': 1.5, 'label': "Address send release"});
 
     // Channels leading out of the PC reader
-    create_diagonal_channels(world, ground, 108, -190, -46.5, -28, channel_pitch, 0, 3, 4, 3.95);
-    create_mixer(world, ground, 77.5, -203);
-    create_diagonal_channels(world, ground, 40.5, -198, 28, 0, narrow_pitch, 2, 3, -1, -3.95);
+    create_diagonal_channels(world, ground, 108, -190, -46.5+5, -28, channel_pitch, 0, 3, 4, 3.95);
+    create_mixer(world, ground, 77.5+5.5, -203);
+    create_diagonal_channels(world, ground, 40.5, -198, 28+5.5, 0, narrow_pitch, 2, 3, -1, -3.95);
 
     // Stops PC writes getting into cams
     create_diagonal_channels(world, ground, 130, -188, 50, -10, narrow_pitch, 2, 0, -1, -3.95);
