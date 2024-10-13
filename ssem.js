@@ -367,12 +367,11 @@ function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
 	// Add an intangible box to hold the columns together
 	var f = addFixture(decoder_line, box(0, sensor_drop, 1.0, row_separation*8+1-sensor_drop), mass_none, collisions_none);
 	f.fillStyle = "#e0e0e0";
-	//f.depth = 1;
+	f.depth = 1;
 	for(var row=0; row<8; row++) {
 	    var offset = ((row>>(cols-1-col))%2==1)?0:1;
 	    var f = addFixture(decoder_line, box(0, row_separation*row-offset-2.2, 1.0, 1.0), mass_normal, collisions_toplayer);
 	    f.fillStyle = "#c0c0c0";
-	    f.depth = 0;
 	}
 
 	// Add the decoder holdoff bar pin

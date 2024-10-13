@@ -6,10 +6,10 @@ function fixtureDepthSort(a, b) {
 	return 0;
     }
     if(!("depth" in a) && "depth" in b) {
-	return -1;
+	return 1;
     }
     if(!("depth" in b) && "depth" in a) {
-	return 1;
+	return -1;
     }
     if(a.depth < b.depth) {
 	return 1;	
