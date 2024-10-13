@@ -1,6 +1,25 @@
 const pl = planck;
 const {Vec2, Box, Polygon, Circle, Rot} = pl;
 
+function fixtureDepthSort(a, b) {
+    if(!("depth" in a) && !("depth" in b)) {
+	return 0;
+    }
+    if(!("depth" in a) && "depth" in b) {
+	return -1;
+    }
+    if(!("depth" in b) && "depth" in a) {
+	return 1;
+    }
+    if(a.depth < b.depth) {
+	return 1;	
+    } else if(a.depth > b.depth) {
+	return -1;
+    } else {
+	return 0;
+    }
+}
+
 class Renderer {
     world = null;
     started = false;
@@ -276,9 +295,16 @@ class Renderer {
 		this.renderPolygon(body.shapeOverride[i].m_vertices, 0, 0);
 	    }
 	} else {
+	    var fixtureList = [];
 	    for (let fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
-		this.renderFixture(fixture, 0, 0);
+		fixtureList.push(fixture);
 	    }
+	    // Doing this sort every draw is inefficient; can we preserve a sort order? It's just body.m_fixtureList
+	    fixtureList.sort(fixtureDepthSort);
+	    for(var i=0;i<fixtureList.length;i++) {
+		this.renderFixture(fixtureList[i], 0, 0);
+	    }
+
 	}
 	// Does this thing have a text label?
 	if('label' in body) {

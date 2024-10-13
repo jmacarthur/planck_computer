@@ -365,11 +365,14 @@ function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
     for(var col=0; col<cols; col++) {
 	var decoder_line = world.createBody({type: "dynamic", position: new Vec2(-3.0+xoffset+col*decoder_x_pitch, yoffset)});
 	// Add an intangible box to hold the columns together
-	addFixture(decoder_line, box(0, sensor_drop, 1.0, row_separation*8+1-sensor_drop), mass_none, collisions_none);
+	var f = addFixture(decoder_line, box(0, sensor_drop, 1.0, row_separation*8+1-sensor_drop), mass_none, collisions_none);
+	f.fillStyle = "#e0e0e0";
+	//f.depth = 1;
 	for(var row=0; row<8; row++) {
 	    var offset = ((row>>(cols-1-col))%2==1)?0:1;
 	    var f = addFixture(decoder_line, box(0, row_separation*row-offset-2.2, 1.0, 1.0), mass_normal, collisions_toplayer);
-	    f.fillStyle = "#7f7f7f";
+	    f.fillStyle = "#c0c0c0";
+	    f.depth = 0;
 	}
 
 	// Add the decoder holdoff bar pin
