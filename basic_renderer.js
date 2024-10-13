@@ -293,7 +293,7 @@ class Renderer {
 	}
 	this.ctx.restore();
     }
-    renderPolygon(vertices, offsetx, offsety) {
+    renderPolygon(vertices, offsetx, offsety, fill) {
 	this.ctx.beginPath();
 	for(let i=0;i<vertices.length;i++) {
 	    var v = vertices[i];
@@ -304,6 +304,10 @@ class Renderer {
 	    }
 	}
 	this.ctx.closePath();
+	if(fill) {
+	    this.ctx.fillStyle = fill;
+	    this.ctx.fill();
+	}
 	this.ctx.stroke();
     }
     renderFixture(fixture, offsetx, offsety) {
@@ -316,7 +320,7 @@ class Renderer {
 	    this.ctx.strokeStyle = "#000000";
 	}
 	if (shapetype == "polygon") {
-	    this.renderPolygon(shape.m_vertices, offsetx, offsety);
+	    this.renderPolygon(shape.m_vertices, offsetx, offsety, fixture.fillStyle);
 	} else if (shapetype == "edge") {
 	    this.ctx.beginPath();
 	    this.ctx.moveTo(shape.m_vertex1.x*this.scale+offsetx, shape.m_vertex1.y*this.scale+offsety);
