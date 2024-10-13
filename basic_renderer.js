@@ -300,6 +300,7 @@ class Renderer {
 		fixtureList.push(fixture);
 	    }
 	    // Doing this sort every draw is inefficient; can we preserve a sort order? It's just body.m_fixtureList
+	    // Note: The problem is Body._addFixture adding in reverse order! We can fix this.... or just sort it after creation
 	    fixtureList.sort(fixtureDepthSort);
 	    for(var i=0;i<fixtureList.length;i++) {
 		this.renderFixture(fixtureList[i], 0, 0);
