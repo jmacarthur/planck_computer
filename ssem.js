@@ -268,6 +268,13 @@ function create_memory(world, ground, xoffset, yoffset, part_index) {
 	// shapes into one polygon
 	var compound_shape = new Polygon();
 	block_line.shapeOverride = [];
+	var joining_bar = box(0,0,8*channel_pitch+10+10*2+2+xoffset, 1+yoffset);
+	var f = addFixture(block_line, joining_bar, mass_none, collisions_none);
+	joining_bar.colour = "#c0c0c0";
+	block_line.shapeOverride.push(joining_bar);
+	// Add another ghost fixture to hold the line together
+	block_line.shapeOverride.push(compound_shape);
+
 	for(var i=0;i<line_shapes.length;i++) {
 	    addFixture(block_line, line_shapes[i], mass_normal, collisions_toplayer);
 	    if(i!=7) {
@@ -278,8 +285,7 @@ function create_memory(world, ground, xoffset, yoffset, part_index) {
 	// Blocker connects the block line to the eject line
 	var blocker = new Polygon(translate_points([Vec2(0,0), Vec2(2,0), Vec2(1,2.5), Vec2(0,2.5)], 9*channel_pitch-1+xoffset, yoffset));
 	addFixture(block_line, blocker, mass_normal, collisions_toplayer);
-
-	compound_shape.m_vertices = union([line_shapes[7], blocker]);
+	compound_shape.m_vertices = union([line_shapes[7], blocker])[0];
 
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : -channel_pitch,
@@ -298,16 +304,6 @@ function create_memory(world, ground, xoffset, yoffset, part_index) {
 	    enableLimit : true
 	}, ground, block_line, Vec2(0.0, 1.0), Vec2(1.0,0.0)));
 	memory_lines.push(eject_line);
-
-	// Add another ghost fixture to hold the line together
-	var joining_bar = box(0,0,8*channel_pitch+10+10*2+2+xoffset, 1+yoffset);
-	var f = addFixture(block_line, joining_bar, mass_none, collisions_none);
-	joining_bar.colour = "#c0c0c0";
-	// Should just use compound_shape here but it doesn't work for some reason
-	//block_line.shapeOverride.push(compound_shape);
-	block_line.shapeOverride.push(line_shapes[7]);
-	block_line.shapeOverride.push(blocker);
-	block_line.shapeOverride.push(joining_bar);
 
 	// Create the crank which biases the block line
 	if(row<8) {
