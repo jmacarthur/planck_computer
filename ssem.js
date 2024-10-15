@@ -7,11 +7,11 @@ var all_inject_timing = [ [0.01, 0.015, 0.0, 0.0 ] ];
 var regen_timing = [ [0.0, 0.01, 0.06, 0, 0.5 ], [1.13, 0.01, 0.2, 0, 0.5], [1.3, 0.01, 0.02, 0, 1.5] ];
 var acc_reset_timing = [ [0.01, 0.01, 0, 0 ] ];
 var pc_reset_timing = acc_reset_timing;
-var instruction_holdoff_timing = [ [0.03, 0.01, 0.2, 0], [0.2, 0, 0.2, 0], [0.5, 0, 0.2, 0] ];
+var instruction_holdoff_timing = [ [0.03, 0.01, 0.2, 0], [0.2, 0, 0.23, 0], [0.5, 0, 0.2, 0] ];
 var mem_holdoff_timing = [ [0.0, 0.01, 0.21, 0], [0.27,0.01,0.1,0] ];
 var mem_reset_timing = [ [0.0, 0.02, 0.2, 0], [0.3, 0.02, 0.2,0] ];
 var null_timing = [ [0, 0.01, 0.1, 0 ]];
-var instruction_read_timing = [ [0.15, 0.01, 0.1, 0] ];
+var instruction_read_timing = [ [0.42, 0.01, 0.05, 0] ];
 
 var channel_pitch = 8.0;
 var narrow_pitch = 3; // For compressed channels
@@ -277,7 +277,7 @@ function create_memory(world, ground, xoffset, yoffset, part_index) {
 	// shapes into one polygon
 	var compound_shape = new Polygon();
 	block_line.shapeOverride = [];
-	var joining_bar = box(xoffset+0,yoffset+0.25,8*channel_pitch+36, 0.5);
+	var joining_bar = box(xoffset+5,yoffset+0.25,8*channel_pitch+31, 0.5);
 	var f = addFixture(block_line, joining_bar, mass_none, collisions_none);
 	block_line.shapeOverride.push(joining_bar);
 	joining_bar.fillStyle = "#ffff003f";
@@ -321,7 +321,7 @@ function create_memory(world, ground, xoffset, yoffset, part_index) {
 	    var crank_x = -10 - 5.0*row+xoffset;
 	    var crank_y = -35.5 + row_separation*row+yoffset;
 	    var bias_crank = create_crank(world, ground, crank_x, crank_y, 0, undefined, mass_heavy);
-	    var distanceJoint = world.createJoint(pl.DistanceJoint({}, bias_crank, new Vec2(crank_x, crank_y+4.5), block_line, new Vec2(-3.0,crank_y+4.5)));
+	    var distanceJoint = world.createJoint(pl.DistanceJoint({}, bias_crank, new Vec2(crank_x, crank_y+4.5), block_line, new Vec2(8.0,crank_y+4.5)));
 	}
     }
     // Memory line holdoff bar
@@ -680,10 +680,6 @@ function createWorld(world) {
 
     world.part_index = part_index;
 
-    // Fake data for the instruction decoder
-    for(var i=0;i<3;i++) {
-	create_fake_data(world, ground, 28+3*i, -190, 1);
-    }
     create_fake_data(world, ground, 193, -120, 1);
 
     var memory_lines = [ [ 1,1,1,0, 0,1,0,1]] ;
