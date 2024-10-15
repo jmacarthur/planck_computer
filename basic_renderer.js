@@ -292,7 +292,13 @@ class Renderer {
 		} else {
 		    this.ctx.strokeStyle = "#000000";
 		}
-		this.renderPolygon(body.shapeOverride[i].m_vertices, 0, 0);
+		if(body.shapeOverride[i].fillStyle) {
+		    this.ctx.fillStyle = body.shapeOverride[i].fillStyle;
+		    this.renderPolygon(body.shapeOverride[i].m_vertices, 0, 0, this.ctx.fillStyle);
+		} else {
+		    this.ctx.fillStyle = "#000000";
+		    this.renderPolygon(body.shapeOverride[i].m_vertices, 0, 0);
+		}
 	    }
 	} else {
 	    for (let fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {

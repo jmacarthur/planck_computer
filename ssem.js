@@ -254,31 +254,42 @@ function create_memory(world, ground, xoffset, yoffset, part_index) {
 	var block_line = world.createBody({type: "dynamic", position: new Vec2(-3.0, -30.0 + row_separation*row - 1.5)});
 	var line_shapes = [];
 
-	addFixture(eject_line, box(2.0+xoffset, yoffset, 5.0, 1.0), mass_normal, collisions_toplayer);
+	var f = addFixture(eject_line, box(2.0+xoffset, yoffset, 5.0, 1.0), mass_normal, collisions_toplayer);
+	f.fillStyle = "#00ff00";
+
+	// Joining bar for eject line
+	var eject_joining_bar = box(2+xoffset,0.25+yoffset,8*channel_pitch+5, 0.5);
+
 	for(var col=1; col<=8; col++) {
 	    line_shapes.push(new Polygon(translate_points([Vec2(0,0), Vec2(5.1,0), Vec2(5.0,1.0), Vec2(0,1.2)], col*channel_pitch+2.0+xoffset, yoffset)));
-	    addFixture(eject_line, box(col*channel_pitch+4.5+xoffset, yoffset, 2.5, 1.0), mass_normal, collisions_toplayer);
+	    var f = addFixture(eject_line, box(col*channel_pitch+4.5+xoffset, yoffset, 2.5, 1.0), mass_normal, collisions_toplayer);
+	    f.fillStyle = "#00ff00";
 	}
+	var f = addFixture(eject_line, eject_joining_bar, mass_none, collisions_none);
+	f.fillStyle = "#00ff003f";
 
 	for(var col=0;col<4;col++) {
 	    line_shapes.push(box(8*channel_pitch+10+decoder_x_pitch*col+1.1+xoffset, -0.1+yoffset, 1.0, 1.0));
 	}
 
+
 	// Turn everything in 'line_shapes' into real fixtures and combine the
 	// shapes into one polygon
 	var compound_shape = new Polygon();
 	block_line.shapeOverride = [];
-	var joining_bar = box(0,0,8*channel_pitch+10+10*2+2+xoffset, 1+yoffset);
+	var joining_bar = box(xoffset+0,yoffset+0.25,8*channel_pitch+36, 0.5);
 	var f = addFixture(block_line, joining_bar, mass_none, collisions_none);
-	joining_bar.colour = "#c0c0c0";
 	block_line.shapeOverride.push(joining_bar);
+	joining_bar.fillStyle = "#ffff003f";
 	// Add another ghost fixture to hold the line together
 	block_line.shapeOverride.push(compound_shape);
+	compound_shape.fillStyle = "#ffff00";
 
 	for(var i=0;i<line_shapes.length;i++) {
 	    addFixture(block_line, line_shapes[i], mass_normal, collisions_toplayer);
 	    if(i!=7) {
 		block_line.shapeOverride.push(line_shapes[i]);
+		line_shapes[i].fillStyle = "#ffff00";
 	    }
 	}
 
