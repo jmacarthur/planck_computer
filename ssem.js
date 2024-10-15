@@ -8,8 +8,8 @@ var regen_timing = [ [0.0, 0.01, 0.06, 0, 0.5 ], [1.13, 0.01, 0.2, 0, 0.5], [1.3
 var acc_reset_timing = [ [0.01, 0.01, 0, 0 ] ];
 var pc_reset_timing = acc_reset_timing;
 var instruction_holdoff_timing = [ [0.03, 0.01, 0.2, 0], [0.2, 0, 0.23, 0], [0.5, 0, 0.2, 0] ];
-var mem_holdoff_timing = [ [0.0, 0.01, 0.21, 0], [0.27,0.01,0.1,0] ];
-var mem_reset_timing = [ [0.0, 0.02, 0.2, 0], [0.3, 0.02, 0.2,0] ];
+var mem_holdoff_timing = [ [0.0, 0.01, 0.21, 0], [0.25,0.01,0.02,0], [0.36, 0.01, 0.3, 0] ];
+var mem_reset_timing = [ [0.0, 0.02, 0.01, 0], [0.35, 0.02, 0.01, 0] ];
 var null_timing = [ [0, 0.01, 0.1, 0 ]];
 var instruction_read_timing = [ [0.42, 0.01, 0.05, 0] ];
 
@@ -203,12 +203,14 @@ function create_injectors(world, ground, xoffset, yoffset, part_index) {
     addFixture(hopper_right, new Polygon([Vec2(0,0), Vec2(3,0), Vec2(16,10), Vec2(13,10)]), mass_none, collisions_toplayer);
 
     for(var i=0;i<16;i++) {
-	let ball1 = world.createBody({
-	    type: "dynamic",
-	    position: new Vec2(2.0+4*i+xoffset, 8.0+yoffset)
-	});
-	addFixture(ball1, new Circle(1.0), mass_normal, collisions_toplayer);
-	world.active_ball_list.push(ball1);
+	for(var j=0;j<2; j++) {
+	    let ball1 = world.createBody({
+		type: "dynamic",
+		position: new Vec2(2.0+4*i+xoffset, 8.0+yoffset+4*j)
+	    });
+	    addFixture(ball1, new Circle(1.0), mass_normal, collisions_toplayer);
+	    world.active_ball_list.push(ball1);
+	}
     }
     part_index['injector_levers'] = injector_levers;
 
