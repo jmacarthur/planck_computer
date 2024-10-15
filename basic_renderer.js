@@ -295,15 +295,8 @@ class Renderer {
 		this.renderPolygon(body.shapeOverride[i].m_vertices, 0, 0);
 	    }
 	} else {
-	    var fixtureList = [];
 	    for (let fixture = body.getFixtureList(); fixture; fixture = fixture.getNext()) {
-		fixtureList.push(fixture);
-	    }
-	    // Doing this sort every draw is inefficient; can we preserve a sort order? It's just body.m_fixtureList
-	    // Note: The problem is Body._addFixture adding in reverse order! We can fix this.... or just sort it after creation
-	    fixtureList.sort(fixtureDepthSort);
-	    for(var i=0;i<fixtureList.length;i++) {
-		this.renderFixture(fixtureList[i], 0, 0);
+		this.renderFixture(fixture, 0, 0);
 	    }
 
 	}

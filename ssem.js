@@ -280,16 +280,6 @@ function create_memory(world, ground, xoffset, yoffset, part_index) {
 	addFixture(block_line, blocker, mass_normal, collisions_toplayer);
 
 	compound_shape.m_vertices = union([line_shapes[7], blocker]);
-	// Add another ghost fixture to hold the line together
-	var joining_bar = box(0,0,8*channel_pitch+10+10*2+2+xoffset, 1+yoffset);
-	addFixture(block_line, joining_bar, mass_none, collisions_none);
-	joining_bar.colour = "#c0c0c0";
-
-	// Should just use compound_shape here but it doesn't work for some reason
-	//block_line.shapeOverride.push(compound_shape);
-	block_line.shapeOverride.push(line_shapes[7]);
-	block_line.shapeOverride.push(blocker);
-	block_line.shapeOverride.push(joining_bar);
 
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : -channel_pitch,
@@ -308,6 +298,16 @@ function create_memory(world, ground, xoffset, yoffset, part_index) {
 	    enableLimit : true
 	}, ground, block_line, Vec2(0.0, 1.0), Vec2(1.0,0.0)));
 	memory_lines.push(eject_line);
+
+	// Add another ghost fixture to hold the line together
+	var joining_bar = box(0,0,8*channel_pitch+10+10*2+2+xoffset, 1+yoffset);
+	var f = addFixture(block_line, joining_bar, mass_none, collisions_none);
+	joining_bar.colour = "#c0c0c0";
+	// Should just use compound_shape here but it doesn't work for some reason
+	//block_line.shapeOverride.push(compound_shape);
+	block_line.shapeOverride.push(line_shapes[7]);
+	block_line.shapeOverride.push(blocker);
+	block_line.shapeOverride.push(joining_bar);
 
 	// Create the crank which biases the block line
 	if(row<8) {
@@ -364,18 +364,15 @@ function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
     var cols = 3;
     for(var col=0; col<cols; col++) {
 	var decoder_line = world.createBody({type: "dynamic", position: new Vec2(-3.0+xoffset+col*decoder_x_pitch, yoffset)});
-	// Add an intangible box to hold the columns together
-	var f = addFixture(decoder_line, box(0, sensor_drop, 1.0, row_separation*8+1-sensor_drop), mass_none, collisions_none);
-	f.fillStyle = "#e0e0e0";
-	f.depth = 1;
 	for(var row=0; row<8; row++) {
 	    var offset = ((row>>(cols-1-col))%2==1)?0:1;
 	    var f = addFixture(decoder_line, box(0, row_separation*row-offset-2.2, 1.0, 1.0), mass_normal, collisions_toplayer);
-	    f.fillStyle = "#c0c0c0";
+	    f.fillStyle = "#808080";
 	}
 
 	// Add the decoder holdoff bar pin
-	addFixture(decoder_line, box(0, row_separation*8,1.0,1.0), mass_normal, collisions_toplayer);
+	var f = addFixture(decoder_line, box(0, row_separation*8,1.0,1.0), mass_normal, collisions_toplayer);
+	f.fillStyle = "#808080";
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : 0.0,
 	    upperTranslation : row_separation,
@@ -385,6 +382,10 @@ function create_memory_decoder(world, ground, xoffset, yoffset, part_index) {
 	// Add the 'sensor' way below the main decoder
 	addFixture(decoder_line, box(0, sensor_drop, 1.0, 1.0), mass_normal, collisions_toplayer);
 
+	// Add an intangible box to hold the columns together
+	var f = addFixture(decoder_line, box(0, sensor_drop, 1.0, row_separation*8+1-sensor_drop), mass_none, collisions_none);
+	f.fillStyle = "#0000003f";
+	
 	decoder_lines.push(decoder_line);
     }
 
