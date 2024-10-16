@@ -277,7 +277,8 @@ function create_memory(world, ground, xoffset, yoffset, part_index) {
 	f.fillStyle = "#00ff003f";
 
 	for(var col=0;col<4;col++) {
-	    line_shapes.push(box(8*channel_pitch+10+decoder_x_pitch*col+1.1+xoffset, -0.1+yoffset, 1.0, 1.0));
+	    var decoder_pin_poly = new Polygon(translate_points([Vec2(0,0), Vec2(1,0), Vec2(1,0.9), Vec2(0,0.9)], 8*channel_pitch+10+decoder_x_pitch*col+1.1+xoffset, -0.1+yoffset));
+	    line_shapes.push(decoder_pin_poly);
 	}
 
 
