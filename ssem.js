@@ -403,7 +403,7 @@ function create_memory(world, ground, xoffset, yoffset, part_index) {
     // Column separators
     for(var col=1;col<9;col++) {
 	var column_separator = world.createBody({type: "static", position: new Vec2(1.5+channel_pitch*col, -32.0)});
-	var f = addFixture(column_separator, box(0,0,0.5,row_separation*8), mass_none, collisions_toplayer);
+	var f = addFixture(column_separator, box(0.2,0,0.3,row_separation*8), mass_none, collisions_toplayer);
 	f.fillStyle = "#0000007f";
 	
     }
