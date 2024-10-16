@@ -19,7 +19,10 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
 	var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	    lowerTranslation : 0.0,
 	    upperTranslation : block_width,
-	    enableLimit : true
+	    enableLimit : true,
+	    motorSpeed : 0.0,
+	    maxMotorForce: 10.0,
+	    enableMotor: true
 	}, ground, decoder_rod, Vec2(0.0, 0.0), Vec2(1.0,0.0)));
 	completeUnion(decoder_rod);
 	addFixture(decoder_rod, joiner_rod, mass_none, collisions_none);
