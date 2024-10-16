@@ -201,26 +201,27 @@ function create_injectors(world, ground, xoffset, yoffset, part_index) {
 
     for(var i=0;i<8;i++) {
 
-	var injector_lever = create_injector_lever(world, ground, i*channel_pitch+xoffset, 4.5+yoffset);
+	var xpos = i*channel_pitch+xoffset;
+	var injector_lever = create_injector_lever(world, ground, xpos+1.25, 4.5+yoffset);
 
 	injector_levers.push(injector_lever);
 	part_index['injector'+i] = injector_lever;
-
 	// Add channel right side
-	var channel_side = world.createBody({type: "static", position: new Vec2(i*channel_pitch+3.0+xoffset,3.1+yoffset)});
+	var channel_side = world.createBody({type: "static", position: new Vec2(xpos+1.25+3.0,3.1+yoffset)});
 	var side_poly = Polygon([Vec2(-0.4,-0.5), Vec2(0.8,-0.4), Vec2(0.8, 2.0), Vec2(-0.2, 2.0)]);
 	var top_poly = Polygon([Vec2(0.6,1.0), Vec2(4.0,1.0), Vec2(4.0,2.5), Vec2(0.6,2.0)]);
-	addFixture(channel_side, side_poly, mass_none, collisions_toplayer);
-	addFixture(channel_side, top_poly, mass_none, collisions_toplayer);
+	addUnionFixture(channel_side, side_poly, mass_none, collisions_toplayer);
+	addUnionFixture(channel_side, top_poly, mass_none, collisions_toplayer);
+	completeUnion(channel_side);
 
 	// Add channel base
-	var channel_side = world.createBody({type: "static", position: new Vec2(i*channel_pitch+2.0+xoffset,-0.5+yoffset)});
-	var base_poly = Polygon([Vec2(-1,0), Vec2(2,0), Vec2(2,1.1), Vec2(-1,1)]);
-	addFixture(channel_side, base_poly, mass_none, collisions_toplayer);
+	var channel_side = world.createBody({type: "static", position: new Vec2(xpos+1.25+2.0,-0.5+yoffset)});
+	var base_poly = Polygon([Vec2(-1,0), Vec2(0.5,0), Vec2(0.5,1.1), Vec2(-1,1)]);
+	addUnionFixture(channel_side, base_poly, mass_none, collisions_toplayer);
 
 	// Add channel left side (backstop)
-	var channel_side = world.createBody({type: "static", position: new Vec2(i*channel_pitch-1.25+xoffset,yoffset)});
-	addFixture(channel_side, box(-0.5, 0, 1.0, 2.0), mass_none, collisions_toplayer);
+	var channel_side = world.createBody({type: "static", position: new Vec2(xpos,yoffset)});
+	addUnionFixture(channel_side, box(-0.5, 0, 1.0, 2.0), mass_none, collisions_toplayer);
     }
 
     // Final channel right side (backstop)
