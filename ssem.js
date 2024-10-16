@@ -7,12 +7,12 @@ var all_inject_timing = [ [0.01, 0.015, 0.0, 0.0 ] ];
 var regen_timing = [ [0.0, 0.01, 0.06, 0, 0.5 ], [1.13, 0.01, 0.2, 0, 0.5], [1.3, 0.01, 0.02, 0, 1.5] ];
 var acc_reset_timing = [ [0.01, 0.01, 0, 0 ] ];
 var pc_reset_timing = acc_reset_timing;
-var instruction_holdoff_timing = [ [0.03, 0.01, 0.2, 0], [0.2, 0, 0.23, 0], [0.5, 0, 0.2, 0] ];
+var instruction_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.23, 0], [0.5, 0, 0.2, 0] ];
 var mem_holdoff_timing = [ [0.0, 0.01, 0.21, 0], [0.25,0.01,0.02,0], [0.36, 0.01, 0.3, 0] ];
 var mem_reset_timing = [ [0.0, 0.02, 0.01, 0], [0.35, 0.02, 0.01, 0] ];
 var null_timing = [ [0, 0.01, 0.1, 0 ]];
-var instruction_read_timing = [ [0.42, 0.01, 0.05, 0] ];
-
+var instruction_read_timing = [ [0.43, 0.01, 0.05, 0] ];
+var instruction_reset_timing = [ [0.05, 0.01, 0, 0 ] ];
 var channel_pitch = 8.0;
 var narrow_pitch = 3; // For compressed channels
 var row_separation = 4.0;
@@ -640,7 +640,7 @@ function createWorld(world) {
     var acc_reset_cam_follower = create_cam_and_v_follower(world, ground, -200, -155, acc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Accumulator reset"});
     var pc_reset_cam_follower = create_cam_and_v_follower(world, ground, 220, -155, pc_reset_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "PC reset"});
     var instruction_reader_cam_follower = create_cam_and_v_follower(world, ground, -50, -235, instruction_read_timing, {'leverlen': 40, 'bumpheight': 1.5, 'label': "Instruction read"});
-    var instruction_reset_cam_follower = create_cam_and_v_follower(world, ground, 180, -250, acc_reset_timing, {'bumpheight': 1.5, 'left': true, 'label': "Instruction reset"});
+    var instruction_reset_cam_follower = create_cam_and_v_follower(world, ground, 180, -250, instruction_reset_timing, {'bumpheight': 1.7, 'left': true, 'label': "Instruction reset"});
 
     // Instruction cams
     var opcode_cams=[];
