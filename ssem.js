@@ -225,7 +225,7 @@ function create_injectors(world, ground, xoffset, yoffset, part_index) {
     }
 
     // Final channel right side (backstop)
-    var channel_side = world.createBody({type: "static", position: new Vec2(8*channel_pitch-1.25+xoffset,yoffset)});
+    var channel_side = world.createBody({type: "static", position: new Vec2(8*channel_pitch+xoffset,yoffset)});
     addFixture(channel_side, box(-0.5, 0, 1.0, 2.0), mass_none, collisions_toplayer);
 
     // Add hopper
