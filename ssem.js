@@ -153,7 +153,7 @@ function create_transparent_lever(world, ground, x, y) {
     });
 
     var fix1 = box(-0.5, -0.5, 4.0, 1.0);
-    var fix2 = box(-0.5, -3.5, 1.0, 4.0);
+    var fix2 = box(-0.5, -3.7, 0.7, 4.2);
     addUnionFixture(injector_lever, fix1, mass_none, collisions_none);
     addUnionFixture(injector_lever, fix2, mass_normal, collisions_toplayer);
 
@@ -455,13 +455,13 @@ function create_regen(world, ground, origin_x, origin_y, part_index, base_name) 
     // Create pusher line
     var regen_bar = world.createBody({type: "dynamic", position: new Vec2(origin_x, origin_y)});
 
-    // Blocking bar is the base
+    // Blocking bar is the base, static element
     var blocking_bar = world.createBody({type: "static", position: new Vec2(origin_x, origin_y)});
     var blockbar_width = channel_pitch;
     for(var col=0; col<8; col++) {
 	var x = col*channel_pitch;
 	addFixture(regen_bar, box(x+0.5, 0, 1, 2), mass_normal, collisions_toplayer)
-	addFixture(blocking_bar, new Polygon([Vec2(x+3,-2), Vec2(x+blockbar_width, -2), Vec2(x+blockbar_width, -0.8), Vec2(x+3, -1)]), mass_normal, collisions_toplayer)
+	addFixture(blocking_bar, new Polygon([Vec2(x+2.8,-2), Vec2(x+blockbar_width, -2), Vec2(x+blockbar_width, -0.8), Vec2(x+2.8, -1)]), mass_normal, collisions_toplayer)
     }
 
     var joining_bar = box(0,0,8*channel_pitch, 2);
