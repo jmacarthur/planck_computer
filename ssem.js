@@ -7,7 +7,20 @@ var all_inject_timing = [ [0.01, 0.015, 0.0, 0.0 ] ];
 var regen_timing = [ [0.0, 0.01, 0.04, 0, 0.5 ], [1.13, 0.01, 0.18, 0, 0.5], [1.3, 0.01, 0.02, 0, 1.5], [1.3, 0.01, 0.1, 0, 0.5], [1.5, 0.01, 0.1, 0, 0.5], [1.57, 0.01, 0.02, 0, 1.5] ];
 var acc_reset_timing = [ [0.01, 0.01, 0, 0 ] ];
 var pc_reset_timing = acc_reset_timing;
-var instruction_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.28, 0], [0.6, 0, 0.2, 0] ];
+
+// All instruction cam timing
+var jmp_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.28, 0], [0.6, 0, 0.2, 0] ];
+var jre_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.28, 0], [0.6, 0, 0.2, 0] ];
+var ldn_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.28, 0], [0.6, 0, 0.2, 0] ];
+var sto_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.28, 0], [0.6, 0, 0.2, 0] ];
+var sub_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.28, 0], [0.6, 0, 0.2, 0] ];
+var sub2_holdoff_timing = sub_holdoff_timing;
+var tst_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.28, 0], [0.6, 0, 0.2, 0] ];
+var hlt_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.28, 0], [0.6, 0, 0.2, 0] ];
+
+var instruction_holdoff_timing = [ jmp_holdoff_timing, jre_holdoff_timing, ldn_holdoff_timing, sto_holdoff_timing,
+				   sub_holdoff_timing, sub2_holdoff_timing, tst_holdoff_timing, hlt_holdoff_timing ];
+
 var mem_holdoff_timing = [ [0.0, 0.01, 0.21, 0], [0.25,0.01,0.01,0], [0.36, 0.01, 0.14, 0], [0.53, 0.01, 0.01, 0], [0.63, 0.01, 0.14, 0] ];
 var mem_reset_timing = [ [0.0, 0.02, 0.01, 0], [0.34, 0.02, 0.01, 0], [0.43,0.2,0.01,0] ];
 var null_timing = [ [0, 0.01, 0.1, 0 ]];
@@ -690,7 +703,7 @@ function createWorld(world) {
     var opcode_cams=[];
     for(var i=0;i<8;i++) {
 	var drop = i%4;
-	opcode_cams[i] = create_cam_and_h_follower(world, ground, 46+7*i+(i>3?15:0), -300-40*drop, instruction_holdoff_timing, {'bumpheight': 1.5, 'label': "Instruction holdoff", 'left': i>3});
+	opcode_cams[i] = create_cam_and_h_follower(world, ground, 46+7*i+(i>3?15:0), -300-40*drop, instruction_holdoff_timing[i], {'bumpheight': 1.5, 'label': "Instruction holdoff", 'left': i>3});
     }
 
     var address_sender_cam = create_cam_and_v_follower(world, ground, 120, -230, address_send_release_timing, {'bumpheight': 1.5, 'label': "Address send release"});
