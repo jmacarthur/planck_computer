@@ -77,7 +77,7 @@ function create_instruction_decoder(world, ground, offsetx, offsety, part_index)
     }
 
     // Resetting option
-    var resetter = world.createBody({type: "dynamic", position: new Vec2(offsetx+16*block_width+3+block_width,offsety)});
+    var resetter = world.createBody({type: "dynamic", position: new Vec2(offsetx+16*block_width+3+block_width+0.1,offsety)});
     addUnionFixture(resetter, box(0,0,1,profile_separation*3), mass_normal, collisions_toplayer);
     var prismaticJoint = world.createJoint(pl.PrismaticJoint({
 	lowerTranslation : -block_width,
