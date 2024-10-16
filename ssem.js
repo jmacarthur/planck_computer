@@ -168,6 +168,32 @@ function create_transparent_lever(world, ground, x, y) {
     return injector_lever;
 }
 
+function create_injector_lever(world, ground, x, y) {
+    // Creates a crank with collision-less horizontal part, used in the injector and regens
+    let injector_lever = world.createBody({
+	type: "dynamic",
+	position: new Vec2(x, y)
+    });
+
+    var fix1 = box(-0.5, -0.5, 4.0, 1.0);
+    var fix2 = box(-0.5, -3.7, 1.0, 4.2);
+    var fix3 = box(2.8, -3.7, 0.7, 0.5);
+    addUnionFixture(injector_lever, fix1, mass_none, collisions_none);
+    addUnionFixture(injector_lever, fix2, mass_normal, collisions_toplayer);
+    addUnionFixture(injector_lever, fix3, mass_normal, collisions_toplayer);
+
+    completeUnion(injector_lever);
+    var revoluteJoint = world.createJoint(pl.RevoluteJoint({
+	lowerAngle: -0.25 * Math.PI,
+	upperAngle: 0.25 * Math.PI,
+	enableLimit: false,
+    }, ground, injector_lever, Vec2(x, y)));
+    injector_lever.attach_points = [];
+    injector_lever.attach_points[0] = Vec2(x+3, y);
+    return injector_lever;
+}
+
+
 function create_injectors(world, ground, xoffset, yoffset, part_index) {
     // Create the hopper and injector
     // Injector consists of an active rectangle and an intangible rectangle
@@ -175,16 +201,17 @@ function create_injectors(world, ground, xoffset, yoffset, part_index) {
 
     for(var i=0;i<8;i++) {
 
-	var injector_lever = create_transparent_lever(world, ground, i*channel_pitch+xoffset, 4.5+yoffset);
+	var injector_lever = create_injector_lever(world, ground, i*channel_pitch+xoffset, 4.5+yoffset);
 
 	injector_levers.push(injector_lever);
 	part_index['injector'+i] = injector_lever;
 
 	// Add channel right side
 	var channel_side = world.createBody({type: "static", position: new Vec2(i*channel_pitch+3.0+xoffset,3.1+yoffset)});
-	var side_poly = Polygon([Vec2(-0.4,-0.5), Vec2(0.8,-0.4), Vec2(0.8, 2.1), Vec2(-0.2, 2.1)]);
+	var side_poly = Polygon([Vec2(-0.4,-0.5), Vec2(0.8,-0.4), Vec2(0.8, 2.0), Vec2(-0.2, 2.0)]);
+	var top_poly = Polygon([Vec2(0.6,1.0), Vec2(4.0,1.0), Vec2(4.0,2.5), Vec2(0.6,2.0)]);
 	addFixture(channel_side, side_poly, mass_none, collisions_toplayer);
-	addFixture(channel_side, box(1.0, 1.0, 3.0, 1.0), mass_none, collisions_toplayer);
+	addFixture(channel_side, top_poly, mass_none, collisions_toplayer);
 
 	// Add channel base
 	var channel_side = world.createBody({type: "static", position: new Vec2(i*channel_pitch+2.0+xoffset,-0.5+yoffset)});
@@ -212,7 +239,7 @@ function create_injectors(world, ground, xoffset, yoffset, part_index) {
 	for(var j=0;j<2; j++) {
 	    let ball1 = world.createBody({
 		type: "dynamic",
-		position: new Vec2(2.0+4*i+xoffset, 8.0+yoffset+4*j)
+		position: new Vec2(2.0+4*i+0.5*j+xoffset, 8.0+yoffset+4*j)
 	    });
 	    addFixture(ball1, new Circle(1.0), mass_normal, collisions_toplayer);
 	    world.active_ball_list.push(ball1);
