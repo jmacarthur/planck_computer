@@ -70,6 +70,11 @@ var mass_normal =  {
     friction: 0.3
 }
 
+var mass_normal_frictionless =  {
+    density: 1.0,
+    friction: 0.0
+}
+
 var mass_heavy =  {
     density: 3.0,
     friction: 0.3
@@ -480,11 +485,11 @@ function create_pitch_reducer(world, ground, offsetx, offsety) {
 	addFixture(reducer, new Polygon([Vec2(centre_x+narrow_pitch*pos, offsety-1-reducer_y_func(pos)),
 					 Vec2(centre_x+narrow_pitch*pos+0.5, offsety-1-reducer_y_func(pos)),
 				     Vec2(centre_x+channel_pitch*pos+0.5, offsety),
-				     Vec2(centre_x+channel_pitch*pos, offsety)]), mass_normal, collisions_toplayer)
+				     Vec2(centre_x+channel_pitch*pos, offsety)]), mass_normal_frictionless, collisions_toplayer)
 	addFixture(reducer, new Polygon([Vec2(centre_x+narrow_pitch*pos, offsety-10),
 				     Vec2(centre_x+narrow_pitch*pos+0.5, offsety-10),
 					 Vec2(centre_x+narrow_pitch*pos+0.5, offsety-1-reducer_y_func(pos)),
-					 Vec2(centre_x+narrow_pitch*pos, offsety-1-reducer_y_func(pos))]), mass_normal, collisions_toplayer)
+					 Vec2(centre_x+narrow_pitch*pos, offsety-1-reducer_y_func(pos))]), mass_normal_frictionless, collisions_toplayer)
     }
 }
 
