@@ -742,7 +742,7 @@ function createWorld(world) {
 
     create_fake_data(world, ground, 193, -120, 1);
 
-    var memory_data = [ [1, 1, 1, 0, 0, 1, 0, 1],
+    var memory_data = [ [0, 0, 0, 0, 0, 1, 0, 1],
 			[1, 0, 1, 0, 1, 0, 1, 0],
 			[1, 0, 1, 0, 1, 0, 1, 0],
 			[1, 0, 1, 0, 1, 0, 1, 0],
