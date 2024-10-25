@@ -3,7 +3,7 @@ function create_router_block(world, ground, offsetx, offsety, part_index, revers
     var fixed_out = world.createBody({type: "static", position: new Vec2(offsetx,offsety)});
     var y_pitch = 4;
     for(var col=0;col<8;col++) {
-	var angled_polygon = [Vec2(0,0), Vec2(0.5, -0.5), Vec2(2.5,1.5), Vec2(2,2)];
+	var angled_polygon = [Vec2(0,0), Vec2(0.5, -0.5), Vec2(2.5,2.5)];
 	if(reverse) {
 	    angled_polygon = hMirror(angled_polygon);
 	}
