@@ -9,7 +9,7 @@ var acc_reset_timing = [ [0.01, 0.01, 0, 0 ] ];
 var pc_reset_timing = acc_reset_timing;
 
 // All instruction cam timing
-var jmp_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.28, 0], [0.6, 0, 0.2, 0] ];
+var jmp_holdoff_timing = [ [0.0, 0.01, 0.25, 0], [0.25, 0, 0.27, 0], [0.6, 0, 0.2, 0] ];
 var jre_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.28, 0], [0.6, 0, 0.2, 0] ];
 var ldn_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.28, 0], [0.6, 0, 0.2, 0] ];
 var sto_holdoff_timing = [ [0.0, 0.01, 0.2, 0], [0.2, 0, 0.28, 0], [0.6, 0, 0.2, 0] ];
