@@ -636,6 +636,13 @@ function make_l_diverter(world, ground, offsetx, offsety, x_pitch, y_pitch, num_
     return diverter;
 }
 
+function create_motion_amplifier(world, from, to, xpos) {
+    world.createJoint(pl.PulleyJoint({}, from, to,
+				     Vec2(130,to.attach_points[0].y+3),
+				     Vec2(130,to.attach_points[0].y),
+				     from.attach_points[0], to.attach_points[0], 0.1));
+}
+
 function createWorld(world) {
 
     var part_index = [];
@@ -672,17 +679,12 @@ function createWorld(world) {
     var pc_write_cam_follower = create_cam_and_v_follower(world, ground, 250, -70, pc_read_timing, {'bumpheight':1.6, 'label': "PC Update", 'left': true, 'bias': 10.0});
 
     //connect(world, pc_read_cam_follower, part_index['pc_read_diverter_lever'], 0, 1);
-    world.createJoint(pl.PulleyJoint({}, pc_read_cam_follower, part_index['pc_read_diverter'],
-				     Vec2(130,part_index['pc_read_diverter'].attach_points[0].y+3),
-				     Vec2(130,part_index['pc_read_diverter'].attach_points[0].y),
-				     pc_read_cam_follower.attach_points[0], part_index['pc_read_diverter'].attach_points[0], 0.1));
-
-    /*world.createJoint(pl.PulleyJoint({}, pc_write_cam_follower, part_index['pc_write_diverter'],
-				     Vec2(210,part_index['pc_write_diverter'].attach_points[0].y+3),
-				     Vec2(210,part_index['pc_write_diverter'].attach_points[0].y),
-				     pc_write_cam_follower.attach_points[0], part_index['pc_write_diverter'].attach_points[0], 0.1));*/
 
     create_instruction_decoder(world, ground, 51, -270, part_index);
+
+    // Pulley motion amplifiers
+    create_motion_amplifier(world, pc_read_cam_follower, part_index['pc_read_diverter'], 130);
+    create_motion_amplifier(world, part_index['opcode0_holdoff'], part_index['pc_write_diverter'], 210);
 
     // Shield for top of decoder
     var decoder_shield = world.createBody({type: "static", position: new Vec2(38,-240)});
